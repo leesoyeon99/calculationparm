@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 미래아카데미 컬러 시스템 */
+    --color-primary: #4CAF50;        /* 미래아카데미 로고 그린 */
+    --color-primary-light: #E0F2E0;  /* 라이트 민트 그린 */
+    --color-primary-dark: #2E7D32;   /* 다크 그린 */
+    
+    --color-secondary: #A8B8A8;      /* 뮤트 그린/올리브 */
+    --color-secondary-light: #E8EDE8; /* 라이트 그레이시 그린 */
+    
+    --color-accent: #00C853;         /* 틸/아쿠아 그린 */
+    --color-accent-light: #B2DFDB;   /* 라이트 틸 */
+    
+    --color-neutral-100: #FFFFFF;    /* 화이트 */
+    --color-neutral-200: #F5F5F5;    /* 라이트 그레이 */
+    --color-neutral-300: #E0E0E0;    /* 미디엄 그레이 */
+    --color-neutral-400: #BDBDBD;    /* 그레이 */
+    --color-neutral-500: #9E9E9E;    /* 미디엄 그레이 */
+    --color-neutral-600: #757575;    /* 다크 그레이 */
+    --color-neutral-700: #4A4A4A;    /* 다크 그레이 */
+    --color-neutral-800: #424242;    /* 다크 그레이 */
+    --color-neutral-900: #1A1A1A;    /* 블랙 */
+    
+    --color-text-primary: #1A1A1A;   /* 프라이머리 텍스트 */
+    --color-text-secondary: #4A4A4A; /* 세컨더리 텍스트 */
+    --color-text-tertiary: #888888;  /* 터셔리 텍스트 */
+    --color-text-white: #FFFFFF;     /* 화이트 텍스트 */
+    
+    /* 그라데이션 */
+    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    --gradient-secondary: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+    --gradient-neutral: linear-gradient(135deg, var(--color-neutral-100) 0%, var(--color-neutral-200) 100%);
+    
+    /* 그림자 */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 넥슨 폰트 정의 */
+  @font-face {
+    font-family: 'NEXON Lv1 Gothic';
+    src: url('/fonts/NEXONLv1GothicLight.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'NEXON Lv1 Gothic';
+    src: url('/fonts/NEXONLv1GothicRegular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'NEXON Lv1 Gothic';
+    src: url('/fonts/NEXONLv1GothicBold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  * {
+    @apply border-gray-200;
+  }
+  
+  body {
+    background: var(--gradient-secondary);
+    min-height: 100vh;
+    font-family: 'NEXON Lv1 Gothic', 'Noto Sans KR', sans-serif;
+    color: var(--color-text-primary);
+  }
+  
+  /* 넥슨 폰트 디자인 시스템 */
+  .font-dnf-display {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 700;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+    letter-spacing: -0.02em;
+  }
+  
+  .font-dnf-heading-1 {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: -0.01em;
+  }
+  
+  .font-dnf-heading-2 {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.3;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    letter-spacing: -0.01em;
+  }
+  
+  .font-dnf-heading-3 {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    letter-spacing: -0.005em;
+  }
+  
+  .font-dnf-body-large {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+  }
+  
+  .font-dnf-body {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+  }
+  
+  .font-dnf-body-small {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 300;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+  
+  .font-dnf-button {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    letter-spacing: 0.01em;
+  }
+  
+  .font-dnf-button-large {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 700;
+    font-size: 1.125rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    letter-spacing: 0.01em;
+  }
+  
+  .font-dnf-caption {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+  }
+  
+  .font-dnf-score {
+    font-family: 'NEXON Lv1 Gothic', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: -0.01em;
+  }
+  
+  .font-dnf-english {
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  .farm-card {
+    @apply bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-white/20;
+  }
+  
+  .crop-card {
+    @apply bg-gradient-to-b from-farm-soil to-farm-brown rounded-lg p-4 shadow-md;
+  }
+  
+  .stage-node {
+    @apply w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shadow-lg transition-all duration-300;
+  }
+  
+  .stage-node.completed {
+    @apply bg-farm-green shadow-green-500/50;
+  }
+  
+  .stage-node.current {
+    @apply bg-farm-sun shadow-yellow-500/50 animate-pulse;
+  }
+  
+  .stage-node.locked {
+    @apply bg-gray-400 cursor-not-allowed;
+  }
+  
+  .somariter-character {
+    @apply w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg;
+  }
+}
