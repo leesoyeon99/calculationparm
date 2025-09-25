@@ -181,17 +181,17 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
               <div className="px-4 py-8">
                 <div className="max-w-6xl mx-auto">
                   {/* 학습 경로 컨테이너 - 세로 스크롤 가능 */}
-                  <div className="relative min-h-[1200px] overflow-y-auto">
+                  <div className="relative min-h-[2100px] overflow-y-auto">
                     {/* 골목길 경로 SVG - 구불구불한 길 */}
                     <svg 
                       className="absolute left-1/2 top-0 w-full h-full z-0" 
-                      viewBox="0 0 800 1200" 
+                      viewBox="0 0 800 2100" 
                       preserveAspectRatio="none"
                       style={{ transform: 'translateX(-50%)' }}
                     >
                       <motion.path
-                        d="M 400 50 Q 300 150 400 250 Q 500 350 400 450 Q 300 550 400 650 Q 500 750 400 850 Q 300 950 400 1050 Q 500 1150 400 1200"
-                        stroke="url(#alleyGradient)"
+                        d="M 400 50 Q 300 150 400 250 Q 500 350 400 450 Q 300 550 400 650 Q 500 750 400 850 Q 300 950 400 1050 Q 500 1150 400 1250 Q 300 1350 400 1450 Q 500 1550 400 1650 Q 300 1750 400 1850 Q 500 1950 400 2050"
+                        stroke="#8B5CF6"
                         strokeWidth="8"
                         fill="none"
                         strokeLinecap="round"
@@ -218,9 +218,10 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                     {/* 학년별 스테이지들 - 골목길을 따라 배치 */}
                     <div className="relative z-10">
                       {curriculumLevels.map((level, index) => {
-                        // 골목길을 따라 위치 계산 (세로로 쭉 배치)
-                        const baseY = 100 + index * 120;
-                        const xOffset = index % 2 === 0 ? 300 : 500; // 좌우 번갈아 배치
+                        // 골목길을 따라 위치 계산 (세로로 쭉 배치, 곡선 사이사이에)
+                        const baseY = 100 + index * 220;
+                        // 곡선의 중심(400)을 기준으로 좌우 번갈아 배치하여 곡선 사이사이에 위치
+                        const xOffset = index % 2 === 0 ? 400 : 740;
                         
                         return (
                           <motion.div

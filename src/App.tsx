@@ -4,18 +4,20 @@ import { WorldMapPage } from './pages/WorldMapPage';
 import { FarmPage } from './pages/FarmPage';
 import { AnimalFarmPage } from './pages/AnimalFarmPage';
 import { StagePlayPage } from './pages/StagePlayPage';
-import { SomariterHubPage } from './pages/SomariterHubPage';
+import { SomaMasterHubPage } from './pages/SomariterHubPage';
 import { DiagnosticPage } from './pages/DiagnosticPage';
 import { PlatformerGame } from './pages/PlatformerGame';
 import { DungeonGame } from './pages/DungeonGame';
 import { CookingGame } from './pages/CookingGame';
 import { RacingGame } from './pages/RacingGame';
+import { PlatformerCookingGame } from './pages/PlatformerCookingGame';
+import StudyTimerPage from './pages/StudyTimerPage';
 import { Navigation } from './components/Navigation';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-farm-sky to-green-200">
-      <div className="container mx-auto px-4 py-6">
+    <div className="min-h-screen bg-white">
+      <div className="w-full px-4 py-6">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/diagnostic" element={<DiagnosticPage />} />
@@ -23,11 +25,13 @@ function App() {
           <Route path="/farm" element={<FarmPage />} />
           <Route path="/animal-farm" element={<AnimalFarmPage />} />
           <Route path="/stage/:id" element={<StagePlayPage />} />
-          <Route path="/somariter" element={<SomariterHubPage />} />
+          <Route path="/somariter" element={<SomaMasterHubPage />} />
           <Route path="/platformer" element={<PlatformerGame />} />
           <Route path="/dungeon" element={<DungeonGame />} />
           <Route path="/cooking" element={<CookingGame />} />
+          <Route path="/platformer-cooking" element={<PlatformerCookingGame />} />
           <Route path="/racing" element={<RacingGame />} />
+          <Route path="/study-timer" element={<StudyTimerPage />} />
         </Routes>
         <Navigation />
       </div>

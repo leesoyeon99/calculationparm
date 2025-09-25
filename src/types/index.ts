@@ -33,6 +33,11 @@ export interface Animal {
   isReadyToEvolve: boolean;
   personality: 'shy' | 'playful' | 'studious' | 'energetic';
   color: 'brown' | 'white' | 'gray' | 'black';
+  stats: {
+    studyTime: number; // 총 공부시간 (분)
+    gamesPlayed: number; // 플레이한 게임 수
+    stagesCompleted: number; // 완료한 스테이지 수
+  };
 }
 
 // 동물농장 타입

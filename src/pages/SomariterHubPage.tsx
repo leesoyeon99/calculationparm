@@ -1,9 +1,9 @@
-import { ArrowLeft, Star, Trophy, Gift, Settings, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Star, Trophy, Gift, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 import { motion } from 'framer-motion';
 
-export function SomariterHubPage() {
+export function SomaMasterHubPage() {
   const { user, somariter, achievements, farm } = useGameStore();
   
   const completedAchievements = achievements.filter(a => a.isCompleted);
@@ -200,16 +200,16 @@ export function SomariterHubPage() {
         <h3 className="text-lg font-bold text-gray-800 mb-4">농장 통계</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-farm-green">{farm.crops.length}</div>
-            <div className="text-sm text-gray-600">현재 작물</div>
+            <div className="text-2xl font-bold text-farm-green">{farm.animals.length}</div>
+            <div className="text-sm text-gray-600">현재 동물</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-farm-green">{farm.resources.coins}</div>
             <div className="text-sm text-gray-600">보유 코인</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-farm-green">{farm.resources.sunlight}</div>
-            <div className="text-sm text-gray-600">햇살 포인트</div>
+            <div className="text-2xl font-bold text-farm-green">{farm.resources.food}</div>
+            <div className="text-sm text-gray-600">먹이 포인트</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-farm-green">{farm.level}</div>

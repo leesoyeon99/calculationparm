@@ -16,6 +16,9 @@ interface GameStore extends GameState {
   updateSomariterMood: (mood: Somariter['mood'], message: string) => void;
   checkAchievements: () => void;
   resetGame: () => void;
+  // Study Timer Actions
+  addStudyTime: (minutes: number, subject: string) => void;
+  updateFarm: (farm: AnimalFarm) => void;
 }
 
 // 초등학교 1-6학년, 중학교 1-3학년 커리큘럼 스테이지 생성
@@ -152,7 +155,7 @@ const initialFarm: AnimalFarm = {
 };
 
 const initialSomariter: Somariter = {
-  name: '소마리터',
+  name: '소마 연산 마스터',
   level: 1,
   experience: 0,
   skin: 'default',
@@ -318,6 +321,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
       isReadyToEvolve: false,
       personality: personalities[Math.floor(Math.random() * personalities.length)],
       color: colors[Math.floor(Math.random() * colors.length)],
+      stats: {
+        studyTime: 0,
+        gamesPlayed: 0,
+        stagesCompleted: 0,
+      },
     };
 
     set({
@@ -586,5 +594,27 @@ export const useGameStore = create<GameStore>((set, get) => ({
       isPlaying: false,
       lastPlayedAt: new Date(),
     });
+  },
+
+  // Study Timer Actions
+  addStudyTime: (minutes: number, subject: string) => {
+    const { farm } = get();
+    const updatedFarm = {
+      ...farm,
+      animals: farm.animals.map(animal => ({
+        ...animal,
+        experience: animal.experience + minutes * 2,
+        happiness: Math.min(100, animal.happiness + minutes),
+        stats: {
+          ...animal.stats,
+          studyTime: animal.stats.studyTime + minutes
+        }
+      }))
+    };
+    set({ farm: updatedFarm });
+  },
+
+  updateFarm: (farm: AnimalFarm) => {
+    set({ farm });
   },
 }));
