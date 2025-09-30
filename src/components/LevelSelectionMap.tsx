@@ -160,6 +160,27 @@ interface LevelSelectionMapProps {
 export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
   const [hoveredLevel, setHoveredLevel] = useState<string | null>(null);
 
+  // 동적으로 골목길 높이와 경로 계산
+  const levelCount = curriculumLevels.length;
+  const pathHeight = Math.max(2000, levelCount * 220 + 200); // 최소 2000px, 레벨 수에 따라 조정
+  const containerHeight = pathHeight + 100; // 여유 공간 추가
+
+  // 골목길 경로 생성 함수
+  const generateAlleyPath = () => {
+    let path = "M 400 50";
+    const segmentHeight = 200;
+    const centerX = 400;
+    const leftX = 300;
+    const rightX = 500;
+    
+    for (let i = 1; i < levelCount; i++) {
+      const y = 50 + i * segmentHeight;
+      const x = i % 2 === 0 ? centerX : (i % 4 < 2 ? leftX : rightX);
+      path += ` Q ${i % 2 === 0 ? (i % 4 < 2 ? leftX : rightX) : centerX} ${y - 50} ${x} ${y}`;
+    }
+    return path;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-purple-50">
 
@@ -168,16 +189,16 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
               <div className="px-4 py-8">
                 <div className="max-w-6xl mx-auto">
                   {/* 학습 경로 컨테이너 - 세로 스크롤 가능 */}
-                  <div className="relative min-h-[2100px] overflow-y-auto">
+                  <div className="relative overflow-y-auto" style={{ minHeight: `${containerHeight}px` }}>
                     {/* 골목길 경로 SVG - 구불구불한 길 */}
                     <svg 
                       className="absolute left-1/2 top-0 w-full h-full z-0" 
-                      viewBox="0 0 800 2100" 
+                      viewBox={`0 0 800 ${pathHeight}`}
                       preserveAspectRatio="none"
                       style={{ transform: 'translateX(-50%)' }}
                     >
                       <motion.path
-                        d="M 400 50 Q 300 150 400 250 Q 500 350 400 450 Q 300 550 400 650 Q 500 750 400 850 Q 300 950 400 1050 Q 500 1150 400 1250 Q 300 1350 400 1450 Q 500 1550 400 1650 Q 300 1750 400 1850 Q 500 1950 400 2050"
+                        d={generateAlleyPath()}
                         stroke="#8B5CF6"
                         strokeWidth="8"
                         fill="none"
@@ -208,7 +229,7 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                         // 골목길을 따라 위치 계산 (세로로 쭉 배치, 곡선 사이사이에)
                         const baseY = 100 + index * 220;
                         // 곡선의 중심(400)을 기준으로 좌우 번갈아 배치하여 곡선 사이사이에 위치
-                        const xOffset = index % 2 === 0 ? 400 : 740;
+                        const xOffset = index % 2 === 0 ? 400 : (index % 4 < 2 ? 300 : 500);
                         
                         return (
                           <motion.div
