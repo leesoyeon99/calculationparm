@@ -301,7 +301,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     console.log('adoptAnimal 호출됨:', { animalType, level, position });
     
     const { farm } = get();
-    const levelNames = { 1: '유딩', 2: '초딩', 3: '중딩' };
+    const levelNames = { 1: '아기', 2: '어린이', 3: '청소년' };
     const stageNames = { 1: 'baby', 2: 'child', 3: 'teen' } as const;
     const personalities = ['shy', 'playful', 'studious', 'energetic'] as const;
     const colors = ['brown', 'white', 'gray', 'black', 'orange', 'blue', 'green', 'purple'] as const;
