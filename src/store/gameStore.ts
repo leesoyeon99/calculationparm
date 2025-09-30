@@ -298,6 +298,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   adoptAnimal: (animalType, level, position) => {
+    console.log('adoptAnimal 호출됨:', { animalType, level, position });
+    
     const { farm } = get();
     const levelNames = { 1: '유딩', 2: '초딩', 3: '중딩' };
     const stageNames = { 1: 'baby', 2: 'child', 3: 'teen' } as const;
@@ -315,6 +317,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     };
     
     const typeInfo = animalTypeInfo[animalType] || animalTypeInfo.rabbit;
+    console.log('선택된 동물 정보:', typeInfo);
     
     const newAnimal: Animal = {
       id: `animal-${Date.now()}`,
