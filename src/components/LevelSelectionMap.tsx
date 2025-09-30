@@ -1,18 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { 
-  Star, 
-  Lock, 
-  Crown, 
-  Zap, 
-  CheckCircle, 
-  Play,
-  Flag,
-  MapPin,
-  Trophy,
-  Flame,
-  Sparkles
-} from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 // 학년별 커리큘럼 레벨 정의
 const curriculumLevels = [
@@ -135,47 +123,7 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-purple-50">
-      {/* 상단 헤더 */}
-      <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-lg">
-        <div className="max-w-md mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
-                <span className="text-white text-xl">🌱</span>
-              </div>
-              <h1 className="text-2xl font-bold text-gray-800">수학Edu</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1 bg-yellow-100 rounded-full px-3 py-1">
-                <span className="text-yellow-600">🔥</span>
-                <span className="text-sm font-bold text-yellow-700">0</span>
-              </div>
-              <div className="flex items-center space-x-1 bg-blue-100 rounded-full px-3 py-1">
-                <span className="text-blue-600">💎</span>
-                <span className="text-sm font-bold text-blue-700">1133</span>
-              </div>
-              <div className="flex items-center space-x-1 bg-red-100 rounded-full px-3 py-1">
-                <span className="text-red-600">❤️</span>
-                <span className="text-sm font-bold text-red-700">5</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* 현재 레벨 배너 */}
-      <div className="bg-gradient-to-r from-green-500 to-blue-500 mx-4 mt-4 rounded-2xl p-6 text-white shadow-xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm opacity-90 mb-1">SECTION 1, UNIT 1</div>
-            <div className="text-2xl font-bold">수학 학습의 길</div>
-            <div className="text-sm opacity-90 mt-1">소마리터와 함께 수학을 마스터하세요</div>
-          </div>
-          <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-            <span className="text-2xl">📚</span>
-          </div>
-        </div>
-      </div>
 
               {/* 학년별 골목길 스타일 학습 경로 */}
               <div className="px-4 py-8">

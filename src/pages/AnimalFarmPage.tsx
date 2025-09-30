@@ -10,7 +10,14 @@ import {
   Coffee, 
   Play, 
   Pause, 
-  Check 
+  Check,
+  Gamepad2,
+  Sword,
+  ChefHat,
+  Car,
+  Award,
+  Star,
+  Sparkles
 } from 'lucide-react';
 
 export function AnimalFarmPage() {
@@ -34,6 +41,27 @@ export function AnimalFarmPage() {
   const [showCheering, setShowCheering] = useState(false);
   const [selectedAnimalForStudy, setSelectedAnimalForStudy] = useState<string | null>(null);
   const intervalRef = useRef<number | null>(null);
+  
+  // 게임 체험권 관련 상태
+  const [gameTokens, setGameTokens] = useState({
+    dungeon: 3,
+    cooking: 2,
+    racing: 1
+  });
+  const [showGameModal, setShowGameModal] = useState(false);
+  const [selectedGame, setSelectedGame] = useState<string | null>(null);
+  
+  // 랜덤 동물 타입 정의
+  const animalTypes = [
+    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '귀여운 토끼 친구' },
+    { type: 'cat', name: '고양이', emoji: '🐱', description: '장난꾸러기 고양이' },
+    { type: 'dog', name: '강아지', emoji: '🐶', description: '충실한 강아지' },
+    { type: 'hamster', name: '햄스터', emoji: '🐹', description: '작고 귀여운 햄스터' },
+    { type: 'bird', name: '새', emoji: '🐦', description: '노래하는 새' },
+    { type: 'fish', name: '물고기', emoji: '🐠', description: '수영하는 물고기' }
+  ];
+  
+  const [hatchedAnimal, setHatchedAnimal] = useState<any>(null);
 
   // 공부 타이머 관련 함수들
   const subjects = ['수학', '국어', '영어', '과학', '사회', '기타'];
@@ -106,6 +134,71 @@ export function AnimalFarmPage() {
     setTimeout(() => setShowCheering(false), 3000);
   };
 
+  // 게임 체험권 관련 함수들
+  const games = [
+    {
+      id: 'dungeon',
+      name: '수학 던전',
+      description: '빠른 계산으로 몬스터를 물리치세요',
+      icon: Sword,
+      color: 'from-red-500 to-pink-500',
+      bgColor: 'from-red-50 to-pink-50',
+      borderColor: 'border-red-200'
+    },
+    {
+      id: 'cooking',
+      name: '수학 레시피',
+      description: '실생활 문제로 요리를 완성하세요',
+      icon: ChefHat,
+      color: 'from-orange-500 to-yellow-500',
+      bgColor: 'from-orange-50 to-yellow-50',
+      borderColor: 'border-orange-200'
+    },
+    {
+      id: 'racing',
+      name: '수학 레이싱',
+      description: '속도와 거리로 우승을 차지하세요',
+      icon: Car,
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'from-blue-50 to-cyan-50',
+      borderColor: 'border-blue-200'
+    }
+  ];
+
+  const handleGameClick = (gameId: string) => {
+    if (gameTokens[gameId as keyof typeof gameTokens] > 0) {
+      setSelectedGame(gameId);
+      setShowGameModal(true);
+    }
+  };
+
+  const handlePlayGame = () => {
+    if (!selectedGame) return;
+    
+    // 체험권 사용
+    setGameTokens(prev => ({
+      ...prev,
+      [selectedGame]: prev[selectedGame as keyof typeof prev] - 1
+    }));
+    
+    // 게임 페이지로 이동
+    const gameRoutes = {
+      dungeon: '/dungeon',
+      cooking: '/platformer-cooking',
+      racing: '/racing'
+    };
+    
+    navigate(gameRoutes[selectedGame as keyof typeof gameRoutes]);
+    setShowGameModal(false);
+  };
+
+  const earnGameToken = (gameId: string) => {
+    setGameTokens(prev => ({
+      ...prev,
+      [gameId]: prev[gameId as keyof typeof prev] + 1
+    }));
+  };
+
   // 토끼 클릭 시 개인 공부 타이머로 이동
   const handleRabbitClick = (animalId: string) => {
     setSelectedAnimalForStudy(animalId);
@@ -131,12 +224,20 @@ export function AnimalFarmPage() {
 
   const handleEggHatch = () => {
     setHatchingProgress(0);
+    setHatchedAnimal(null);
+    
     const interval = setInterval(() => {
       setHatchingProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
+          
+          // 랜덤 동물 선택 (현재는 토끼가 나올 확률이 높음)
+          const randomAnimal = Math.random() < 0.7 ? animalTypes[0] : animalTypes[Math.floor(Math.random() * animalTypes.length)];
+          setHatchedAnimal(randomAnimal);
+          
+          // 실제로는 토끼만 입양 (데모용)
           adoptAnimal(selectedEggType);
-          setShowEggModal(false);
+          
           return 100;
         }
         return prev + 10;
@@ -161,9 +262,9 @@ export function AnimalFarmPage() {
 
           <div className="text-center">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              🐰 토끼 농장
+              🐰 동물 농장
             </h1>
-            <p className="text-gray-600">귀여운 토끼들과 함께 공부해요!</p>
+            <p className="text-gray-600">귀여운 동물들과 함께 공부해요!</p>
           </div>
 
           <div className="bg-white/80 backdrop-blur-sm px-6 py-3 rounded-2xl shadow-lg">
@@ -229,17 +330,17 @@ export function AnimalFarmPage() {
               <div className="relative z-10">
                 {farm.animals.length === 0 ? (
                   <div className="text-center py-20">
-                    <div className="text-8xl mb-4">[?]</div>
-                    <h3 className="text-2xl font-bold text-gray-600 mb-4">아직 토끼가 없어요!</h3>
-                    <p className="text-gray-500 mb-6">새로운 토끼를 입양해보세요</p>
+                    <div className="text-8xl mb-4">🥚</div>
+                    <h3 className="text-2xl font-bold text-gray-600 mb-4">아직 동물이 없어요!</h3>
+                    <p className="text-gray-500 mb-6">알을 깨서 새로운 친구를 만나보세요</p>
                     <motion.button
-                      onClick={() => setShowAdoptModal(true)}
-                      className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                      onClick={() => setShowEggModal(true)}
+                      className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <Plus className="w-6 h-6 inline mr-2" />
-                      토끼 입양하기
+                      <span className="text-2xl mr-2">🥚</span>
+                      알 깨기
                     </motion.button>
                   </div>
                 ) : (
@@ -280,9 +381,9 @@ export function AnimalFarmPage() {
                       ))}
                     </div>
 
-                    {/* 토끼 정보 리스트 - 수조 아래에 표시 */}
+                    {/* 동물 정보 리스트 - 수조 아래에 표시 */}
                     <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-gray-100">
-                      <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">🐰 우리 토끼들</h3>
+                      <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">🐰 우리 동물들</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {farm.animals.map((animal) => (
                           <motion.div
@@ -348,27 +449,78 @@ export function AnimalFarmPage() {
                         ))}
                       </div>
                     </div>
+
+                    {/* 게임 체험권 섹션 */}
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 shadow-lg border-2 border-purple-100">
+                      <div className="text-center mb-6">
+                        <h3 className="text-2xl font-bold text-gray-800 mb-2">🎮 게임 체험권</h3>
+                        <p className="text-gray-600">학습 완료 후 보상으로 게임을 즐겨보세요!</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {games.map((game) => {
+                          const IconComponent = game.icon;
+                          const tokenCount = gameTokens[game.id as keyof typeof gameTokens];
+                          const hasTokens = tokenCount > 0;
+                          
+                          return (
+                            <motion.div
+                              key={game.id}
+                              className={`relative p-6 rounded-2xl border-2 transition-all cursor-pointer ${
+                                hasTokens 
+                                  ? `${game.bgColor} ${game.borderColor} hover:shadow-lg` 
+                                  : 'bg-gray-100 border-gray-200 opacity-60'
+                              }`}
+                              onClick={() => hasTokens && handleGameClick(game.id)}
+                              whileHover={hasTokens ? { scale: 1.02, y: -2 } : {}}
+                              whileTap={hasTokens ? { scale: 0.98 } : {}}
+                            >
+                              {/* 체험권 개수 표시 */}
+                              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                                {tokenCount}개
+                              </div>
+                              
+                              <div className="text-center">
+                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ${
+                                  hasTokens ? `bg-gradient-to-r ${game.color}` : 'bg-gray-300'
+                                }`}>
+                                  <IconComponent className="w-8 h-8 text-white" />
+                                </div>
+                                
+                                <h4 className="font-bold text-lg mb-2 text-gray-800">{game.name}</h4>
+                                <p className="text-sm text-gray-600 mb-4">{game.description}</p>
+                                
+                                {hasTokens ? (
+                                  <motion.button
+                                    className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all"
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    <Gamepad2 className="w-4 h-4 inline mr-1" />
+                                    플레이하기
+                                  </motion.button>
+                                ) : (
+                                  <div className="text-gray-500 text-sm">
+                                    <Star className="w-4 h-4 inline mr-1" />
+                                    체험권 필요
+                                  </div>
+                                )}
+                              </div>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                      
+                      <div className="text-center mt-4">
+                        <p className="text-sm text-gray-500">
+                          💡 스테이지를 완료하면 게임 체험권을 얻을 수 있어요!
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
 
-              {/* 알 깨기 버튼 - 항상 표시 */}
-              <motion.button
-                onClick={() => setShowEggModal(true)}
-                className="fixed bottom-8 right-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 z-50"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                animate={{
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <span className="text-2xl">🥚</span>
-              </motion.button>
             </div>
           )}
 
@@ -595,7 +747,7 @@ export function AnimalFarmPage() {
                   ))}
                 </div>
                 
-                {hatchingProgress > 0 && (
+                {hatchingProgress > 0 && hatchingProgress < 100 && (
                   <div className="bg-gray-100 rounded-xl p-4">
                     <div className="text-center mb-2">부화 중...</div>
                     <div className="w-full bg-gray-200 rounded-full h-4">
@@ -608,24 +760,72 @@ export function AnimalFarmPage() {
                   </div>
                 )}
                 
+                {hatchedAnimal && (
+                  <motion.div
+                    className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border-2 border-green-200"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <div className="text-center">
+                      <motion.div
+                        className="text-6xl mb-4"
+                        animate={{ 
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 5, -5, 0]
+                        }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        {hatchedAnimal.emoji}
+                      </motion.div>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-2">축하합니다! 🎉</h3>
+                      <p className="text-lg text-gray-700 mb-2">
+                        <span className="font-bold text-green-600">{hatchedAnimal.name}</span>이(가) 태어났어요!
+                      </p>
+                      <p className="text-sm text-gray-600">{hatchedAnimal.description}</p>
+                    </div>
+                  </motion.div>
+                )}
+                
                 <div className="flex space-x-4">
-                  <motion.button
-                    onClick={() => setShowEggModal(false)}
-                    className="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition-colors"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    취소
-                  </motion.button>
-                  <motion.button
-                    onClick={handleEggHatch}
-                    disabled={hatchingProgress > 0}
-                    className="flex-1 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {hatchingProgress > 0 ? '부화 중...' : '부화하기'}
-                  </motion.button>
+                  {hatchedAnimal ? (
+                    <motion.button
+                      onClick={() => {
+                        setShowEggModal(false);
+                        setHatchedAnimal(null);
+                        setHatchingProgress(0);
+                      }}
+                      className="w-full py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      농장으로 가기
+                    </motion.button>
+                  ) : (
+                    <>
+                      <motion.button
+                        onClick={() => {
+                          setShowEggModal(false);
+                          setHatchingProgress(0);
+                          setHatchedAnimal(null);
+                        }}
+                        className="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        취소
+                      </motion.button>
+                      <motion.button
+                        onClick={handleEggHatch}
+                        disabled={hatchingProgress > 0}
+                        className="flex-1 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        {hatchingProgress > 0 ? '부화 중...' : '부화하기'}
+                      </motion.button>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -664,6 +864,96 @@ export function AnimalFarmPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* 게임 모달 */}
+      <AnimatePresence>
+        {showGameModal && selectedGame && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              {(() => {
+                const game = games.find(g => g.id === selectedGame);
+                if (!game) return null;
+                
+                const IconComponent = game.icon;
+                const tokenCount = gameTokens[selectedGame as keyof typeof gameTokens];
+                
+                return (
+                  <div className="text-center">
+                    <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 bg-gradient-to-r ${game.color}`}>
+                      <IconComponent className="w-10 h-10 text-white" />
+                    </div>
+                    
+                    <h2 className="text-3xl font-bold text-gray-800 mb-4">{game.name}</h2>
+                    <p className="text-gray-600 mb-6">{game.description}</p>
+                    
+                    <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 mb-6">
+                      <div className="flex items-center justify-center space-x-2 mb-2">
+                        <Award className="w-5 h-5 text-yellow-600" />
+                        <span className="font-bold text-gray-800">보유 체험권</span>
+                      </div>
+                      <div className="text-2xl font-bold text-yellow-600">{tokenCount}개</div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <motion.button
+                        onClick={handlePlayGame}
+                        className="w-full py-4 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Gamepad2 className="w-6 h-6" />
+                        <span>게임 시작하기</span>
+                        <Sparkles className="w-5 h-5" />
+                      </motion.button>
+                      
+                      <motion.button
+                        onClick={() => setShowGameModal(false)}
+                        className="w-full py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        취소
+                      </motion.button>
+                    </div>
+                  </div>
+                );
+              })()}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 알 깨기 버튼 - 모든 탭에서 항상 표시 */}
+      <motion.button
+        onClick={() => setShowEggModal(true)}
+        className="fixed bottom-24 right-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-6 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 z-50 border-4 border-white"
+        whileHover={{ scale: 1.15, y: -5 }}
+        whileTap={{ scale: 0.95 }}
+        animate={{
+          scale: [1, 1.1, 1],
+          y: [0, -5, 0],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        <span className="text-4xl">🥚</span>
+        <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+          <span className="text-white text-xs font-bold">!</span>
+        </div>
+      </motion.button>
     </div>
   );
 }

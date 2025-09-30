@@ -4,16 +4,11 @@ import {
   Brain, 
   Star, 
   ArrowRight, 
-  Target, 
-  ChefHat,
-  Sword,
-  Car,
-  Heart,
-  Sparkles,
-  Trophy,
-  Home,
-  ArrowRightCircle,
-  Users
+  Map,
+  Gamepad2,
+  CheckCircle,
+  BookOpen,
+  Zap
 } from 'lucide-react'
 
 export function HomePage() {
@@ -58,13 +53,13 @@ export function HomePage() {
               새로운 인터랙티브 학습 플랫폼
             </div>
 
-            <h1 className="font-dnf-display mb-6" style={{color: 'var(--color-text-primary)'}}>
-              소마 사고력연산, 게임으로 배우는 수학
-            </h1>
+                    <h1 className="font-dnf-display mb-6" style={{color: 'var(--color-text-primary)'}}>
+                      소마 사고력연산, 체계적인 학습 여정으로 수학을 마스터하세요
+                    </h1>
 
-            <p className="font-dnf-body-large mb-8 max-w-3xl mx-auto" style={{color: 'var(--color-text-secondary)'}}>
-              <span style={{color: 'var(--color-text-primary)'}}>검증된 커리큘럼</span>에 보상과 진단을 결합한 게임형 학습 플랫폼을 제공합니다.
-            </p>
+                    <p className="font-dnf-body-large mb-8 max-w-3xl mx-auto" style={{color: 'var(--color-text-secondary)'}}>
+                      <span style={{color: 'var(--color-text-primary)'}}>진단 → 맞춤 학습 → 게임 체험</span>의 완벽한 학습 사이클로 개인별 최적화된 수학 학습을 제공합니다.
+                    </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
@@ -72,10 +67,10 @@ export function HomePage() {
                 style={{background: 'var(--gradient-primary)'}}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/world-map')}
+                onClick={() => navigate('/diagnostic')}
               >
-                <Target className="w-6 h-6 mr-2" />
-                학습 시작하기
+                <Brain className="w-6 h-6 mr-2" />
+                지금 시작하기
                 <ArrowRight className="w-5 h-5 ml-2" />
               </motion.button>
               <motion.button
@@ -83,95 +78,85 @@ export function HomePage() {
                 style={{borderColor: 'var(--color-primary)', color: 'var(--color-primary)'}}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/diagnostic')}
+                onClick={() => navigate('/world-map')}
               >
-                <Target className="w-6 h-6 mr-2" />
-                진단 테스트
+                <Map className="w-6 h-6 mr-2" />
+                학습 경로 보기
               </motion.button>
             </div>
           </motion.div>
 
-          {/* 게임 카드들 - 한 줄로 배열 */}
+          {/* 학습 여정 카드들 */}
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
 
-            {/* 던전 게임 카드 */}
+            {/* 1단계: 진단 테스트 카드 */}
             <motion.div
               className="rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border text-center"
               style={{background: 'var(--color-primary-light)', borderColor: 'var(--color-primary)'}}
               whileHover={{ scale: 1.05, rotate: -2 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/dungeon')}
+              onClick={() => navigate('/diagnostic')}
             >
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:animate-pulse mx-auto" style={{background: 'var(--color-accent)'}}>
-                <Sword className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:animate-pulse mx-auto" style={{background: 'var(--color-primary)'}}>
+                <Brain className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-dnf-heading-3 mb-2" style={{color: 'var(--color-text-primary)'}}>던전</h3>
-              <p className="font-dnf-body-small mb-4" style={{color: 'var(--color-text-secondary)'}}>수학으로 몬스터와 전투하세요</p>
-              <div className="flex items-center justify-center font-medium" style={{color: 'var(--color-accent)'}}>
-                <span className="text-sm">지금 플레이</span>
-                <Heart className="w-4 h-4 ml-1" />
+              <div className="flex items-center justify-center mb-2">
+                <span className="text-sm font-bold px-2 py-1 rounded-full text-white mr-2" style={{background: 'var(--color-primary)'}}>1단계</span>
+                <h3 className="font-dnf-heading-3" style={{color: 'var(--color-text-primary)'}}>진단 테스트</h3>
+              </div>
+              <p className="font-dnf-body-small mb-4" style={{color: 'var(--color-text-secondary)'}}>현재 실력을 정확히 파악하고<br/>맞춤형 학습 경로를 받으세요</p>
+              <div className="flex items-center justify-center font-medium" style={{color: 'var(--color-primary)'}}>
+                <span className="text-sm">진단 시작</span>
+                <CheckCircle className="w-4 h-4 ml-1" />
               </div>
             </motion.div>
 
-            {/* 플랫포머 요리 게임 카드 */}
+            {/* 2단계: 맞춤 학습 경로 카드 */}
             <motion.div
               className="rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border text-center"
               style={{background: 'var(--color-secondary-light)', borderColor: 'var(--color-secondary)'}}
               whileHover={{ scale: 1.05, rotate: 2 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/platformer-cooking')}
+              onClick={() => navigate('/world-map')}
             >
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:animate-bounce mx-auto" style={{background: 'var(--color-secondary)'}}>
-                <ChefHat className="w-8 h-8 text-white" />
+                <Map className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-dnf-heading-3 mb-2" style={{color: 'var(--color-text-primary)'}}>플랫포머 요리</h3>
-              <p className="font-dnf-body-small mb-4" style={{color: 'var(--color-text-secondary)'}}>점프하며 수학 레시피를 완성하세요</p>
+              <div className="flex items-center justify-center mb-2">
+                <span className="text-sm font-bold px-2 py-1 rounded-full text-white mr-2" style={{background: 'var(--color-secondary)'}}>2단계</span>
+                <h3 className="font-dnf-heading-3" style={{color: 'var(--color-text-primary)'}}>맞춤 학습 경로</h3>
+              </div>
+              <p className="font-dnf-body-small mb-4" style={{color: 'var(--color-text-secondary)'}}>개인별 최적화된 스테이지를<br/>체계적으로 학습하세요</p>
               <div className="flex items-center justify-center font-medium" style={{color: 'var(--color-secondary)'}}>
-                <span className="text-sm">지금 플레이</span>
-                <Sparkles className="w-4 h-4 ml-1" />
+                <span className="text-sm">학습 시작</span>
+                <BookOpen className="w-4 h-4 ml-1" />
               </div>
             </motion.div>
 
-            {/* 레이싱 게임 카드 */}
+            {/* 3단계: 게임 체험 카드 */}
             <motion.div
               className="rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border text-center"
-              style={{background: 'var(--color-neutral-100)', borderColor: 'var(--color-accent)'}}
+              style={{background: 'var(--color-accent-light)', borderColor: 'var(--color-accent)'}}
               whileHover={{ scale: 1.05, rotate: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/racing')}
-            >
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:animate-pulse mx-auto" style={{background: 'var(--color-accent)'}}>
-                <Car className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="font-dnf-heading-3 mb-2" style={{color: 'var(--color-text-primary)'}}>레이싱</h3>
-              <p className="font-dnf-body-small mb-4" style={{color: 'var(--color-text-secondary)'}}>수학으로 속도를 높이세요</p>
-              <div className="flex items-center justify-center font-medium" style={{color: 'var(--color-accent)'}}>
-                <span className="text-sm">지금 플레이</span>
-                <Trophy className="w-4 h-4 ml-1" />
-              </div>
-            </motion.div>
-
-            {/* 동물농장 카드 */}
-            <motion.div
-              className="rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border text-center"
-              style={{background: 'var(--color-success-light)', borderColor: 'var(--color-success)'}}
-              whileHover={{ scale: 1.05, rotate: 2 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/animal-farm')}
             >
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:animate-bounce mx-auto" style={{background: 'var(--color-success)'}}>
-                <Users className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:animate-pulse mx-auto" style={{background: 'var(--color-accent)'}}>
+                <Gamepad2 className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-dnf-heading-3 mb-2" style={{color: 'var(--color-text-primary)'}}>동물농장</h3>
-              <p className="font-dnf-body-small mb-4" style={{color: 'var(--color-text-secondary)'}}>친구들과 공부타이머 기능 체크하고 내 동물을 키워보는 기능</p>
-              <div className="flex items-center justify-center font-medium" style={{color: 'var(--color-success)'}}>
-                <span className="text-sm">농장 가기</span>
-                <ArrowRightCircle className="w-4 h-4 ml-1" />
+              <div className="flex items-center justify-center mb-2">
+                <span className="text-sm font-bold px-2 py-1 rounded-full text-white mr-2" style={{background: 'var(--color-accent)'}}>3단계</span>
+                <h3 className="font-dnf-heading-3" style={{color: 'var(--color-text-primary)'}}>게임 체험</h3>
+              </div>
+              <p className="font-dnf-body-small mb-4" style={{color: 'var(--color-text-secondary)'}}>학습 완료 후 보상으로<br/>다양한 게임을 즐기세요</p>
+              <div className="flex items-center justify-center font-medium" style={{color: 'var(--color-accent)'}}>
+                <span className="text-sm">게임 체험</span>
+                <Zap className="w-4 h-4 ml-1" />
               </div>
             </motion.div>
 

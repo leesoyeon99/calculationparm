@@ -8,9 +8,9 @@ export function Navigation() {
 
   const navItems = [
     { path: '/', icon: Home, label: '홈', color: 'text-blue-600' },
-    { path: '/world-map', icon: Map, label: '월드맵', color: 'text-green-600' },
-    { path: '/farm', icon: Sprout, label: '농장', color: 'text-orange-600' },
-    { path: '/somariter', icon: User, label: '소마 연산 마스터', color: 'text-purple-600' },
+    { path: '/world-map', icon: Map, label: '수학월드', color: 'text-green-600' },
+    { path: '/animal-farm', icon: Sprout, label: '동물농장', color: 'text-orange-600' },
+    { path: '/somariter', icon: User, label: '소마허브', color: 'text-purple-600' },
   ];
 
   return (
@@ -33,22 +33,6 @@ export function Navigation() {
             </Link>
           );
         })}
-      </div>
-      
-      {/* 리소스 표시 */}
-      <div className="mt-2 flex items-center space-x-4 text-sm">
-        <div className="farm-card px-3 py-1 flex items-center space-x-1">
-          <span className="text-yellow-600">☀️</span>
-          <span className="font-medium">{farm.resources.sunlight}</span>
-        </div>
-        <div className="farm-card px-3 py-1 flex items-center space-x-1">
-          <span className="text-blue-600">💧</span>
-          <span className="font-medium">{farm.resources.water}</span>
-        </div>
-        <div className="farm-card px-3 py-1 flex items-center space-x-1">
-          <span className="text-yellow-500">🪙</span>
-          <span className="font-medium">{farm.resources.coins}</span>
-        </div>
       </div>
     </nav>
   );

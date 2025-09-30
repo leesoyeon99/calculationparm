@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, XCircle, Star, BookOpen, Sparkles } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Star, BookOpen, Sparkles, Brain, Target, Clock, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { diagnosticTests, curriculumUnits } from '../data/curriculum';
 import { useGameStore } from '../store/gameStore';
@@ -283,69 +283,165 @@ export function DiagnosticPage() {
 
   if (!selectedLevel) {
     return (
-      <div className="space-y-6 pb-20">
-        {/* 헤더 */}
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={() => navigate('/')}
-            className="p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
-          </button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">학습 진단</h1>
-            <p className="text-gray-600">현재 수학 실력을 확인해보세요!</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+        <div className="container mx-auto px-4 py-8">
+          {/* 특별한 헤더 */}
+          <div className="text-center mb-8">
+            <motion.div
+              className="inline-flex items-center px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg"
+              style={{background: 'var(--gradient-primary)', color: 'white'}}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Brain className="w-5 h-5 mr-2" />
+              🎯 AI 기반 실력 진단 테스트
+              <Sparkles className="w-4 h-4 ml-2" />
+            </motion.div>
+            
+            <motion.h1
+              className="text-5xl font-bold mb-4"
+              style={{color: 'var(--color-text-primary)'}}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              나의 수학 실력은?
+            </motion.h1>
+            
+            <motion.div
+              className="flex items-center justify-center space-x-4 mb-6"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="flex items-center text-sm" style={{color: 'var(--color-text-secondary)'}}>
+                <Clock className="w-4 h-4 mr-1" />
+                약 5분 소요
+              </div>
+              <div className="flex items-center text-sm" style={{color: 'var(--color-text-secondary)'}}>
+                <Target className="w-4 h-4 mr-1" />
+                정확한 분석
+              </div>
+              <div className="flex items-center text-sm" style={{color: 'var(--color-text-secondary)'}}>
+                <TrendingUp className="w-4 h-4 mr-1" />
+                맞춤 경로 추천
+              </div>
+            </motion.div>
+            
+            <motion.p
+              className="text-lg max-w-2xl mx-auto mb-8"
+              style={{color: 'var(--color-text-secondary)'}}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <span style={{color: 'var(--color-text-primary)', fontWeight: 'bold'}}>검증된 알고리즘</span>으로 현재 실력을 정확히 파악하고, 
+              <span style={{color: 'var(--color-text-primary)', fontWeight: 'bold'}}>개인별 최적화된 학습 경로</span>를 추천받으세요
+            </motion.p>
           </div>
-        </div>
 
         {/* 레벨 선택 */}
-        <div className="farm-card p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-6">학습 레벨을 선택하세요</h3>
+        <motion.div
+          className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold mb-2" style={{color: 'var(--color-text-primary)'}}>학습 레벨을 선택하세요</h3>
+            <p className="text-sm" style={{color: 'var(--color-text-secondary)'}}>현재 수준에 맞는 레벨을 선택해주세요</p>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {curriculumLevels.map((level) => (
+            {curriculumLevels.map((level, index) => (
               <motion.button
                 key={level.id}
                 onClick={() => handleLevelSelect(level.id)}
-                className={`p-6 rounded-2xl border-2 transition-all text-center ${
+                className={`p-8 rounded-3xl border-2 transition-all text-center group hover:shadow-lg ${
                   level.color === 'purple' 
-                    ? 'border-purple-200 hover:border-purple-400 bg-purple-50/30' 
+                    ? 'border-purple-200 hover:border-purple-400 bg-gradient-to-br from-purple-50 to-purple-100/50' 
                     : level.color === 'blue'
-                    ? 'border-blue-200 hover:border-blue-400 bg-blue-50/30'
+                    ? 'border-blue-200 hover:border-blue-400 bg-gradient-to-br from-blue-50 to-blue-100/50'
                     : level.color === 'orange'
-                    ? 'border-orange-200 hover:border-orange-400 bg-orange-50/30'
-                    : 'border-green-200 hover:border-green-400 bg-green-50/30'
+                    ? 'border-orange-200 hover:border-orange-400 bg-gradient-to-br from-orange-50 to-orange-100/50'
+                    : 'border-green-200 hover:border-green-400 bg-gradient-to-br from-green-50 to-green-100/50'
                 }`}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, y: -5 }}
                 whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
               >
-                <div className="text-4xl mb-3">{level.icon}</div>
-                <div className="text-2xl font-bold mb-2">{level.name}</div>
-                <div className="text-sm text-gray-600">
+                <motion.div
+                  className="text-5xl mb-4"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {level.icon}
+                </motion.div>
+                <div className="text-2xl font-bold mb-3 group-hover:text-white transition-colors">{level.name}</div>
+                <div className="text-sm text-gray-600 group-hover:text-white/80 transition-colors">
                   {level.grades.map(grade => `${grade}학년`).join(', ')}
                 </div>
+                <motion.div
+                  className="mt-4 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{color: 'var(--color-text-primary)'}}
+                >
+                  클릭하여 진단 시작 →
+                </motion.div>
               </motion.button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* 진단 안내 */}
-        <div className="farm-card p-6 bg-gradient-to-r from-blue-50 to-green-50">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">진단 안내</h3>
-          <div className="space-y-3 text-gray-700">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>각 학년별 3문제씩 출제됩니다</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Star className="w-5 h-5 text-yellow-500" />
-              <span>3개 이상 정답 시 상위 레벨로 진입</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <BookOpen className="w-5 h-5 text-blue-500" />
-              <span>2개 이하 정답 시 보충 학습 제공</span>
-            </div>
+        <motion.div
+          className="bg-gradient-to-r from-blue-50 to-green-50 rounded-3xl p-8 shadow-lg border border-gray-100"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-bold mb-2" style={{color: 'var(--color-text-primary)'}}>진단 안내</h3>
+            <p className="text-sm" style={{color: 'var(--color-text-secondary)'}}>정확한 진단을 위한 안내사항입니다</p>
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <motion.div
+              className="flex flex-col items-center text-center p-4 rounded-2xl bg-white/50"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-3">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+              </div>
+              <h4 className="font-bold mb-2" style={{color: 'var(--color-text-primary)'}}>3문제 출제</h4>
+              <p className="text-sm" style={{color: 'var(--color-text-secondary)'}}>각 학년별 3문제씩<br/>출제됩니다</p>
+            </motion.div>
+            <motion.div
+              className="flex flex-col items-center text-center p-4 rounded-2xl bg-white/50"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mb-3">
+                <Star className="w-6 h-6 text-yellow-600" />
+              </div>
+              <h4 className="font-bold mb-2" style={{color: 'var(--color-text-primary)'}}>상위 레벨 진입</h4>
+              <p className="text-sm" style={{color: 'var(--color-text-secondary)'}}>3개 이상 정답 시<br/>상위 레벨로 진입</p>
+            </motion.div>
+            <motion.div
+              className="flex flex-col items-center text-center p-4 rounded-2xl bg-white/50"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+                <BookOpen className="w-6 h-6 text-blue-600" />
+              </div>
+              <h4 className="font-bold mb-2" style={{color: 'var(--color-text-primary)'}}>보충 학습</h4>
+              <p className="text-sm" style={{color: 'var(--color-text-secondary)'}}>2개 이하 정답 시<br/>보충 학습 제공</p>
+            </motion.div>
+          </div>
+        </motion.div>
         </div>
       </div>
     );
