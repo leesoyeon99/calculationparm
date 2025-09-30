@@ -51,17 +51,24 @@ export function AnimalFarmPage() {
   const [showGameModal, setShowGameModal] = useState(false);
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   
-  // 랜덤 동물 타입 정의
+  // 랜덤 동물 타입 정의 (이미지와 함께)
   const animalTypes = [
-    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '귀여운 토끼 친구' },
-    { type: 'cat', name: '고양이', emoji: '🐱', description: '장난꾸러기 고양이' },
-    { type: 'dog', name: '강아지', emoji: '🐶', description: '충실한 강아지' },
-    { type: 'hamster', name: '햄스터', emoji: '🐹', description: '작고 귀여운 햄스터' },
-    { type: 'bird', name: '새', emoji: '🐦', description: '노래하는 새' },
-    { type: 'fish', name: '물고기', emoji: '🐠', description: '수영하는 물고기' }
+    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '귀여운 토끼 친구', image: '/images/rabbit.png' },
+    { type: 'cat1', name: '고양이', emoji: '🐱', description: '장난꾸러기 고양이', image: '/images/c1.png' },
+    { type: 'cat2', name: '고양이', emoji: '🐱', description: '우아한 고양이', image: '/images/c2.png' },
+    { type: 'cat3', name: '고양이', emoji: '🐱', description: '털복숭이 고양이', image: '/images/c3.png' },
+    { type: 'fish1', name: '물고기', emoji: '🐠', description: '수영하는 물고기', image: '/images/f1.png' },
+    { type: 'rabbit1', name: '토끼', emoji: '🐰', description: '활발한 토끼', image: '/images/r1.png' },
+    { type: 'rabbit2', name: '토끼', emoji: '🐰', description: '귀여운 토끼', image: '/images/r2.png' },
+    { type: 'rabbit3', name: '토끼', emoji: '🐰', description: '똑똑한 토끼', image: '/images/r3.png' },
+    { type: 'rabbit4', name: '토끼', emoji: '🐰', description: '친근한 토끼', image: '/images/r4.png' },
+    { type: 'rabbit5', name: '토끼', emoji: '🐰', description: '특별한 토끼', image: '/images/r5.png' }
   ];
   
   const [hatchedAnimal, setHatchedAnimal] = useState<any>(null);
+  
+  // 알깨기 비용 설정
+  const eggHatchCost = 100; // 코인 100개 필요
 
   // 공부 타이머 관련 함수들
   const subjects = ['수학', '국어', '영어', '과학', '사회', '기타'];
@@ -223,6 +230,16 @@ export function AnimalFarmPage() {
   };
 
   const handleEggHatch = () => {
+    // 코인 확인
+    if (farm.resources.coins < eggHatchCost) {
+      setCurrentDialogue(`코인이 부족해요! ${eggHatchCost}개가 필요해요 💰`);
+      setShowDialogueModal(true);
+      return;
+    }
+    
+    // 코인 차감
+    addCoins(-eggHatchCost);
+    
     setHatchingProgress(0);
     setHatchedAnimal(null);
     
@@ -231,8 +248,10 @@ export function AnimalFarmPage() {
         if (prev >= 100) {
           clearInterval(interval);
           
-          // 랜덤 동물 선택 (현재는 토끼가 나올 확률이 높음)
-          const randomAnimal = Math.random() < 0.7 ? animalTypes[0] : animalTypes[Math.floor(Math.random() * animalTypes.length)];
+          // 랜덤 동물 선택 (토끼가 나올 확률이 높음)
+          const randomAnimal = Math.random() < 0.6 ? 
+            animalTypes[Math.floor(Math.random() * 6)] : // 토끼들 (0-5)
+            animalTypes[Math.floor(Math.random() * animalTypes.length)]; // 전체
           setHatchedAnimal(randomAnimal);
           
           // 실제로는 토끼만 입양 (데모용)
@@ -727,6 +746,22 @@ export function AnimalFarmPage() {
               exit={{ scale: 0.9, opacity: 0 }}
             >
               <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">알 깨기</h2>
+              
+              {/* 비용 정보 */}
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 mb-6 border-2 border-yellow-200">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <span className="text-2xl">🪙</span>
+                  <span className="font-bold text-gray-800">알깨기 비용</span>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-yellow-600">{eggHatchCost} 코인</div>
+                  <div className="text-sm text-gray-600 mt-1">현재 보유: {farm.resources.coins} 코인</div>
+                  {farm.resources.coins < eggHatchCost && (
+                    <div className="text-red-500 text-sm mt-2 font-bold">❌ 코인이 부족합니다!</div>
+                  )}
+                </div>
+              </div>
+              
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-4">
                   {[1, 2, 3].map((type) => (
@@ -769,14 +804,18 @@ export function AnimalFarmPage() {
                   >
                     <div className="text-center">
                       <motion.div
-                        className="text-6xl mb-4"
+                        className="mb-4"
                         animate={{ 
                           scale: [1, 1.2, 1],
                           rotate: [0, 5, -5, 0]
                         }}
                         transition={{ duration: 0.6 }}
                       >
-                        {hatchedAnimal.emoji}
+                        <img 
+                          src={hatchedAnimal.image} 
+                          alt={hatchedAnimal.name}
+                          className="w-24 h-24 object-contain mx-auto"
+                        />
                       </motion.div>
                       <h3 className="text-2xl font-bold text-gray-800 mb-2">축하합니다! 🎉</h3>
                       <p className="text-lg text-gray-700 mb-2">
@@ -817,12 +856,17 @@ export function AnimalFarmPage() {
                       </motion.button>
                       <motion.button
                         onClick={handleEggHatch}
-                        disabled={hatchingProgress > 0}
-                        className="flex-1 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        disabled={hatchingProgress > 0 || farm.resources.coins < eggHatchCost}
+                        className={`flex-1 py-3 rounded-xl font-bold shadow-lg transition-all duration-300 ${
+                          farm.resources.coins < eggHatchCost
+                            ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white hover:shadow-xl'
+                        }`}
+                        whileHover={farm.resources.coins >= eggHatchCost ? { scale: 1.02 } : {}}
+                        whileTap={farm.resources.coins >= eggHatchCost ? { scale: 0.98 } : {}}
                       >
-                        {hatchingProgress > 0 ? '부화 중...' : '부화하기'}
+                        {hatchingProgress > 0 ? '부화 중...' : 
+                         farm.resources.coins < eggHatchCost ? '코인 부족' : '부화하기'}
                       </motion.button>
                     </>
                   )}
@@ -936,7 +980,11 @@ export function AnimalFarmPage() {
       {/* 알 깨기 버튼 - 모든 탭에서 항상 표시 */}
       <motion.button
         onClick={() => setShowEggModal(true)}
-        className="fixed bottom-24 right-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-6 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 z-50 border-4 border-white"
+        className={`fixed bottom-24 right-8 text-white p-6 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 z-50 border-4 border-white ${
+          farm.resources.coins < eggHatchCost
+            ? 'bg-gradient-to-r from-gray-400 to-gray-500'
+            : 'bg-gradient-to-r from-yellow-400 to-orange-500'
+        }`}
         whileHover={{ scale: 1.15, y: -5 }}
         whileTap={{ scale: 0.95 }}
         animate={{
@@ -950,8 +998,16 @@ export function AnimalFarmPage() {
         }}
       >
         <span className="text-4xl">🥚</span>
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-          <span className="text-white text-xs font-bold">!</span>
+        <div className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center ${
+          farm.resources.coins < eggHatchCost ? 'bg-red-500' : 'bg-green-500'
+        }`}>
+          <span className="text-white text-xs font-bold">
+            {farm.resources.coins < eggHatchCost ? '!' : '✓'}
+          </span>
+        </div>
+        {/* 코인 비용 표시 */}
+        <div className="absolute -bottom-2 -left-2 bg-black/80 text-white text-xs px-2 py-1 rounded-full">
+          {eggHatchCost}🪙
         </div>
       </motion.button>
     </div>
