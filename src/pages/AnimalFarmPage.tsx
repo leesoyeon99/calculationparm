@@ -255,7 +255,7 @@ export function AnimalFarmPage() {
           setHatchedAnimal(randomAnimal);
           
           // 실제 동물 타입에 따라 입양
-          const animalType = randomAnimal.type as 'rabbit' | 'cat' | 'fish' | 'bird' | 'hamster' | 'dog';
+          const animalType = randomAnimal.type as 'rabbit' | 'rabbit1' | 'rabbit2' | 'rabbit3' | 'rabbit4' | 'rabbit5' | 'cat' | 'cat1' | 'cat2' | 'cat3' | 'fish' | 'fish1' | 'bird' | 'hamster' | 'dog';
           // selectedEggType을 level로 변환 (1->1, 2->2, 3->3)
           const animalLevel = selectedEggType as 1 | 2 | 3;
           
@@ -263,7 +263,10 @@ export function AnimalFarmPage() {
           console.log('동물 타입:', animalType);
           console.log('동물 레벨:', animalLevel);
           
-          adoptAnimal(animalType, animalLevel, { x: Math.random() * 300 + 50, y: Math.random() * 200 + 50 });
+          // React 렌더링 경고를 피하기 위해 setTimeout으로 감싸기
+          setTimeout(() => {
+            adoptAnimal(animalType, animalLevel, { x: Math.random() * 300 + 50, y: Math.random() * 200 + 50 });
+          }, 0);
           
           return 100;
         }

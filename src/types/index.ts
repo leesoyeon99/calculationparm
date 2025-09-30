@@ -19,7 +19,7 @@ export interface Stage {
 export interface Animal {
   id: string;
   name: string;
-  type: 'rabbit' | 'cat' | 'fish' | 'bird' | 'hamster' | 'dog';
+  type: 'rabbit' | 'rabbit1' | 'rabbit2' | 'rabbit3' | 'rabbit4' | 'rabbit5' | 'cat' | 'cat1' | 'cat2' | 'cat3' | 'fish' | 'fish1' | 'bird' | 'hamster' | 'dog';
   level: 1 | 2 | 3; // 유딩(1), 초딩(2), 중딩(3)
   stage: 'baby' | 'child' | 'teen' | 'adult';
   happiness: number; // 0-100
