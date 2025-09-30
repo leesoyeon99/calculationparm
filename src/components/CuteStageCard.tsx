@@ -65,6 +65,11 @@ export function CuteStageCard({ stage, unit, onStart, index }: CuteStageCardProp
   };
 
   const getDifficultyColor = () => {
+    // 사고력 연산은 특별한 프리미엄 색상
+    if (unit?.subject === '사고력 연산') {
+      return 'from-yellow-400 via-yellow-500 to-yellow-600';
+    }
+    
     switch (stage.difficulty) {
       case 'easy':
         return 'from-green-400 via-emerald-300 to-green-500';
@@ -95,6 +100,20 @@ export function CuteStageCard({ stage, unit, onStart, index }: CuteStageCardProp
   };
 
   const getCardStyle = () => {
+    // 사고력 연산은 특별한 프리미엄 스타일
+    if (unit?.subject === '사고력 연산') {
+      if (stage.isCurrent) {
+        return 'bg-gradient-to-br from-yellow-100 via-yellow-50 to-yellow-100 border-3 border-yellow-400 shadow-2xl animate-pulse';
+      }
+      if (stage.isCompleted) {
+        return 'bg-gradient-to-br from-yellow-100 via-yellow-50 to-yellow-100 border-2 border-yellow-300 shadow-xl';
+      }
+      if (stage.isUnlocked) {
+        return 'bg-gradient-to-br from-yellow-50 via-yellow-25 to-yellow-50 border-2 border-yellow-300 hover:shadow-2xl animate-pulse';
+      }
+      return 'bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 border-2 border-gray-300 opacity-60';
+    }
+    
     if (stage.isCurrent) {
       return 'bg-gradient-to-br from-yellow-100 via-orange-50 to-yellow-100 border-3 border-yellow-400 shadow-2xl';
     }
@@ -197,6 +216,13 @@ export function CuteStageCard({ stage, unit, onStart, index }: CuteStageCardProp
         {stage.isGoldStage && (
           <div className="absolute -top-1 -left-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg z-10">
             <Crown className="w-3 h-3 text-white" />
+          </div>
+        )}
+
+        {/* 사고력 연산 프리미엄 표시 */}
+        {unit?.subject === '사고력 연산' && (
+          <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black text-xs font-bold px-2 py-1 rounded-full shadow-lg animate-pulse z-10">
+            PREMIUM
           </div>
         )}
 

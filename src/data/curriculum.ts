@@ -299,6 +299,42 @@ export const curriculumUnits: CurriculumUnit[] = [
     difficulty: 'hard',
     prerequisites: ['M3-1'],
     description: '인수분해의 기본 공식과 활용'
+  },
+  // 사고력 연산 4학년
+  {
+    id: 'T4-1',
+    title: '논리적 사고',
+    grade: 4,
+    subject: '사고력 연산',
+    subSubject: '논리적 추론',
+    stageRange: [161, 168],
+    difficulty: 'medium',
+    prerequisites: ['E4-3'],
+    description: '논리적 사고와 문제 해결'
+  },
+  // 사고력 연산 5학년
+  {
+    id: 'T5-1',
+    title: '창의적 사고',
+    grade: 5,
+    subject: '사고력 연산',
+    subSubject: '창의적 추론',
+    stageRange: [169, 176],
+    difficulty: 'hard',
+    prerequisites: ['E5-3'],
+    description: '창의적 사고와 추론'
+  },
+  // 사고력 연산 6학년
+  {
+    id: 'T6-1',
+    title: '비판적 사고',
+    grade: 6,
+    subject: '사고력 연산',
+    subSubject: '비판적 분석',
+    stageRange: [177, 183],
+    difficulty: 'hard',
+    prerequisites: ['E6-3'],
+    description: '비판적 사고와 종합 분석'
   }
 ];
 

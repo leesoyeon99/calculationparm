@@ -58,11 +58,12 @@ const curriculumLevels = [
     name: '4학년', 
     school: '사고력 연산',
     grades: [4], 
-    color: 'orange', 
+    color: 'premium', 
     icon: '🧠',
     description: '논리적 사고, 문제 해결',
     stageCount: 8,
-    position: { x: 40, y: 50 }
+    position: { x: 40, y: 50 },
+    isPremium: true
   },
   // 초등학교 5학년
   { 
@@ -82,11 +83,12 @@ const curriculumLevels = [
     name: '5학년', 
     school: '사고력 연산',
     grades: [5], 
-    color: 'amber', 
+    color: 'premium', 
     icon: '⚡',
     description: '창의적 사고, 추론',
     stageCount: 8,
-    position: { x: 80, y: 30 }
+    position: { x: 80, y: 30 },
+    isPremium: true
   },
   // 초등학교 6학년
   { 
@@ -106,11 +108,12 @@ const curriculumLevels = [
     name: '6학년', 
     school: '사고력 연산',
     grades: [6], 
-    color: 'yellow', 
+    color: 'premium', 
     icon: '💡',
     description: '비판적 사고, 종합 분석',
     stageCount: 7,
-    position: { x: 40, y: 10 }
+    position: { x: 40, y: 10 },
+    isPremium: true
   },
   // 중학교 1학년
   { 
@@ -229,10 +232,12 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                               onClick={() => onLevelSelect(level.id)}
                               onMouseEnter={() => setHoveredLevel(level.id)}
                               onMouseLeave={() => setHoveredLevel(null)}
-                              className={`w-32 h-32 rounded-full shadow-2xl transition-all duration-300 flex flex-col items-center justify-center text-white relative ${
-                                level.color === 'pink' 
-                                  ? 'bg-gradient-to-br from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800' 
-                                  : level.color === 'blue'
+                                className={`w-32 h-32 rounded-full shadow-2xl transition-all duration-300 flex flex-col items-center justify-center text-white relative ${
+                                 level.color === 'premium'
+                                   ? 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-300 hover:via-yellow-400 hover:to-yellow-500 shadow-yellow-500/50 animate-pulse'
+                                   : level.color === 'pink' 
+                                   ? 'bg-gradient-to-br from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800' 
+                                   : level.color === 'blue'
                                   ? 'bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800'
                                   : level.color === 'green'
                                   ? 'bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800'
@@ -254,6 +259,13 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1)',
                               }}
                             >
+                              {/* 프리미엄 배지 */}
+                              {level.isPremium && (
+                                <div className="absolute -top-3 -left-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black text-xs font-bold px-2 py-1 rounded-full shadow-lg animate-bounce z-10">
+                                  PREMIUM
+                                </div>
+                              )}
+
                               {/* 아이콘 */}
                               <div className="text-3xl mb-1">{level.icon}</div>
                               
