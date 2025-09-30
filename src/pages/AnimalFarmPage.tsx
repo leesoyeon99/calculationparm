@@ -51,18 +51,21 @@ export function AnimalFarmPage() {
   const [showGameModal, setShowGameModal] = useState(false);
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   
-  // 랜덤 동물 타입 정의 (이미지와 함께)
+  // 랜덤 동물 타입 정의 (이미지와 함께) - 균등한 확률로 설정
   const animalTypes = [
     { type: 'rabbit', name: '토끼', emoji: '🐰', description: '귀여운 토끼 친구', image: '/images/rabbit.png' },
-    { type: 'cat1', name: '고양이', emoji: '🐱', description: '장난꾸러기 고양이', image: '/images/c1.png' },
-    { type: 'cat2', name: '고양이', emoji: '🐱', description: '우아한 고양이', image: '/images/c2.png' },
-    { type: 'cat3', name: '고양이', emoji: '🐱', description: '털복숭이 고양이', image: '/images/c3.png' },
-    { type: 'fish1', name: '물고기', emoji: '🐠', description: '수영하는 물고기', image: '/images/f1.png' },
-    { type: 'rabbit1', name: '토끼', emoji: '🐰', description: '활발한 토끼', image: '/images/r1.png' },
-    { type: 'rabbit2', name: '토끼', emoji: '🐰', description: '귀여운 토끼', image: '/images/r2.png' },
-    { type: 'rabbit3', name: '토끼', emoji: '🐰', description: '똑똑한 토끼', image: '/images/r3.png' },
-    { type: 'rabbit4', name: '토끼', emoji: '🐰', description: '친근한 토끼', image: '/images/r4.png' },
-    { type: 'rabbit5', name: '토끼', emoji: '🐰', description: '특별한 토끼', image: '/images/r5.png' }
+    { type: 'cat', name: '고양이', emoji: '🐱', description: '장난꾸러기 고양이', image: '/images/c1.png' },
+    { type: 'cat', name: '고양이', emoji: '🐱', description: '우아한 고양이', image: '/images/c2.png' },
+    { type: 'cat', name: '고양이', emoji: '🐱', description: '털복숭이 고양이', image: '/images/c3.png' },
+    { type: 'fish', name: '물고기', emoji: '🐠', description: '수영하는 물고기', image: '/images/f1.png' },
+    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '활발한 토끼', image: '/images/r1.png' },
+    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '귀여운 토끼', image: '/images/r2.png' },
+    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '똑똑한 토끼', image: '/images/r3.png' },
+    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '친근한 토끼', image: '/images/r4.png' },
+    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '특별한 토끼', image: '/images/r5.png' },
+    // 물고기와 고양이를 더 추가하여 균형 맞추기
+    { type: 'fish', name: '물고기', emoji: '🐠', description: '빠른 물고기', image: '/images/f1.png' },
+    { type: 'fish', name: '물고기', emoji: '🐠', description: '예쁜 물고기', image: '/images/f1.png' }
   ];
   
   const [hatchedAnimal, setHatchedAnimal] = useState<any>(null);
@@ -248,10 +251,8 @@ export function AnimalFarmPage() {
         if (prev >= 100) {
           clearInterval(interval);
           
-          // 랜덤 동물 선택 (토끼가 나올 확률이 높음)
-          const randomAnimal = Math.random() < 0.6 ? 
-            animalTypes[Math.floor(Math.random() * 6)] : // 토끼들 (0-5)
-            animalTypes[Math.floor(Math.random() * animalTypes.length)]; // 전체
+          // 랜덤 동물 선택 (다양한 동물이 나오도록)
+          const randomAnimal = animalTypes[Math.floor(Math.random() * animalTypes.length)];
           setHatchedAnimal(randomAnimal);
           
           // 실제 동물 타입에 따라 입양
