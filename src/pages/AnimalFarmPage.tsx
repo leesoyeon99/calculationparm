@@ -254,8 +254,9 @@ export function AnimalFarmPage() {
             animalTypes[Math.floor(Math.random() * animalTypes.length)]; // 전체
           setHatchedAnimal(randomAnimal);
           
-          // 실제로는 토끼만 입양 (데모용)
-          adoptAnimal(selectedEggType);
+          // 실제 동물 타입에 따라 입양
+          const animalType = randomAnimal.type as 'rabbit' | 'cat' | 'fish' | 'bird' | 'hamster' | 'dog';
+          adoptAnimal(animalType, selectedEggType, { x: Math.random() * 300 + 50, y: Math.random() * 200 + 50 });
           
           return 100;
         }
@@ -411,7 +412,7 @@ export function AnimalFarmPage() {
                             whileHover={{ translateY: -5 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <img src="/images/rabbit.png" alt="토끼" className="w-20 h-20 object-contain mb-2" />
+                            <img src={animal.image || "/images/rabbit.png"} alt={animal.name} className="w-20 h-20 object-contain mb-2" />
                             <h4 className="font-bold text-lg text-gray-800">{animal.name}</h4>
                             <p className="text-sm text-gray-600">Lv.{animal.level} | {animal.personality}</p>
                             <div className="flex items-center space-x-2 mt-2">
@@ -553,7 +554,7 @@ export function AnimalFarmPage() {
                     const animal = farm.animals.find(a => a.id === selectedAnimalForStudy);
                     return animal ? (
                       <div className="flex items-center space-x-4">
-                        <img src="/images/rabbit.png" alt="토끼" className="w-16 h-16" />
+                        <img src={animal.image || "/images/rabbit.png"} alt={animal.name} className="w-16 h-16" />
                         <div>
                           <h3 className="text-xl font-bold text-gray-800">{animal.name}와 함께 공부해요!</h3>
                           <p className="text-gray-600">Lv.{animal.level} • 행복도: {animal.happiness}%</p>

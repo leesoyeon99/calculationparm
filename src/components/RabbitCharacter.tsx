@@ -155,8 +155,8 @@ export function RabbitCharacter({
             }}
           >
             <img
-              src="/images/rabbit.png"
-              alt={`${animal.name} 토끼`}
+              src={animal.image || "/images/rabbit.png"}
+              alt={animal.name}
               className="w-full h-full object-contain"
             />
             
@@ -208,8 +208,8 @@ export function RabbitCharacter({
               onClick={onStudyTimer}
             >
               <img
-                src="/images/rabbit.png"
-                alt={`${animal.name} 토끼`}
+                src={animal.image || "/images/rabbit.png"}
+                alt={animal.name}
                 className="w-full h-full object-contain"
               />
               

@@ -19,7 +19,7 @@ export interface Stage {
 export interface Animal {
   id: string;
   name: string;
-  type: 'rabbit';
+  type: 'rabbit' | 'cat' | 'fish' | 'bird' | 'hamster' | 'dog';
   level: 1 | 2 | 3; // 유딩(1), 초딩(2), 중딩(3)
   stage: 'baby' | 'child' | 'teen' | 'adult';
   happiness: number; // 0-100
@@ -32,7 +32,8 @@ export interface Animal {
   lastPlayed: Date;
   isReadyToEvolve: boolean;
   personality: 'shy' | 'playful' | 'studious' | 'energetic';
-  color: 'brown' | 'white' | 'gray' | 'black';
+  color: 'brown' | 'white' | 'gray' | 'black' | 'orange' | 'blue' | 'green' | 'purple';
+  image: string; // 동물 이미지 경로
   stats: {
     studyTime: number; // 총 공부시간 (분)
     gamesPlayed: number; // 플레이한 게임 수

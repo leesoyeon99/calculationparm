@@ -302,11 +302,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const levelNames = { 1: '유딩', 2: '초딩', 3: '중딩' };
     const stageNames = { 1: 'baby', 2: 'child', 3: 'teen' } as const;
     const personalities = ['shy', 'playful', 'studious', 'energetic'] as const;
-    const colors = ['brown', 'white', 'gray', 'black'] as const;
+    const colors = ['brown', 'white', 'gray', 'black', 'orange', 'blue', 'green', 'purple'] as const;
+    
+    // 동물 타입별 이름과 이미지 매핑
+    const animalTypeInfo = {
+      rabbit: { name: '토끼', image: '/images/rabbit.png' },
+      cat: { name: '고양이', image: '/images/c1.png' },
+      fish: { name: '물고기', image: '/images/f1.png' },
+      bird: { name: '새', image: '/images/rabbit.png' }, // 기본 이미지
+      hamster: { name: '햄스터', image: '/images/rabbit.png' }, // 기본 이미지
+      dog: { name: '강아지', image: '/images/rabbit.png' }, // 기본 이미지
+    };
+    
+    const typeInfo = animalTypeInfo[animalType] || animalTypeInfo.rabbit;
     
     const newAnimal: Animal = {
       id: `animal-${Date.now()}`,
-      name: `${levelNames[level]} 토끼`,
+      name: `${levelNames[level]} ${typeInfo.name}`,
       type: animalType,
       level,
       stage: stageNames[level],
@@ -321,6 +333,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       isReadyToEvolve: false,
       personality: personalities[Math.floor(Math.random() * personalities.length)],
       color: colors[Math.floor(Math.random() * colors.length)],
+      image: typeInfo.image,
       stats: {
         studyTime: 0,
         gamesPlayed: 0,
@@ -597,7 +610,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // Study Timer Actions
-  addStudyTime: (minutes: number, subject: string) => {
+  addStudyTime: (minutes: number, _subject: string) => {
     const { farm } = get();
     const updatedFarm = {
       ...farm,
