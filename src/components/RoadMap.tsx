@@ -61,26 +61,6 @@ const curriculumLevels = [
     stageCount: 8
   },
   { 
-    id: 'elementary-5', 
-    name: '5학년', 
-    school: '초등학교',
-    grades: [5], 
-    color: 'orange', 
-    icon: '🧠',
-    description: '약분·통분, 분수·소수 곱셈',
-    stageCount: 8
-  },
-  { 
-    id: 'elementary-6', 
-    name: '6학년', 
-    school: '초등학교',
-    grades: [6], 
-    color: 'red', 
-    icon: '🎯',
-    description: '비와 비율, 원의 넓이',
-    stageCount: 7
-  },
-  { 
     id: 'thinking-4', 
     name: '4학년', 
     school: '사고력 연산',
@@ -88,6 +68,16 @@ const curriculumLevels = [
     color: 'orange', 
     icon: '🧠',
     description: '논리적 사고, 문제 해결',
+    stageCount: 8
+  },
+  { 
+    id: 'elementary-5', 
+    name: '5학년', 
+    school: '초등학교',
+    grades: [5], 
+    color: 'blue', 
+    icon: '📘',
+    description: '약분·통분, 분수·소수 곱셈',
     stageCount: 8
   },
   { 
@@ -99,6 +89,16 @@ const curriculumLevels = [
     icon: '⚡',
     description: '창의적 사고, 추론',
     stageCount: 8
+  },
+  { 
+    id: 'elementary-6', 
+    name: '6학년', 
+    school: '초등학교',
+    grades: [6], 
+    color: 'red', 
+    icon: '🎯',
+    description: '비와 비율, 원의 넓이',
+    stageCount: 7
   },
   { 
     id: 'thinking-6', 

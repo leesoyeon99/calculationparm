@@ -50,31 +50,7 @@ const curriculumLevels = [
     icon: '🔮',
     description: '분수 덧셈·뺄셈, 평행·수직',
     stageCount: 8,
-    position: { x: 80, y: 60 }
-  },
-  // 초등학교 5학년
-  { 
-    id: 'elementary-5', 
-    name: '5학년', 
-    school: '초등학교',
-    grades: [5], 
-    color: 'orange', 
-    icon: '🧠',
-    description: '약분·통분, 분수·소수 곱셈',
-    stageCount: 8,
-    position: { x: 20, y: 50 }
-  },
-  // 초등학교 6학년
-  { 
-    id: 'elementary-6', 
-    name: '6학년', 
-    school: '초등학교',
-    grades: [6], 
-    color: 'red', 
-    icon: '🎯',
-    description: '비와 비율, 원의 넓이',
-    stageCount: 7,
-    position: { x: 40, y: 40 }
+    position: { x: 20, y: 60 }
   },
   // 사고력 연산 4학년
   { 
@@ -86,7 +62,19 @@ const curriculumLevels = [
     icon: '🧠',
     description: '논리적 사고, 문제 해결',
     stageCount: 8,
-    position: { x: 60, y: 30 }
+    position: { x: 40, y: 50 }
+  },
+  // 초등학교 5학년
+  { 
+    id: 'elementary-5', 
+    name: '5학년', 
+    school: '초등학교',
+    grades: [5], 
+    color: 'blue', 
+    icon: '📘',
+    description: '약분·통분, 분수·소수 곱셈',
+    stageCount: 8,
+    position: { x: 60, y: 40 }
   },
   // 사고력 연산 5학년
   { 
@@ -98,7 +86,19 @@ const curriculumLevels = [
     icon: '⚡',
     description: '창의적 사고, 추론',
     stageCount: 8,
-    position: { x: 80, y: 20 }
+    position: { x: 80, y: 30 }
+  },
+  // 초등학교 6학년
+  { 
+    id: 'elementary-6', 
+    name: '6학년', 
+    school: '초등학교',
+    grades: [6], 
+    color: 'red', 
+    icon: '🎯',
+    description: '비와 비율, 원의 넓이',
+    stageCount: 7,
+    position: { x: 20, y: 20 }
   },
   // 사고력 연산 6학년
   { 
@@ -110,7 +110,7 @@ const curriculumLevels = [
     icon: '💡',
     description: '비판적 사고, 종합 분석',
     stageCount: 7,
-    position: { x: 20, y: 10 }
+    position: { x: 40, y: 10 }
   },
   // 중학교 1학년
   { 
