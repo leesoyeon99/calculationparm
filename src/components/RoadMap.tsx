@@ -81,6 +81,36 @@ const curriculumLevels = [
     stageCount: 7
   },
   { 
+    id: 'thinking-4', 
+    name: '4학년', 
+    school: '사고력 연산',
+    grades: [4], 
+    color: 'orange', 
+    icon: '🧠',
+    description: '논리적 사고, 문제 해결',
+    stageCount: 8
+  },
+  { 
+    id: 'thinking-5', 
+    name: '5학년', 
+    school: '사고력 연산',
+    grades: [5], 
+    color: 'amber', 
+    icon: '⚡',
+    description: '창의적 사고, 추론',
+    stageCount: 8
+  },
+  { 
+    id: 'thinking-6', 
+    name: '6학년', 
+    school: '사고력 연산',
+    grades: [6], 
+    color: 'yellow', 
+    icon: '💡',
+    description: '비판적 사고, 종합 분석',
+    stageCount: 7
+  },
+  { 
     id: 'middle-1', 
     name: '1학년', 
     school: '중학교',

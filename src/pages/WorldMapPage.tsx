@@ -31,16 +31,17 @@ export function WorldMapPage() {
             맞춤 학습 경로
           </motion.h1>
           
-          <motion.p
-            className="text-lg max-w-2xl mx-auto mb-8"
-            style={{color: 'var(--color-text-secondary)'}}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <span style={{color: 'var(--color-text-primary)', fontWeight: 'bold'}}>개인별 최적화된 스테이지</span>를 통해 
-            체계적으로 수학을 학습하고, 완료 시 <span style={{color: 'var(--color-text-primary)', fontWeight: 'bold'}}>게임 체험권</span>을 획득하세요!
-          </motion.p>
+                  <motion.p
+                    className="text-lg max-w-2xl mx-auto mb-8"
+                    style={{color: 'var(--color-text-secondary)'}}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    <span style={{color: 'var(--color-text-primary)', fontWeight: 'bold'}}>초등학교, 사고력 연산, 중학교</span>의 
+                    <span style={{color: 'var(--color-text-primary)', fontWeight: 'bold'}}>개인별 최적화된 스테이지</span>를 통해 
+                    체계적으로 수학을 학습하고, 완료 시 <span style={{color: 'var(--color-text-primary)', fontWeight: 'bold'}}>게임 체험권</span>을 획득하세요!
+                  </motion.p>
 
           <motion.div
             className="flex items-center justify-center space-x-6 mb-8"
