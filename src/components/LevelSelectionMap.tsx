@@ -165,7 +165,7 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
   const pathHeight = Math.max(2000, levelCount * 220 + 200); // 최소 2000px, 레벨 수에 따라 조정
   const containerHeight = pathHeight + 100; // 여유 공간 추가
 
-  // 골목길 경로 생성 함수 - 자연스러운 곡선
+  // 골목길 경로 생성 함수 - 원래 복잡한 곡선 패턴
   const generateAlleyPath = () => {
     let path = "M 400 50";
     const segmentHeight = 200;
@@ -177,11 +177,8 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
       const y = 50 + i * segmentHeight;
       const x = i % 2 === 0 ? centerX : (i % 4 < 2 ? leftX : rightX);
       
-      // 자연스러운 곡선을 위한 제어점
-      const controlY = y - 100;
-      const controlX = i % 2 === 0 ? (i % 4 < 2 ? leftX : rightX) : centerX;
-      
-      path += ` Q ${controlX} ${controlY} ${x} ${y}`;
+      // 원래의 복잡한 곡선 패턴
+      path += ` Q ${i % 2 === 0 ? (i % 4 < 2 ? leftX : rightX) : centerX} ${y - 50} ${x} ${y}`;
     }
     return path;
   };
