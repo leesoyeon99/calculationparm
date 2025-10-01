@@ -157,12 +157,26 @@ interface LevelSelectionMapProps {
   onLevelSelect: (levelId: string) => void;
 }
 
+// 색상 매핑 객체 - 유지보수성 향상
+const colorMap = {
+  premium: 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-300 hover:via-yellow-400 hover:to-yellow-500 shadow-yellow-500/50 animate-pulse',
+  pink: 'bg-gradient-to-br from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800',
+  blue: 'bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800',
+  green: 'bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800',
+  purple: 'bg-gradient-to-br from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800',
+  orange: 'bg-gradient-to-br from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800',
+  red: 'bg-gradient-to-br from-red-500 to-red-700 hover:from-red-600 hover:to-red-800',
+  indigo: 'bg-gradient-to-br from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800',
+  teal: 'bg-gradient-to-br from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800',
+  emerald: 'bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800'
+};
+
 export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
   const [hoveredLevel, setHoveredLevel] = useState<string | null>(null);
 
   // 동적으로 골목길 높이와 경로 계산
   const levelCount = curriculumLevels.length;
-  const pathHeight = Math.max(2000, levelCount * 220 + 200); // 최소 2000px, 레벨 수에 따라 조정
+  const pathHeight = Math.max(800, levelCount * 220 + 200); // 최소 800px로 줄여서 빈 공간 최소화
   const containerHeight = pathHeight + 100; // 여유 공간 추가
 
   // 골목길 경로 생성 함수 - 뱀이 기어가듯 좌우로 출렁이는 곡선
@@ -178,10 +192,10 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
       const x = (i % 2 === 0) ? rightX : leftX;
       const prevY = 50 + (i - 1) * segmentHeight;
 
-      // 제어점 두 개를 양쪽으로 벌려줘서 진짜 곡선 만들기
-      const c1x = centerX;
+      // 제어점 X 좌표를 도착점 쪽으로 이동시켜서 진짜 곡선 만들기
+      const c1x = (x + centerX) / 2;
       const c1y = prevY + segmentHeight / 3;
-      const c2x = centerX;
+      const c2x = (x + centerX) / 2;
       const c2y = prevY + 2 * segmentHeight / 3;
 
       path += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x} ${y}`;
@@ -237,8 +251,10 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                       {curriculumLevels.map((level, index) => {
                         // 골목길을 따라 위치 계산 (세로로 쭉 배치, 뱀 기어가는 곡선에 맞춰)
                         const baseY = 100 + index * 220;
-                        // 뱀 기어가는 곡선에 맞춰 좌우 번갈아 배치
-                        const xOffset = index % 2 === 0 ? 500 : 300;
+                        // 반응형 좌우 배치 - centerX 기준으로 상대적 위치
+                        const centerX = 400;
+                        const offset = 100; // centerX에서 좌우로 100px씩
+                        const xOffset = index % 2 === 0 ? centerX + offset : centerX - offset;
                         
                         return (
                           <motion.div
@@ -263,26 +279,8 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                               onMouseEnter={() => setHoveredLevel(level.id)}
                               onMouseLeave={() => setHoveredLevel(null)}
                                 className={`w-32 h-32 rounded-full shadow-2xl transition-all duration-300 flex flex-col items-center justify-center text-white relative ${
-                                 level.color === 'premium'
-                                   ? 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-300 hover:via-yellow-400 hover:to-yellow-500 shadow-yellow-500/50 animate-pulse'
-                                   : level.color === 'pink' 
-                                   ? 'bg-gradient-to-br from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800' 
-                                   : level.color === 'blue'
-                                  ? 'bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800'
-                                  : level.color === 'green'
-                                  ? 'bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800'
-                                  : level.color === 'purple'
-                                  ? 'bg-gradient-to-br from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800'
-                                  : level.color === 'orange'
-                                  ? 'bg-gradient-to-br from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800'
-                                  : level.color === 'red'
-                                  ? 'bg-gradient-to-br from-red-500 to-red-700 hover:from-red-600 hover:to-red-800'
-                                  : level.color === 'indigo'
-                                  ? 'bg-gradient-to-br from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800'
-                                  : level.color === 'teal'
-                                  ? 'bg-gradient-to-br from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800'
-                                  : 'bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800'
-                              }`}
+                                  colorMap[level.color as keyof typeof colorMap] || colorMap.emerald
+                                }`}
                               whileHover={{ scale: 1.1, y: -5 }}
                               whileTap={{ scale: 0.95 }}
                               style={{
@@ -339,22 +337,24 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                                 </motion.div>
                               )}
 
-                              {/* 반짝이는 효과 */}
-                              <motion.div
-                                className="absolute inset-0 rounded-full"
-                                animate={{
-                                  boxShadow: [
-                                    '0 0 0 0 rgba(255, 255, 255, 0.7)',
-                                    '0 0 0 20px rgba(255, 255, 255, 0)',
-                                    '0 0 0 0 rgba(255, 255, 255, 0)',
-                                  ],
-                                }}
-                                transition={{
-                                  duration: 3,
-                                  repeat: Infinity,
-                                  delay: index * 0.3,
-                                }}
-                              />
+                              {/* 반짝이는 효과 - 프리미엄만 적용 */}
+                              {level.isPremium && (
+                                <motion.div
+                                  className="absolute inset-0 rounded-full"
+                                  animate={{
+                                    boxShadow: [
+                                      '0 0 0 0 rgba(255, 255, 255, 0.7)',
+                                      '0 0 0 20px rgba(255, 255, 255, 0)',
+                                      '0 0 0 0 rgba(255, 255, 255, 0)',
+                                    ],
+                                  }}
+                                  transition={{
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    delay: index * 0.3,
+                                  }}
+                                />
+                              )}
                             </motion.button>
                           </motion.div>
                         );
