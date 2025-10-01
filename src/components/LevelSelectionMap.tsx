@@ -165,7 +165,7 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
   const pathHeight = Math.max(2000, levelCount * 220 + 200); // 최소 2000px, 레벨 수에 따라 조정
   const containerHeight = pathHeight + 100; // 여유 공간 추가
 
-  // 골목길 경로 생성 함수 - 매끄러운 S자 곡선
+  // 골목길 경로 생성 함수 - 진짜 부드러운 S자 곡선
   const generateAlleyPath = () => {
     let path = "M 400 50";
     const segmentHeight = 200;
@@ -173,17 +173,28 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
     const leftX = 300;
     const rightX = 500;
     
-    for (let i = 1; i < levelCount; i++) {
+    // 연속적인 S자 곡선을 위해 모든 점을 먼저 계산
+    const points = [];
+    for (let i = 0; i < levelCount; i++) {
       const y = 50 + i * segmentHeight;
-      const x = (i % 2 === 0) ? rightX : leftX;
-
-      // 제어점: 항상 중앙 X, 이전 Y와 현재 Y의 중간값
-      const prevY = 50 + (i - 1) * segmentHeight;
-      const controlX = centerX;
-      const controlY = (prevY + y) / 2;
-
-      path += ` Q ${controlX} ${controlY} ${x} ${y}`;
+      const x = (i % 2 === 0) ? centerX : ((i % 4 < 2) ? leftX : rightX);
+      points.push({ x, y });
     }
+    
+    // 연속적인 곡선을 위해 C(ubic bezier) 명령어 사용
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      
+      // 부드러운 곡선을 위한 제어점 계산
+      const control1X = prev.x + (curr.x - prev.x) * 0.3;
+      const control1Y = prev.y + (curr.y - prev.y) * 0.3;
+      const control2X = prev.x + (curr.x - prev.x) * 0.7;
+      const control2Y = prev.y + (curr.y - prev.y) * 0.7;
+      
+      path += ` C ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${curr.x} ${curr.y}`;
+    }
+    
     return path;
   };
 
@@ -234,8 +245,8 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                       {curriculumLevels.map((level, index) => {
                         // 골목길을 따라 위치 계산 (세로로 쭉 배치, S자 곡선에 맞춰)
                         const baseY = 100 + index * 220;
-                        // S자 곡선에 맞춰 좌우 번갈아 배치 (수정된 패턴)
-                        const xOffset = index % 2 === 0 ? 500 : 300;
+                        // S자 곡선에 맞춰 좌우 번갈아 배치 (새로운 패턴)
+                        const xOffset = index % 2 === 0 ? 400 : ((index % 4 < 2) ? 300 : 500);
                         
                         return (
                           <motion.div
