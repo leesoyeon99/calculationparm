@@ -165,7 +165,7 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
   const pathHeight = Math.max(2000, levelCount * 220 + 200); // 최소 2000px, 레벨 수에 따라 조정
   const containerHeight = pathHeight + 100; // 여유 공간 추가
 
-  // 골목길 경로 생성 함수 - 원래 복잡한 곡선 패턴
+  // 골목길 경로 생성 함수 - 단순하고 규칙적인 좌우 반복 곡선
   const generateAlleyPath = () => {
     let path = "M 400 50";
     const segmentHeight = 200;
@@ -175,10 +175,13 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
     
     for (let i = 1; i < levelCount; i++) {
       const y = 50 + i * segmentHeight;
-      const x = i % 2 === 0 ? centerX : (i % 4 < 2 ? leftX : rightX);
+      const x = i % 2 === 0 ? leftX : rightX; // 단순한 좌우 반복
       
-      // 원래의 복잡한 곡선 패턴
-      path += ` Q ${i % 2 === 0 ? (i % 4 < 2 ? leftX : rightX) : centerX} ${y - 50} ${x} ${y}`;
+      // 규칙적인 곡선 - 제어점을 중앙으로
+      const controlY = y - 100;
+      const controlX = centerX;
+      
+      path += ` Q ${controlX} ${controlY} ${x} ${y}`;
     }
     return path;
   };
@@ -228,10 +231,10 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                     {/* 학년별 스테이지들 - 골목길을 따라 배치 */}
                     <div className="relative z-10">
                       {curriculumLevels.map((level, index) => {
-                        // 골목길을 따라 위치 계산 (세로로 쭉 배치, 곡선 사이사이에)
+                        // 골목길을 따라 위치 계산 (세로로 쭉 배치, 단순한 좌우 반복)
                         const baseY = 100 + index * 220;
-                        // 곡선의 중심(400)을 기준으로 좌우 번갈아 배치하여 곡선 사이사이에 위치
-                        const xOffset = index % 2 === 0 ? 400 : (index % 4 < 2 ? 300 : 500);
+                        // 단순한 좌우 반복 배치
+                        const xOffset = index % 2 === 0 ? 300 : 500;
                         
                         return (
                           <motion.div
