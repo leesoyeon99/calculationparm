@@ -165,7 +165,7 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
   const pathHeight = Math.max(2000, levelCount * 220 + 200); // 최소 2000px, 레벨 수에 따라 조정
   const containerHeight = pathHeight + 100; // 여유 공간 추가
 
-  // 골목길 경로 생성 함수 - 원래 패턴으로 되돌리되 동적 길이 조정
+  // 골목길 경로 생성 함수 - 매끄러운 S자 곡선
   const generateAlleyPath = () => {
     let path = "M 400 50";
     const segmentHeight = 200;
@@ -173,14 +173,14 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
     const leftX = 300;
     const rightX = 500;
     
-    // 원래 패턴: Q 300 150 400 250 Q 500 350 400 450 ...
     for (let i = 1; i < levelCount; i++) {
       const y = 50 + i * segmentHeight;
-      const x = i % 2 === 0 ? centerX : (i % 4 < 2 ? leftX : rightX);
+      const x = i % 2 === 0 ? leftX : rightX; // 좌우 번갈아
       
-      // 원래 패턴의 제어점 계산
-      const controlY = y - 100;
-      const controlX = i % 2 === 0 ? (i % 4 < 2 ? leftX : rightX) : centerX;
+      // 매끄러운 S자 곡선을 위한 제어점
+      // 제어점은 항상 중앙 X 좌표 사용
+      const controlY = (50 + (i - 1) * segmentHeight + y) / 2; // 두 점의 중간 Y값
+      const controlX = centerX; // 항상 중앙 X 좌표
       
       path += ` Q ${controlX} ${controlY} ${x} ${y}`;
     }
@@ -232,10 +232,10 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                     {/* 학년별 스테이지들 - 골목길을 따라 배치 */}
                     <div className="relative z-10">
                       {curriculumLevels.map((level, index) => {
-                        // 골목길을 따라 위치 계산 (세로로 쭉 배치, 곡선 사이사이에)
+                        // 골목길을 따라 위치 계산 (세로로 쭉 배치, S자 곡선에 맞춰)
                         const baseY = 100 + index * 220;
-                        // 곡선의 중심(400)을 기준으로 좌우 번갈아 배치하여 곡선 사이사이에 위치
-                        const xOffset = index % 2 === 0 ? 400 : 740;
+                        // S자 곡선에 맞춰 좌우 번갈아 배치
+                        const xOffset = index % 2 === 0 ? 300 : 500;
                         
                         return (
                           <motion.div
