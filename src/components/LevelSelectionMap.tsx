@@ -175,13 +175,13 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
     
     for (let i = 1; i < levelCount; i++) {
       const y = 50 + i * segmentHeight;
-      const x = i % 2 === 0 ? leftX : rightX; // 좌우 번갈아
-      
-      // 매끄러운 S자 곡선을 위한 제어점
-      // 제어점은 항상 중앙 X 좌표 사용
-      const controlY = (50 + (i - 1) * segmentHeight + y) / 2; // 두 점의 중간 Y값
-      const controlX = centerX; // 항상 중앙 X 좌표
-      
+      const x = (i % 2 === 0) ? rightX : leftX;
+
+      // 제어점: 항상 중앙 X, 이전 Y와 현재 Y의 중간값
+      const prevY = 50 + (i - 1) * segmentHeight;
+      const controlX = centerX;
+      const controlY = (prevY + y) / 2;
+
       path += ` Q ${controlX} ${controlY} ${x} ${y}`;
     }
     return path;
@@ -234,8 +234,8 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                       {curriculumLevels.map((level, index) => {
                         // 골목길을 따라 위치 계산 (세로로 쭉 배치, S자 곡선에 맞춰)
                         const baseY = 100 + index * 220;
-                        // S자 곡선에 맞춰 좌우 번갈아 배치
-                        const xOffset = index % 2 === 0 ? 300 : 500;
+                        // S자 곡선에 맞춰 좌우 번갈아 배치 (수정된 패턴)
+                        const xOffset = index % 2 === 0 ? 500 : 300;
                         
                         return (
                           <motion.div
