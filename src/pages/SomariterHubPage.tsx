@@ -1,4 +1,4 @@
-import { ArrowLeft, Star, Trophy, Gift, MessageCircle, Sword, ChefHat, Zap } from 'lucide-react';
+import { ArrowLeft, Star, Trophy, Gift, MessageCircle, Sword, ChefHat, Car, Gamepad2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 import { motion } from 'framer-motion';
@@ -44,7 +44,7 @@ export function SomaMasterHubPage() {
       id: 'racing',
       name: '수학 레이싱',
       description: '속도와 거리로 우승을 차지하세요',
-      icon: Zap,
+      icon: Car,
       color: 'from-blue-500 to-cyan-500',
       bgColor: 'from-blue-50 to-cyan-50',
       borderColor: 'border-blue-200',
@@ -288,65 +288,6 @@ export function SomaMasterHubPage() {
         </div>
       </div>
 
-      {/* 게임 체험권 섹션 */}
-      <div className="farm-card p-6 bg-gradient-to-r from-purple-50 to-pink-50">
-        <div className="text-center mb-6">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">🎮 게임 체험권</h3>
-          <p className="text-gray-600">학습 완료 후 보상으로 게임을 즐겨보세요!</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {games.map((game) => {
-            const IconComponent = game.icon;
-            const tokenCount = gameTokens[game.id as keyof typeof gameTokens];
-            const hasTokens = tokenCount > 0;
-            
-            return (
-              <motion.div
-                key={game.id}
-                className={`relative rounded-xl p-4 border-2 transition-all duration-300 ${
-                  hasTokens 
-                    ? 'cursor-pointer hover:scale-105 hover:shadow-lg' 
-                    : 'opacity-50 cursor-not-allowed'
-                } ${game.bgColor} ${game.borderColor}`}
-                whileHover={hasTokens ? { scale: 1.05 } : {}}
-                whileTap={hasTokens ? { scale: 0.95 } : {}}
-                onClick={() => hasTokens && (window.location.href = game.path)}
-              >
-                <div className="text-center">
-                  <div className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center ${game.color} text-white`}>
-                    <IconComponent className="w-6 h-6" />
-                  </div>
-                  
-                  <h4 className="font-bold text-gray-800 mb-2">{game.name}</h4>
-                  <p className="text-sm text-gray-600 mb-3">{game.description}</p>
-                  
-                  <div className="flex items-center justify-center space-x-2">
-                    <span className="text-lg font-bold text-purple-600">{tokenCount}개</span>
-                    <span className="text-sm text-gray-500">체험권</span>
-                  </div>
-                  
-                  {hasTokens && (
-                    <motion.button
-                      className="mt-3 px-4 py-2 bg-purple-500 text-white rounded-lg text-sm font-medium hover:bg-purple-600 transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      플레이하기
-                    </motion.button>
-                  )}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-        
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-500">
-            💡 스테이지를 완료하면 게임 체험권을 얻을 수 있어요!
-          </p>
-        </div>
-      </div>
 
       {/* 액션 버튼들 */}
       <div className="grid grid-cols-2 gap-4">
@@ -367,6 +308,32 @@ export function SomaMasterHubPage() {
           <h4 className="font-bold text-gray-800">농장 가기</h4>
           <p className="text-sm text-gray-600">작물을 확인해보세요</p>
         </Link>
+      </div>
+
+      {/* 플로팅 게임 버튼들 */}
+      <div className="fixed top-4 right-4 z-50 flex flex-col space-y-2">
+        {games.map((game) => {
+          const IconComponent = game.icon;
+          const tokenCount = gameTokens[game.id as keyof typeof gameTokens];
+          const hasTokens = tokenCount > 0;
+          
+          return (
+            <motion.button
+              key={game.id}
+              className={`w-14 h-14 rounded-full shadow-lg border-2 border-white flex items-center justify-center transition-all duration-300 ${
+                hasTokens 
+                  ? 'cursor-pointer hover:scale-110 hover:shadow-xl' 
+                  : 'opacity-50 cursor-not-allowed'
+              } ${game.color}`}
+              whileHover={hasTokens ? { scale: 1.1 } : {}}
+              whileTap={hasTokens ? { scale: 0.95 } : {}}
+              onClick={() => hasTokens && (window.location.href = game.path)}
+              title={`${game.name} (${tokenCount}개 체험권)`}
+            >
+              <IconComponent className="w-6 h-6 text-white" />
+            </motion.button>
+          );
+        })}
       </div>
     </div>
   );

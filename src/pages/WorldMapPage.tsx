@@ -1,9 +1,50 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Map, Target, Star, Award } from 'lucide-react';
+import { ArrowLeft, Map, Target, Star, Award, Sword, ChefHat, Car, Gamepad2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { RoadMap } from '../components/RoadMap';
+import { useState } from 'react';
 
 export function WorldMapPage() {
+  // 게임 체험권 관련 상태
+  const [gameTokens, setGameTokens] = useState({
+    dungeon: 3,
+    cooking: 2,
+    racing: 1
+  });
+
+  const games = [
+    {
+      id: 'dungeon',
+      name: '수학 던전',
+      description: '빠른 계산으로 몬스터를 물리치세요',
+      icon: Sword,
+      color: 'from-red-500 to-pink-500',
+      bgColor: 'from-red-50 to-pink-50',
+      borderColor: 'border-red-200',
+      path: '/dungeon'
+    },
+    {
+      id: 'cooking',
+      name: '수학 레시피',
+      description: '실생활 문제로 요리를 완성하세요',
+      icon: ChefHat,
+      color: 'from-orange-500 to-yellow-500',
+      bgColor: 'from-orange-50 to-yellow-50',
+      borderColor: 'border-orange-200',
+      path: '/platformer-cooking'
+    },
+    {
+      id: 'racing',
+      name: '수학 레이싱',
+      description: '속도와 거리로 우승을 차지하세요',
+      icon: Car,
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'from-blue-50 to-cyan-50',
+      borderColor: 'border-blue-200',
+      path: '/racing'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       <div className="container mx-auto px-4 py-8">
@@ -64,14 +105,41 @@ export function WorldMapPage() {
           </motion.div>
         </div>
 
+
         {/* 길 맵 컴포넌트 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
         >
           <RoadMap />
         </motion.div>
+
+        {/* 플로팅 게임 버튼들 */}
+        <div className="fixed top-4 right-4 z-50 flex flex-col space-y-2">
+          {games.map((game) => {
+            const IconComponent = game.icon;
+            const tokenCount = gameTokens[game.id as keyof typeof gameTokens];
+            const hasTokens = tokenCount > 0;
+            
+            return (
+              <motion.button
+                key={game.id}
+                className={`w-14 h-14 rounded-full shadow-lg border-2 border-white flex items-center justify-center transition-all duration-300 ${
+                  hasTokens 
+                    ? 'cursor-pointer hover:scale-110 hover:shadow-xl' 
+                    : 'opacity-50 cursor-not-allowed'
+                } ${game.color}`}
+                whileHover={hasTokens ? { scale: 1.1 } : {}}
+                whileTap={hasTokens ? { scale: 0.95 } : {}}
+                onClick={() => hasTokens && (window.location.href = game.path)}
+                title={`${game.name} (${tokenCount}개 체험권)`}
+              >
+                <IconComponent className="w-6 h-6 text-white" />
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

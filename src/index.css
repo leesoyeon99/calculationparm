@@ -45,30 +45,7 @@
     --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
   }
   
-  /* 넥슨 폰트 정의 */
-  @font-face {
-    font-family: 'NEXON Lv1 Gothic';
-    src: url('/fonts/NEXONLv1GothicLight.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'NEXON Lv1 Gothic';
-    src: url('/fonts/NEXONLv1GothicRegular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'NEXON Lv1 Gothic';
-    src: url('/fonts/NEXONLv1GothicBold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-  }
+/* Google Fonts 사용 */
   
   * {
     @apply border-gray-200;
@@ -77,7 +54,7 @@
   body {
     background: var(--gradient-secondary);
     min-height: 100vh;
-    font-family: 'NEXON Lv1 Gothic', 'Noto Sans KR', sans-serif;
+    font-family: 'Noto Sans KR', sans-serif;
     color: var(--color-text-primary);
   }
   

@@ -10,7 +10,7 @@ export function Navigation() {
     { path: '/', icon: Home, label: '홈', color: 'text-blue-600' },
     { path: '/world-map', icon: Map, label: '수학월드', color: 'text-green-600' },
     { path: '/animal-farm', icon: Sprout, label: '동물농장', color: 'text-orange-600' },
-    { path: '/somariter', icon: User, label: '소마허브', color: 'text-purple-600' },
+    { path: '/somariter', icon: User, label: '프로필', color: 'text-purple-600' },
   ];
 
   return (
