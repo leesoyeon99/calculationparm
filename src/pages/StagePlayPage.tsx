@@ -51,8 +51,13 @@ export function StagePlayPage() {
     grade = 1; // 기본값
   }
   const stage = stages.find(s => s.id === stageId);
+  console.log('StagePlayPage - stageId:', stageId, 'grade:', grade, 'stage:', stage);
+  
   const problems = stage ? generateStageProblems(grade, stageId) : {};
+  console.log('StagePlayPage - problems:', problems, 'problems count:', Object.keys(problems).length);
+  
   const currentProblem = problems[currentProblemIndex + 1]; // 문제 인덱스는 1부터 시작
+  console.log('StagePlayPage - currentProblem:', currentProblem, 'currentProblemIndex:', currentProblemIndex);
   
   // 현재 스테이지의 커리큘럼 단원 정보
   const currentUnit = curriculumUnits[grade] || curriculumUnits[1];
