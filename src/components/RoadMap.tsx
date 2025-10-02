@@ -323,15 +323,51 @@ export function RoadMap() {
                 {/* 스테이지 노드들 */}
                 <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                   {levelStages.map((stage, index) => {
-                    const unit = curriculumUnits.find(u => 
-                      stage.id >= u.stageRange[0] && stage.id <= u.stageRange[1]
-                    );
+                    // 학년별로 매핑 (1-6학년)
+                    // 스테이지 ID에 따른 학년 계산
+      let grade: number;
+      if (stage.id >= 81 && stage.id <= 84) {
+        grade = 9; // 중3
+      } else if (stage.id >= 71 && stage.id <= 74) {
+        grade = 8; // 중2
+      } else if (stage.id >= 61 && stage.id <= 64) {
+        grade = 7; // 중1
+      } else if (stage.id >= 51 && stage.id <= 54) {
+        grade = 6; // 6학년
+      } else if (stage.id >= 41 && stage.id <= 44) {
+        grade = 5; // 5학년
+      } else if (stage.id >= 31 && stage.id <= 34) {
+        grade = 4; // 4학년
+      } else if (stage.id >= 21 && stage.id <= 24) {
+        grade = 3; // 3학년
+      } else if (stage.id >= 11 && stage.id <= 14) {
+        grade = 2; // 2학년
+      } else if (stage.id >= 1 && stage.id <= 4) {
+        grade = 1; // 1학년
+      } else {
+        grade = 1; // 기본값
+      }
+                    const unit = curriculumUnits[grade] || curriculumUnits[1];
+                    
+                    const difficultyMap = {
+                      1: 'easy' as const,
+                      2: 'medium' as const,
+                      3: 'hard' as const,
+                      4: 'boss' as const
+                    };
                     
                     return (
                       <CuteStageCard
                         key={stage.id}
-                        stage={stage}
-                        unit={unit}
+                        stage={{
+                          ...stage,
+                          difficulty: difficultyMap[stage.difficulty as keyof typeof difficultyMap] || 'medium'
+                        }}
+                        unit={{
+                          grade: unit?.id || 1,
+                          subject: unit?.name || '수학',
+                          subSubject: unit?.description || '기초 수학'
+                        }}
                         onStart={() => {
                           playClick();
                           setCurrentStage(stage.id);
@@ -375,10 +411,10 @@ export function RoadMap() {
                   <div className="bg-white/50 rounded-lg p-4">
                     <div className="text-sm text-gray-600 mb-2">난이도</div>
                     <div className="text-lg font-bold text-gray-800">
-                      {currentStage.difficulty === 'easy' && '🟢 쉬움'}
-                      {currentStage.difficulty === 'medium' && '🟡 보통'}
-                      {currentStage.difficulty === 'hard' && '🔴 어려움'}
-                      {currentStage.difficulty === 'boss' && '👑 보스'}
+                      {currentStage.difficulty === 1 && '🟢 쉬움'}
+                      {currentStage.difficulty === 2 && '🟡 보통'}
+                      {currentStage.difficulty === 3 && '🔴 어려움'}
+                      {currentStage.difficulty === 4 && '👑 보스'}
                     </div>
                   </div>
                   <div className="bg-white/50 rounded-lg p-4">

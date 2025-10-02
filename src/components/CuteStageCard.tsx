@@ -149,7 +149,6 @@ export function CuteStageCard({ stage, unit, onStart, index }: CuteStageCardProp
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onTapStart={() => setIsPressed(true)}
-      onTapEnd={() => setIsPressed(false)}
     >
       {/* 연결선 */}
       {index < 5 && (

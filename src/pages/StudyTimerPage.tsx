@@ -20,7 +20,7 @@ const StudyTimerPage: React.FC = () => {
   const [studySessions, setStudySessions] = useState<StudySession[]>([]);
   const [showRabbitCheering, setShowRabbitCheering] = useState(false);
   const [cheeringMessage, setCheeringMessage] = useState('');
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   const subjects = ['수학', '국어', '영어', '과학', '사회', '기타'];
 

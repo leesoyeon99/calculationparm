@@ -10,6 +10,8 @@ import { DungeonGame } from './pages/DungeonGame';
 import { RacingGame } from './pages/RacingGame';
 import { PlatformerCookingGame } from './pages/PlatformerCookingGame';
 import StudyTimerPage from './pages/StudyTimerPage';
+import { RankingPage } from './pages/RankingPage';
+import ImageProblemExample from './examples/ImageProblemExample';
 import { Navigation } from './components/Navigation';
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
                   <Route path="/platformer-cooking" element={<PlatformerCookingGame />} />
           <Route path="/racing" element={<RacingGame />} />
           <Route path="/study-timer" element={<StudyTimerPage />} />
+          <Route path="/ranking" element={<RankingPage />} />
+          <Route path="/image-problems" element={<ImageProblemExample />} />
         </Routes>
         <Navigation />
       </div>

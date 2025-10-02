@@ -1,7 +1,8 @@
-import { ArrowLeft, Star, Trophy, Gift, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Star, Trophy, Gift, MessageCircle, Sword, ChefHat, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 export function SomaMasterHubPage() {
   const { user, somariter, achievements, farm } = useGameStore();
@@ -9,6 +10,47 @@ export function SomaMasterHubPage() {
   const completedAchievements = achievements.filter(a => a.isCompleted);
   const totalAchievements = achievements.length;
   const completionRate = Math.round((completedAchievements.length / totalAchievements) * 100);
+
+  // 게임 체험권 관련 상태
+  const [gameTokens, setGameTokens] = useState({
+    dungeon: 3,
+    cooking: 2,
+    racing: 1
+  });
+
+  // 게임 데이터
+  const games = [
+    {
+      id: 'dungeon',
+      name: '수학 던전',
+      description: '빠른 계산으로 몬스터를 물리치세요',
+      icon: Sword,
+      color: 'from-red-500 to-pink-500',
+      bgColor: 'from-red-50 to-pink-50',
+      borderColor: 'border-red-200',
+      path: '/dungeon-game'
+    },
+    {
+      id: 'cooking',
+      name: '수학 레시피',
+      description: '실생활 문제로 요리를 완성하세요',
+      icon: ChefHat,
+      color: 'from-orange-500 to-yellow-500',
+      bgColor: 'from-orange-50 to-yellow-50',
+      borderColor: 'border-orange-200',
+      path: '/platformer-cooking-game'
+    },
+    {
+      id: 'racing',
+      name: '수학 레이싱',
+      description: '속도와 거리로 우승을 차지하세요',
+      icon: Zap,
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'from-blue-50 to-cyan-50',
+      borderColor: 'border-blue-200',
+      path: '/racing-game'
+    }
+  ];
 
   const getMoodEmoji = (mood: string) => {
     switch (mood) {
@@ -243,6 +285,66 @@ export function SomaMasterHubPage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* 게임 체험권 섹션 */}
+      <div className="farm-card p-6 bg-gradient-to-r from-purple-50 to-pink-50">
+        <div className="text-center mb-6">
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">🎮 게임 체험권</h3>
+          <p className="text-gray-600">학습 완료 후 보상으로 게임을 즐겨보세요!</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {games.map((game) => {
+            const IconComponent = game.icon;
+            const tokenCount = gameTokens[game.id as keyof typeof gameTokens];
+            const hasTokens = tokenCount > 0;
+            
+            return (
+              <motion.div
+                key={game.id}
+                className={`relative rounded-xl p-4 border-2 transition-all duration-300 ${
+                  hasTokens 
+                    ? 'cursor-pointer hover:scale-105 hover:shadow-lg' 
+                    : 'opacity-50 cursor-not-allowed'
+                } ${game.bgColor} ${game.borderColor}`}
+                whileHover={hasTokens ? { scale: 1.05 } : {}}
+                whileTap={hasTokens ? { scale: 0.95 } : {}}
+                onClick={() => hasTokens && (window.location.href = game.path)}
+              >
+                <div className="text-center">
+                  <div className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center ${game.color} text-white`}>
+                    <IconComponent className="w-6 h-6" />
+                  </div>
+                  
+                  <h4 className="font-bold text-gray-800 mb-2">{game.name}</h4>
+                  <p className="text-sm text-gray-600 mb-3">{game.description}</p>
+                  
+                  <div className="flex items-center justify-center space-x-2">
+                    <span className="text-lg font-bold text-purple-600">{tokenCount}개</span>
+                    <span className="text-sm text-gray-500">체험권</span>
+                  </div>
+                  
+                  {hasTokens && (
+                    <motion.button
+                      className="mt-3 px-4 py-2 bg-purple-500 text-white rounded-lg text-sm font-medium hover:bg-purple-600 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      플레이하기
+                    </motion.button>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+        
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-500">
+            💡 스테이지를 완료하면 게임 체험권을 얻을 수 있어요!
+          </p>
         </div>
       </div>
 

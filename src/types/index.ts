@@ -105,6 +105,35 @@ export interface MathProblem {
   category: 'addition' | 'subtraction' | 'multiplication' | 'division' | 'fractions';
 }
 
+// 작물 타입
+export interface Crop {
+  id: string;
+  name: string;
+  type: 'potato' | 'carrot' | 'corn' | 'sunflower';
+  stage: 'seed' | 'sprout' | 'stem' | 'flower' | 'harvest';
+  plantedAt: Date;
+  growthProgress: number; // 0-100
+  isReadyToHarvest: boolean;
+}
+
+// 이미지 문제 타입
+export interface ImageItem {
+  id: string;
+  type: 'number' | 'shape' | 'object';
+  value: string | number;
+  image: string;
+  position: { x: number; y: number };
+}
+
+export interface ImageProblem {
+  id: string;
+  question: string;
+  items: ImageItem[];
+  correctAnswer: string;
+  explanation: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
 // 보상 타입
 export interface Reward {
   type: 'exp' | 'cropGrowth' | 'coins' | 'item' | 'decoration' | 'experience';
@@ -129,6 +158,41 @@ export interface Achievement {
   };
 }
 
+// 공부 기록 타입
+export interface StudyRecord {
+  id: string;
+  date: string; // YYYY-MM-DD 형식
+  subject: string;
+  duration: number; // 분 단위
+  startTime: Date;
+  endTime: Date;
+  animalId?: string; // 함께 공부한 동물 ID
+  notes?: string;
+}
+
+// 랭킹 사용자 타입
+export interface RankingUser {
+  id: string;
+  nickname: string;
+  avatar: string;
+  studyTime: number; // 총 공부시간 (분)
+  rank: number;
+  level: number;
+  streak: number;
+  isOnline: boolean;
+  lastStudyTime?: Date;
+}
+
+// 랭킹 타입
+export interface Ranking {
+  id: string;
+  type: 'daily' | 'weekly' | 'monthly';
+  date: string;
+  users: RankingUser[];
+  myRank?: number;
+  myStudyTime?: number;
+}
+
 // 게임 상태 타입
 export interface GameState {
   user: {
@@ -147,5 +211,10 @@ export interface GameState {
   currentStage?: Stage;
   isPlaying: boolean;
   lastPlayedAt: Date;
+  // 공부 기록 관련
+  studyRecords: StudyRecord[];
+  rankings: Ranking[];
+  totalStudyTime: number; // 총 공부시간 (분)
+  dailyStudyTime: number; // 오늘 공부시간 (분)
 }
 

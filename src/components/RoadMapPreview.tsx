@@ -214,8 +214,8 @@ export function RoadMapPreview() {
                     <motion.div 
                       className="text-2xl"
                       animate={{
-                        scale: isHovered ? 1.2 : 1,
-                        rotate: isHovered ? [0, 10, -10, 0] : 0,
+                        scale: 1,
+                        rotate: 0,
                       }}
                       transition={{ duration: 0.3 }}
                     >
@@ -232,17 +232,17 @@ export function RoadMapPreview() {
                   <div className="mb-2 text-center">
                     <motion.div
                       className={`inline-block px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg ${
-                        stage.difficulty === 'easy' ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
-                        stage.difficulty === 'medium' ? 'bg-gradient-to-r from-yellow-400 to-orange-500' :
-                        stage.difficulty === 'hard' ? 'bg-gradient-to-r from-red-400 to-rose-500' :
+                        stage.difficulty === 1 ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
+                        stage.difficulty === 2 ? 'bg-gradient-to-r from-yellow-400 to-orange-500' :
+                        stage.difficulty === 3 ? 'bg-gradient-to-r from-red-400 to-rose-500' :
                         'bg-gradient-to-r from-purple-400 to-pink-500'
                       }`}
                       whileHover={{ scale: 1.1, rotate: 2 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      {stage.difficulty === 'easy' ? '쉬워요' :
-                       stage.difficulty === 'medium' ? '보통이에요' :
-                       stage.difficulty === 'hard' ? '어려워요' : '보스예요'}
+                      {stage.difficulty === 1 ? '쉬워요' :
+                       stage.difficulty === 2 ? '보통이에요' :
+                       stage.difficulty === 3 ? '어려워요' : '보스예요'}
                     </motion.div>
                   </div>
 

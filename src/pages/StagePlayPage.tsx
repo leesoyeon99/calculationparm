@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Star, Clock, CheckCircle, XCircle, Zap, Heart, Sparkles, Trophy, Sprout, Leaf, TreePine, Target, Coins, Flame } from 'lucide-react';
+import { ArrowLeft, Star, Clock, CheckCircle, XCircle, Sparkles, Trophy, Target, Flame } from 'lucide-react';
 import { useGameStore } from '../store/gameStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { generateStageProblems, curriculumUnits } from '../data/curriculum';
@@ -25,14 +25,44 @@ export function StagePlayPage() {
   const [showStreak, setShowStreak] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const stage = stages.find(s => s.id === parseInt(id || '0'));
-  const problems = generateStageProblems(parseInt(id || '0'));
-  const currentProblem = problems[currentProblemIndex];
+  const stageId = parseInt(id || '0');
+  // 스테이지 ID에 따른 학년 계산
+  let grade: number;
+  if (stageId >= 81 && stageId <= 84) {
+    grade = 9; // 중3
+  } else if (stageId >= 71 && stageId <= 74) {
+    grade = 8; // 중2
+  } else if (stageId >= 61 && stageId <= 64) {
+    grade = 7; // 중1
+  } else if (stageId >= 51 && stageId <= 54) {
+    grade = 6; // 6학년
+  } else if (stageId >= 41 && stageId <= 44) {
+    grade = 5; // 5학년
+  } else if (stageId >= 31 && stageId <= 34) {
+    grade = 4; // 4학년
+  } else if (stageId >= 21 && stageId <= 24) {
+    grade = 3; // 3학년
+  } else if (stageId >= 11 && stageId <= 14) {
+    grade = 2; // 2학년
+  } else if (stageId >= 1 && stageId <= 4) {
+    grade = 1; // 1학년
+  } else {
+    grade = 1; // 기본값
+  }
+  const stage = stages.find(s => s.id === stageId);
+  const problems = stage ? generateStageProblems(grade, stageId) : {};
+  const currentProblem = problems[currentProblemIndex + 1]; // 문제 인덱스는 1부터 시작
   
   // 현재 스테이지의 커리큘럼 단원 정보
-  const currentUnit = curriculumUnits.find(u => 
-    parseInt(id || '0') >= u.stageRange[0] && parseInt(id || '0') <= u.stageRange[1]
-  );
+  const currentUnit = curriculumUnits[grade] || curriculumUnits[1];
+
+  const handleTimeUp = useCallback(() => {
+    setShowResult(true);
+    setCombo(0); // 콤보 초기화
+    setStreak(0); // 연속 정답 초기화
+    updateSomariterMood('thinking', '시간이 초과되었어요!');
+    // 시간 초과 시 오답 처리 로직 추가 가능
+  }, [updateSomariterMood]);
 
   useEffect(() => {
     if (!stage) {
@@ -54,7 +84,7 @@ export function StagePlayPage() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [stage]);
+  }, [stage, handleTimeUp]);
 
   const handleAnswerSelect = (answer: string) => {
     if (showResult) return;
@@ -73,7 +103,7 @@ export function StagePlayPage() {
     
     setShowResult(true);
     
-    if (selectedAnswer === currentProblem.correctAnswer) {
+    if (selectedAnswer === currentProblem.answer) {
       const newCombo = combo + 1;
       const newScore = score + 1;
       const newStreak = streak + 1;
@@ -98,954 +128,315 @@ export function StagePlayPage() {
       
       // 특별 효과 추가
       const effects: string[] = [];
-      if (newCombo >= 5) effects.push('🔥 콤보!');
-      if (newStreak >= 10) effects.push('⚡ 연속 정답!');
-      if (timeLeft > 20) effects.push('⚡ 빠른 정답!');
-      if (effects.length > 0) {
-        setSpecialEffects(prev => [...prev, ...effects]);
-        setTimeout(() => setSpecialEffects(prev => prev.slice(effects.length)), 3000);
-      }
-      
-      // 소마리터 반응 (콤보에 따라 다르게)
-      if (newCombo >= 5) {
-        updateSomariterMood('excited', `와! ${newCombo}콤보! 불타오르고 있어! 🔥`);
-      } else if (newStreak >= 10) {
-        updateSomariterMood('excited', `연속 ${newStreak}정답! 대단해! ⚡`);
-      } else {
-        updateSomariterMood('excited', '정답이야! 작물이 자라고 있어! 🌱');
-      }
+      if (newCombo >= 5) effects.push('fire');
+      if (newStreak >= 10) effects.push('star');
+      setSpecialEffects(effects);
+
+      updateSomariterMood('happy', '정답을 맞혔어요!');
     } else {
-      setCombo(0);
-      setStreak(0);
-      updateSomariterMood('encouraging', '괜찮아! 다음에는 맞출 수 있어! 💪');
-    }
-
-    setTimeout(() => {
-      if (currentProblemIndex < problems.length - 1) {
-        setCurrentProblemIndex(prev => prev + 1);
-        setSelectedAnswer(null);
-        setShowResult(false);
-        setCropGrowthAnimation(false);
-        setTimeLeft(30);
-      } else {
-        handleStageComplete();
-      }
-    }, 2000);
-  };
-
-  const handleTimeUp = () => {
-    setShowResult(true);
-    updateSomariterMood('thinking', '시간이 끝났어! 다음 문제로 넘어가자! ⏰');
-    
-    setTimeout(() => {
-      if (currentProblemIndex < problems.length - 1) {
-        setCurrentProblemIndex(prev => prev + 1);
-        setSelectedAnswer(null);
-        setShowResult(false);
-      } else {
-        handleStageComplete();
-      }
-    }, 2000);
-  };
-
-  const handleStageComplete = () => {
-    setIsCompleted(true);
-    
-    if (stage && score >= problems.length * 0.7) { // 70% 이상 정답
-      completeStage(stage.id);
-      addCoins(score * 10);
-      
-      // 다음 스테이지 잠금 해제
-      const nextStageId = stage.id + 1;
-      const nextStage = stages.find(s => s.id === nextStageId);
-      if (nextStage && !nextStage.isUnlocked) {
-        unlockStage(nextStageId);
-      }
-      
-      updateSomariterMood('excited', `와! ${stage.title}를 완료했어! ${score}/${problems.length}개 맞췄어! 🎉`);
-    } else {
-      updateSomariterMood('encouraging', '조금 더 연습하면 완벽해질 거야! 다시 도전해보자! 💪');
+      setCombo(0); // 콤보 초기화
+      setStreak(0); // 연속 정답 초기화
+      updateSomariterMood('thinking', '틀렸어요. 다시 시도해보세요!');
     }
   };
 
-  const handleRetry = () => {
-    setCurrentProblemIndex(0);
+  const handleNextProblem = () => {
     setSelectedAnswer(null);
     setShowResult(false);
-    setScore(0);
-    setTimeLeft(30);
-    setIsCompleted(false);
     setCropGrowthAnimation(false);
-    setCombo(0);
-    setStreak(0);
-    setMaxCombo(0);
     setSpecialEffects([]);
-    setShowCombo(false);
-    setShowStreak(false);
+
+    if (currentProblemIndex < Object.keys(problems).length - 1) {
+      setCurrentProblemIndex(prev => prev + 1);
+      setTimeLeft(30); // 다음 문제로 넘어가면 시간 초기화
+    } else {
+      // 모든 문제 완료
+      setIsCompleted(true);
+      completeStage(stageId);
+      addCoins(score * 10); // 점수당 코인 지급
+      
+      // 다음 스테이지 잠금 해제 (예: 현재 스테이지 ID + 1)
+      const nextStageId = stageId + 1;
+      const nextStage = stages.find(s => s.id === nextStageId);
+      if (nextStage) {
+        unlockStage(nextStageId);
+      }
+    }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-farm-sky to-green-200">
-        <motion.div
-          className="text-center p-8 bg-white/80 rounded-2xl shadow-xl"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 mx-auto mb-4"
-          >
-            <Target className="w-16 h-16 text-blue-500" />
-          </motion.div>
-          <h2 className="text-2xl font-bold text-gray-600 mb-2">스테이지 로딩 중...</h2>
-          <p className="text-gray-500">잠시만 기다려주세요!</p>
-        </motion.div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200">
+        <div className="text-2xl font-bold text-blue-700">로딩 중...</div>
       </div>
     );
   }
 
-  if (!stage) {
-    return null;
-  }
-
-  // 문제가 없을 때 처리
-  if (!currentProblem) {
+  if (!stage || Object.keys(problems).length === 0) {
     return (
-      <div className="space-y-6 pb-20">
-        <motion.div 
-          className="farm-card p-8 text-center bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 shadow-xl"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-100 to-red-200 text-red-800 p-4">
+        <XCircle size={64} className="mb-4" />
+        <h1 className="text-3xl font-bold mb-2">문제를 불러올 수 없습니다</h1>
+        <p className="text-lg mb-6 text-center">잠시 후 다시 시도해주세요. 또는 월드맵에서 다른 스테이지를 선택해주세요.</p>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center"
+          onClick={() => navigate('/world-map')}
         >
-          <motion.div
-            className="text-6xl mb-4"
-            animate={{ 
-              scale: [1, 1.2, 1],
-              rotate: [0, 5, -5, 0]
-            }}
-            transition={{ duration: 0.6 }}
-          >
-            <Target className="w-16 h-16 text-red-500" />
-          </motion.div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            문제를 불러올 수 없습니다
-          </h2>
-          <p className="text-gray-600 mb-6">
-            잠시 후 다시 시도해주세요.
-          </p>
-          <motion.button
-            onClick={() => navigate('/world-map')}
-            className="px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-500 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            월드맵으로 돌아가기
-          </motion.button>
-        </motion.div>
+          <ArrowLeft className="mr-2" /> 월드맵으로 돌아가기
+        </motion.button>
       </div>
     );
   }
 
   if (isCompleted) {
     return (
-      <div className="space-y-6 pb-20">
-        {/* 귀여운 헤더 */}
-        <motion.div 
-          className="farm-card p-6 bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50 border-2 border-yellow-200 shadow-xl"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 to-teal-200 text-green-800 p-4"
+      >
+        <Trophy size={64} className="mb-4 text-yellow-500" />
+        <h1 className="text-4xl font-bold mb-2">스테이지 완료!</h1>
+        <p className="text-xl mb-4">총 {Object.keys(problems).length} 문제 중 {score} 문제 정답!</p>
+        <p className="text-lg mb-6">최대 콤보: {maxCombo} 🎉</p>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center"
+          onClick={() => navigate('/world-map')}
         >
-          <div className="flex items-center space-x-4">
-            <motion.button
-              onClick={() => navigate('/world-map')}
-              className="p-3 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 transition-all duration-300 shadow-lg"
-              whileHover={{ scale: 1.1, rotate: -5 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <ArrowLeft className="w-6 h-6 text-white" />
-            </motion.button>
-            <div>
-              <motion.h1 
-                className="text-3xl font-bold text-gray-800 mb-2 flex items-center space-x-3"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <Trophy className="w-8 h-8 text-yellow-500" />
-                <span>스테이지 완료!</span>
-                <Trophy className="w-8 h-8 text-yellow-500" />
-              </motion.h1>
-              <p className="text-gray-600 text-lg">{stage.title}</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* 귀여운 결과 화면 */}
-        <motion.div
-          className="farm-card p-8 text-center bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 border-2 border-pink-200 shadow-2xl"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, type: "spring", stiffness: 200 }}
-        >
-          {/* 축하 애니메이션 */}
-          <motion.div
-            className="text-8xl mb-6"
-            animate={{ 
-              scale: [1, 1.3, 1],
-              rotate: [0, 10, -10, 0]
-            }}
-            transition={{ 
-              duration: 1,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            {score >= problems.length * 0.7 ? (
-              <Trophy className="w-20 h-20 text-yellow-500" />
-            ) : (
-              <Target className="w-20 h-20 text-blue-500" />
-            )}
-          </motion.div>
-          
-          <motion.h2 
-            className="text-4xl font-bold text-gray-800 mb-4 flex items-center justify-center space-x-3"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            {score >= problems.length * 0.7 ? (
-              <>
-                <Trophy className="w-8 h-8 text-yellow-500" />
-                <span>스테이지 클리어!</span>
-                <Sparkles className="w-8 h-8 text-yellow-500" />
-              </>
-            ) : (
-              <>
-                <Target className="w-8 h-8 text-blue-500" />
-                <span>다시 도전해보세요!</span>
-                <Zap className="w-8 h-8 text-blue-500" />
-              </>
-            )}
-          </motion.h2>
-          
-          {/* 보상 카드들 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <motion.div 
-              className="bg-gradient-to-r from-green-100 to-emerald-100 p-4 rounded-2xl border-2 border-green-200 shadow-lg"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <motion.div
-                animate={{
-                  rotate: [0, 10, -10, 0],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <Trophy className="w-6 h-6 text-green-500 mx-auto mb-2" />
-              </motion.div>
-              <div className="text-2xl font-bold text-green-600">{score}</div>
-              <div className="text-sm text-gray-600">정답</div>
-            </motion.div>
-            
-            <motion.div 
-              className="bg-gradient-to-r from-blue-100 to-cyan-100 p-4 rounded-2xl border-2 border-blue-200 shadow-lg"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <motion.div
-                animate={{
-                  rotate: [0, 360]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              >
-                <Sparkles className="w-6 h-6 text-blue-500 mx-auto mb-2" />
-              </motion.div>
-              <div className="text-2xl font-bold text-blue-600">{Math.round((score / problems.length) * 100)}%</div>
-              <div className="text-sm text-gray-600">정답률</div>
-            </motion.div>
-            
-            <motion.div 
-              className="bg-gradient-to-r from-red-100 to-pink-100 p-4 rounded-2xl border-2 border-red-200 shadow-lg"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <motion.div
-                animate={{
-                  rotate: [0, 360],
-                  scale: [1, 1.2, 1]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <Flame className="w-6 h-6 text-red-500 mx-auto mb-2" />
-              </motion.div>
-              <div className="text-2xl font-bold text-red-600">{maxCombo}</div>
-              <div className="text-sm text-gray-600">최대 콤보</div>
-            </motion.div>
-            
-            <motion.div 
-              className="bg-gradient-to-r from-yellow-100 to-orange-100 p-4 rounded-2xl border-2 border-yellow-200 shadow-lg"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <motion.div
-                animate={{
-                  rotate: [0, 360]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              >
-                <Coins className="w-6 h-6 text-yellow-500 mx-auto mb-2" />
-              </motion.div>
-              <div className="text-2xl font-bold text-yellow-600">{score * 10}</div>
-              <div className="text-sm text-gray-600">코인</div>
-            </motion.div>
-          </div>
-
-          {/* 액션 버튼들 */}
-          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
-            <motion.button
-              onClick={handleRetry}
-              className="flex-1 py-4 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <Target className="w-5 h-5" />
-              <span>다시 도전</span>
-            </motion.button>
-            <motion.button
-              onClick={() => navigate('/world-map')}
-              className="flex-1 py-4 bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ 
-                opacity: 1, 
-                y: 0,
-                boxShadow: [
-                  "0 10px 25px rgba(236, 72, 153, 0.3)",
-                  "0 15px 35px rgba(236, 72, 153, 0.5)",
-                  "0 10px 25px rgba(236, 72, 153, 0.3)"
-                ]
-              }}
-              transition={{ 
-                delay: 0.8,
-                boxShadow: {
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }
-              }}
-            >
-              <div className="flex items-center justify-center space-x-2">
-                <motion.div
-                  animate={{
-                    rotate: [0, 10, -10, 0],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <Zap className="w-5 h-5" />
-                </motion.div>
-                <span>월드맵으로</span>
-              </div>
-            </motion.button>
-          </div>
-        </motion.div>
-      </div>
+          <ArrowLeft className="mr-2" /> 월드맵으로 돌아가기
+        </motion.button>
+      </motion.div>
     );
   }
 
+  const progress = ((currentProblemIndex + 1) / Object.keys(problems).length) * 100;
+
   return (
-    <div className="space-y-6 pb-20">
-      {/* 귀여운 헤더 */}
-      <motion.div 
-        className="farm-card p-6 bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50 border-2 border-pink-200 shadow-xl"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <motion.button
-              onClick={() => navigate('/world-map')}
-              className="p-3 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 transition-all duration-300 shadow-lg"
-              whileHover={{ scale: 1.1, rotate: -5 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <ArrowLeft className="w-6 h-6 text-white" />
-            </motion.button>
-            <div>
-              <motion.h1 
-                className="text-3xl font-bold text-gray-800 mb-2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                {currentUnit ? `${currentUnit.title} (${currentUnit.grade === 0 ? '유치원' : currentUnit.grade <= 6 ? `${currentUnit.grade}학년` : `${currentUnit.grade - 6}학년`})` : stage.title}
-              </motion.h1>
-              <motion.p 
-                className="text-gray-600 text-lg"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                {currentUnit?.description || stage.description}
-              </motion.p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            {/* 콤보 표시 */}
-            {combo > 0 && (
-              <motion.div 
-                className="flex items-center space-x-2 bg-gradient-to-r from-red-100 to-pink-100 px-4 py-3 rounded-2xl shadow-lg border-2 border-red-200"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
-              >
-                <motion.div
-                  animate={{
-                    rotate: [0, 360],
-                    scale: [1, 1.2, 1]
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <Flame className="w-6 h-6 text-red-500" />
-                </motion.div>
-                <span className="text-xl font-bold text-red-600">{combo}콤보</span>
-              </motion.div>
-            )}
-            
-            {/* 스트릭 표시 */}
-            {streak > 0 && (
-              <motion.div 
-                className="flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-cyan-100 px-4 py-3 rounded-2xl shadow-lg border-2 border-blue-200"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
-              >
-                <motion.div
-                  animate={{
-                    rotate: [0, 10, -10, 0],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <Zap className="w-6 h-6 text-blue-500" />
-                </motion.div>
-                <span className="text-xl font-bold text-blue-600">{streak}연속</span>
-              </motion.div>
-            )}
-            
-            {/* 점수 표시 */}
-            <motion.div 
-              className="flex items-center space-x-3 bg-gradient-to-r from-yellow-100 to-orange-100 px-4 py-3 rounded-2xl shadow-lg"
-              whileHover={{ scale: 1.05 }}
-            >
-              <motion.div
-                animate={{
-                  rotate: [0, 10, -10, 0],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <Star className="w-6 h-6 text-yellow-500" />
-              </motion.div>
-              <span className="text-2xl font-bold text-gray-800">{score}</span>
-            </motion.div>
-            
-            {/* 시간 표시 */}
-            <motion.div 
-              className={`flex items-center space-x-3 px-4 py-3 rounded-2xl shadow-lg ${
-                timeLeft <= 10 
-                  ? 'bg-gradient-to-r from-red-100 to-pink-100' 
-                  : 'bg-gradient-to-r from-blue-100 to-cyan-100'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              animate={timeLeft <= 10 ? {
-                scale: [1, 1.05, 1],
-                boxShadow: [
-                  "0 4px 15px rgba(239, 68, 68, 0.3)",
-                  "0 8px 25px rgba(239, 68, 68, 0.5)",
-                  "0 4px 15px rgba(239, 68, 68, 0.3)"
-                ]
-              } : {}}
-              transition={{
-                duration: 1,
-                repeat: timeLeft <= 10 ? Infinity : 0,
-                ease: "easeInOut"
-              }}
-            >
-              <motion.div
-                animate={{
-                  rotate: [0, 360]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              >
-                <Clock className={`w-6 h-6 ${timeLeft <= 10 ? 'text-red-500' : 'text-blue-500'}`} />
-              </motion.div>
-              <span className={`text-2xl font-bold ${timeLeft <= 10 ? 'text-red-600' : 'text-gray-800'}`}>
-                {timeLeft}
-              </span>
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* 배경 효과 */}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
+        className="absolute inset-0 bg-white bg-opacity-30 rounded-full blur-3xl opacity-50"
+        style={{ width: '80vmin', height: '80vmin', top: '-40vmin', left: '-40vmin' }}
+      ></motion.div>
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.7, type: "spring", stiffness: 100, delay: 0.2 }}
+        className="absolute inset-0 bg-yellow-100 bg-opacity-30 rounded-full blur-3xl opacity-50"
+        style={{ width: '60vmin', height: '60vmin', bottom: '-30vmin', right: '-30vmin' }}
+      ></motion.div>
 
-      {/* 귀여운 진행률 */}
-      <motion.div 
-        className="farm-card p-6 bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-200 shadow-lg"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center space-x-3">
-            <motion.div
-              animate={{
-                rotate: [0, 360]
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            >
-              <Sparkles className="w-6 h-6 text-purple-500" />
-            </motion.div>
-            <span className="text-lg font-bold text-gray-800">문제 진행률</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-gray-800">{currentProblemIndex + 1}</span>
-            <span className="text-gray-600">/</span>
-            <span className="text-2xl font-bold text-gray-800">{problems.length}</span>
-          </div>
-        </div>
-        <div className="w-full bg-gradient-to-r from-gray-200 to-gray-300 rounded-full h-4 shadow-inner">
-          <motion.div
-            className="bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 h-4 rounded-full shadow-lg"
-            initial={{ width: 0 }}
-            animate={{ width: `${((currentProblemIndex + 1) / problems.length) * 100}%` }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            {/* 진행률 바 내부 반짝이는 효과 */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 rounded-full"
-              animate={{
-                x: ['-100%', '100%'],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "linear",
-                delay: 1
-              }}
-            />
-          </motion.div>
-        </div>
-      </motion.div>
-
-      {/* 특별 효과 표시 */}
+      {/* 특수 효과 애니메이션 */}
       <AnimatePresence>
-        {specialEffects.map((effect, index) => (
+        {specialEffects.includes('fire') && (
           <motion.div
-            key={index}
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
-            initial={{ scale: 0, opacity: 0, y: 0 }}
-            animate={{ scale: 1, opacity: 1, y: -50 }}
-            exit={{ scale: 0, opacity: 0, y: -100 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.5 }}
+            className="absolute inset-0 flex items-center justify-center text-red-500 text-6xl font-bold z-10"
           >
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-full text-2xl font-bold shadow-2xl border-2 border-yellow-300">
-              {effect}
-            </div>
+            <Flame size={100} className="animate-bounce" />
           </motion.div>
-        ))}
+        )}
+        {specialEffects.includes('star') && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.5 }}
+            className="absolute inset-0 flex items-center justify-center text-yellow-400 text-6xl font-bold z-10"
+          >
+            <Sparkles size={100} className="animate-spin" />
+          </motion.div>
+        )}
       </AnimatePresence>
 
-      {/* 콤보 표시 */}
+      {/* 콤보 및 연속 정답 UI */}
       <AnimatePresence>
         {showCombo && (
           <motion.div
-            className="fixed top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="absolute top-20 left-1/2 -translate-x-1/2 bg-yellow-400 text-white px-4 py-2 rounded-full shadow-lg text-xl font-bold z-20"
           >
-            <div className="bg-gradient-to-r from-red-400 to-pink-500 text-white px-8 py-4 rounded-full text-3xl font-bold shadow-2xl border-2 border-red-300 flex items-center space-x-3">
-              <Flame className="w-8 h-8" />
-              <span>콤보!</span>
-            </div>
+            {combo} 콤보!
           </motion.div>
         )}
-      </AnimatePresence>
-
-      {/* 스트릭 표시 */}
-      <AnimatePresence>
         {showStreak && (
           <motion.div
-            className="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="absolute top-32 left-1/2 -translate-x-1/2 bg-purple-500 text-white px-4 py-2 rounded-full shadow-lg text-xl font-bold z-20"
           >
-            <div className="bg-gradient-to-r from-blue-400 to-cyan-500 text-white px-8 py-4 rounded-full text-3xl font-bold shadow-2xl border-2 border-blue-300 flex items-center space-x-3">
-              <Zap className="w-8 h-8" />
-              <span>연속 정답!</span>
-            </div>
+            {streak} 연속 정답!
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* 귀여운 작물 성장 애니메이션 */}
+      {/* 뒤로가기 버튼 */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="absolute top-4 left-4 p-2 rounded-full bg-white bg-opacity-50 hover:bg-opacity-70 transition-all duration-200 z-10"
+        onClick={() => navigate('/world-map')}
+      >
+        <ArrowLeft size={24} className="text-gray-800" />
+      </motion.button>
+
+      <div className="relative bg-white rounded-3xl shadow-2xl p-8 w-full max-w-2xl z-10 transform transition-all duration-300 hover:scale-[1.01]">
+        {/* 상단 정보 */}
+        <div className="flex justify-between items-center mb-6">
+          <motion.h1
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl font-extrabold text-gray-800 flex items-center"
+          >
+            <Target className="mr-2 text-blue-500" />
+            {currentUnit ? `${currentUnit.name} (${grade}학년)` : stage.title}
+          </motion.h1>
+          <div className="flex items-center space-x-4">
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="flex items-center text-xl font-semibold text-blue-600"
+            >
+              <Clock className="mr-2" /> {timeLeft}s
+            </motion.div>
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex items-center text-xl font-semibold text-yellow-600"
+            >
+              <Star className="mr-2" /> {score} / {Object.keys(problems).length}
+            </motion.div>
+          </div>
+        </div>
+
+        {/* 진행 바 */}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.5 }}
+          className="h-3 bg-blue-500 rounded-full mb-8 shadow-inner"
+        ></motion.div>
+
+        {/* 문제 영역 */}
+        <motion.div
+          key={currentProblemIndex}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="bg-blue-50 p-6 rounded-2xl mb-8 shadow-inner"
+        >
+          <div className="flex items-start mb-4">
+            <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold mr-4 flex-shrink-0">
+              {currentProblemIndex + 1}
+            </div>
+            <p className="text-2xl font-bold text-gray-900 leading-relaxed">
+              {currentProblem.question}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {currentProblem.options?.map((option, index) => (
+              <motion.button
+                key={index}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`p-4 rounded-xl text-lg font-medium transition-all duration-200 flex items-center
+                  ${selectedAnswer === option ? 'bg-blue-400 text-white shadow-md' : 'bg-blue-200 text-blue-800 hover:bg-blue-300'}
+                  ${showResult && option === currentProblem.answer ? 'bg-green-500 text-white animate-pulse-once' : ''}
+                  ${showResult && selectedAnswer === option && selectedAnswer !== currentProblem.answer ? 'bg-red-500 text-white animate-shake' : ''}
+                `}
+                onClick={() => handleAnswerSelect(option)}
+                disabled={showResult}
+                data-answer={option}
+              >
+                <span className="bg-white bg-opacity-30 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3 flex-shrink-0">
+                  {String.fromCharCode(9312 + index)}
+                </span>
+                <span className="text-left">{option}</span>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* 결과 및 다음 문제 버튼 */}
+        {showResult && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mt-6 text-center"
+          >
+            {selectedAnswer === currentProblem.answer ? (
+              <motion.div
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                className="text-green-600 text-2xl font-bold flex items-center justify-center mb-4"
+              >
+                <CheckCircle className="mr-2" /> 정답입니다!
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                className="text-red-600 text-2xl font-bold flex items-center justify-center mb-4"
+              >
+                <XCircle className="mr-2" /> 오답입니다. 정답은 {currentProblem.answer}
+              </motion.div>
+            )}
+            <p className="text-gray-700 text-lg mb-4">{currentProblem.explanation}</p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg"
+              onClick={handleNextProblem}
+            >
+              {currentProblemIndex < Object.keys(problems).length - 1 ? '다음 문제' : '결과 보기'}
+            </motion.button>
+          </motion.div>
+        )}
+
+        {!showResult && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className={`w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-4 rounded-full shadow-lg text-xl mt-6
+              ${!selectedAnswer ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={handleSubmitAnswer}
+            disabled={!selectedAnswer}
+          >
+            정답 제출
+          </motion.button>
+        )}
+      </div>
+
+      {/* 작물 성장 애니메이션 */}
       <AnimatePresence>
         {cropGrowthAnimation && (
           <motion.div
-            className="farm-card p-8 text-center bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border-2 border-green-200 shadow-2xl"
-            initial={{ scale: 0.8, opacity: 0, y: 50 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: -50 }}
-            transition={{ duration: 0.8, type: "spring", stiffness: 200 }}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ duration: 0.5 }}
+            className="absolute bottom-10 right-10 z-20"
           >
-            {/* 작물 성장 이모지들 */}
-            <div className="flex justify-center space-x-4 mb-4">
-            <motion.div
-              className="text-6xl text-green-500"
-              animate={{ 
-                scale: [1, 1.3, 1],
-                rotate: [0, 10, -10, 0]
-              }}
-              transition={{ 
-                duration: 1,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <Sprout className="w-16 h-16" />
-            </motion.div>
-            <motion.div
-              className="text-6xl text-green-600"
-              animate={{ 
-                scale: [1, 1.2, 1],
-                rotate: [0, -5, 5, 0]
-              }}
-              transition={{ 
-                duration: 1.2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.2
-              }}
-            >
-              <Leaf className="w-16 h-16" />
-            </motion.div>
-            <motion.div
-              className="text-6xl text-green-700"
-              animate={{ 
-                scale: [1, 1.4, 1],
-                rotate: [0, 15, -15, 0]
-              }}
-              transition={{ 
-                duration: 1.4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.4
-              }}
-            >
-              <TreePine className="w-16 h-16" />
-            </motion.div>
-            </div>
-            
-            <motion.p 
-              className="text-2xl font-bold text-green-800 mb-2 flex items-center justify-center space-x-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Sprout className="w-6 h-6 text-green-600" />
-              <span>작물이 자라고 있어요!</span>
-              <Sparkles className="w-6 h-6 text-yellow-500" />
-            </motion.p>
-            
-            <motion.div
-              className="inline-block bg-gradient-to-r from-green-400 to-emerald-500 text-white px-6 py-3 rounded-full text-xl font-bold shadow-lg"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ 
-                opacity: 1, 
-                scale: [1, 1.1, 1],
-                boxShadow: [
-                  "0 4px 15px rgba(34, 197, 94, 0.3)",
-                  "0 8px 25px rgba(34, 197, 94, 0.5)",
-                  "0 4px 15px rgba(34, 197, 94, 0.3)"
-                ]
-              }}
-              transition={{ 
-                delay: 0.7,
-                boxShadow: {
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }
-              }}
-            >
-              +{stage.cropGrowthReward} 성장
-            </motion.div>
+            <Target size={80} className="text-green-500" />
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* 귀여운 문제 카드 */}
-      <motion.div
-        key={currentProblemIndex}
-        className="farm-card p-8 bg-gradient-to-br from-white via-pink-50 to-purple-50 border-2 border-pink-200 shadow-2xl"
-        initial={{ x: 300, opacity: 0, scale: 0.8 }}
-        animate={{ x: 0, opacity: 1, scale: 1 }}
-        exit={{ x: -300, opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
-      >
-        {/* 문제 번호와 장식 */}
-        <div className="text-center mb-8 relative">
-          <motion.div
-            className="inline-block bg-gradient-to-r from-pink-400 to-purple-500 text-white px-6 py-3 rounded-full text-xl font-bold shadow-lg mb-4"
-            animate={{
-              scale: [1, 1.05, 1],
-              boxShadow: [
-                "0 4px 15px rgba(236, 72, 153, 0.3)",
-                "0 8px 25px rgba(236, 72, 153, 0.5)",
-                "0 4px 15px rgba(236, 72, 153, 0.3)"
-              ]
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            문제 {currentProblemIndex + 1}
-          </motion.div>
-          
-          {/* 장식 요소들 */}
-          <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-            <Sparkles className="w-3 h-3 text-white" />
-          </div>
-          <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
-            <Heart className="w-3 h-3 text-white" />
-          </div>
-          
-          <motion.p 
-            className="text-2xl text-gray-800 font-bold bg-gradient-to-r from-pink-100 to-purple-100 px-8 py-4 rounded-2xl shadow-lg"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            {currentProblem.question}
-          </motion.p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-6 mb-8">
-          {currentProblem.options.map((option: string) => {
-            const isSelected = selectedAnswer === option;
-            const isCorrect = showResult && option === currentProblem.correctAnswer;
-            const isWrong = showResult && isSelected && option !== currentProblem.correctAnswer;
-            
-            return (
-              <motion.button
-                key={option}
-                data-answer={option}
-                onClick={() => handleAnswerSelect(option)}
-                disabled={showResult}
-                className={`p-6 rounded-2xl text-xl font-bold transition-all duration-300 shadow-lg ${
-                  isCorrect
-                    ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white border-2 border-green-600 shadow-green-200'
-                    : isWrong
-                      ? 'bg-gradient-to-r from-red-400 to-rose-500 text-white border-2 border-red-600 shadow-red-200'
-                      : isSelected
-                        ? 'bg-gradient-to-r from-pink-400 to-purple-500 text-white border-2 border-pink-600 shadow-pink-200'
-                        : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border-2 border-gray-300 hover:border-pink-400 hover:bg-gradient-to-r hover:from-pink-100 hover:to-purple-100 hover:shadow-pink-200'
-                }`}
-                whileHover={!showResult ? { 
-                  scale: 1.05, 
-                  y: -5,
-                  rotateY: 5,
-                  boxShadow: "0 15px 30px rgba(0,0,0,0.2)"
-                } : {}}
-                whileTap={!showResult ? { scale: 0.95 } : {}}
-                animate={isCorrect ? {
-                  scale: [1, 1.1, 1],
-                  boxShadow: [
-                    "0 4px 15px rgba(34, 197, 94, 0.3)",
-                    "0 8px 25px rgba(34, 197, 94, 0.5)",
-                    "0 4px 15px rgba(34, 197, 94, 0.3)"
-                  ]
-                } : isWrong ? {
-                  scale: [1, 0.95, 1],
-                  x: [0, -5, 5, 0]
-                } : {}}
-                transition={{
-                  duration: 0.3,
-                  repeat: isCorrect ? Infinity : 0,
-                  ease: "easeInOut"
-                }}
-              >
-                <div className="flex items-center justify-center space-x-3">
-                  {isCorrect && (
-                    <motion.div
-                      animate={{
-                        scale: [1, 1.2, 1],
-                        rotate: [0, 10, -10, 0]
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    >
-                      <CheckCircle className="w-6 h-6" />
-                    </motion.div>
-                  )}
-                  {isWrong && (
-                    <motion.div
-                      animate={{
-                        scale: [1, 1.2, 1],
-                        rotate: [0, -10, 10, 0]
-                      }}
-                      transition={{
-                        duration: 0.6,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    >
-                      <XCircle className="w-6 h-6" />
-                    </motion.div>
-                  )}
-                  <span>{option}</span>
-                </div>
-              </motion.button>
-            );
-          })}
-        </div>
-
-        {showResult && (
-          <motion.div
-            className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl mb-6 border-2 border-blue-200 shadow-lg"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex items-center space-x-3 mb-4">
-              <motion.div
-                animate={{
-                  rotate: [0, 360]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              >
-                <Sparkles className="w-6 h-6 text-blue-500" />
-              </motion.div>
-              <h3 className="text-xl font-bold text-gray-800">해설</h3>
-            </div>
-            <p className="text-gray-700 text-lg leading-relaxed">{currentProblem.explanation}</p>
-          </motion.div>
-        )}
-
-        {!showResult && selectedAnswer && (
-          <motion.button
-            onClick={handleSubmitAnswer}
-            className="w-full py-6 bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 text-white rounded-2xl font-bold text-xl shadow-xl hover:shadow-2xl transition-all duration-300"
-            whileHover={{ 
-              scale: 1.05, 
-              y: -2,
-              boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
-            }}
-            whileTap={{ scale: 0.95 }}
-            animate={{
-              boxShadow: [
-                "0 10px 25px rgba(236, 72, 153, 0.3)",
-                "0 15px 35px rgba(236, 72, 153, 0.5)",
-                "0 10px 25px rgba(236, 72, 153, 0.3)"
-              ]
-            }}
-            transition={{
-              boxShadow: {
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }
-            }}
-          >
-            <div className="flex items-center justify-center space-x-3">
-              <motion.div
-                animate={{
-                  rotate: [0, 10, -10, 0],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <Zap className="w-6 h-6" />
-              </motion.div>
-              <span>답안 제출</span>
-            </div>
-          </motion.button>
-        )}
-      </motion.div>
     </div>
   );
 }

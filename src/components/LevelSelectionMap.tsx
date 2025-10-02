@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Sparkles } from 'lucide-react';
 
 // 학년별 커리큘럼 레벨 정의
@@ -171,6 +171,75 @@ const colorMap = {
   emerald: 'bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800'
 };
 
+// Canvas 기반 SnakeCurve 컴포넌트
+function SnakeCurveCanvas({ levelCount, pathHeight }: { levelCount: number; pathHeight: number }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // 캔버스 초기화
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 파라미터
+    const centerX = canvas.width / 2; // 중앙 X (400px)
+    const amplitude = 100;            // 좌우 흔들림 크기 (적당히)
+    const wavelength = 440;           // 파동 주기 (220px * 2 = 440px로 스테이지 간격에 맞춤)
+    const step = 10;                  // y 간격 (작을수록 곡선 부드러움)
+    const startY = 50;
+    const endY = pathHeight - 50;
+
+    // 스타일
+    ctx.strokeStyle = "#8B5CF6";
+    ctx.globalAlpha = 0.3;            // 투명도 30% (50% → 30%)
+    ctx.lineWidth = 8;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+
+    // 경로 시작
+    ctx.beginPath();
+    ctx.moveTo(centerX, startY);
+
+    for (let y = startY; y <= endY; y += step) {
+      const x = centerX + amplitude * Math.sin((y / wavelength) * 2 * Math.PI);
+      ctx.lineTo(x, y);
+    }
+
+    ctx.stroke();
+
+    // 노드 위치 표시 (레벨 포인트) - 스테이지 위치에 맞춰 조정
+    for (let i = 0; i < levelCount; i++) {
+      const y = 100 + i * 220; // 스테이지와 동일한 Y 위치
+      const x = centerX + amplitude * Math.sin((y / wavelength) * 2 * Math.PI);
+      
+      // 노드 원
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.fillStyle = "white";
+      ctx.fill();
+      ctx.strokeStyle = "#8B5CF6";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+    
+    // 투명도 리셋
+    ctx.globalAlpha = 1.0;
+  }, [levelCount, pathHeight]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={800}
+      height={pathHeight}
+      className="absolute left-1/2 top-0 w-full h-full z-0"
+      style={{ transform: 'translateX(-50%)' }}
+    />
+  );
+}
+
 export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
   const [hoveredLevel, setHoveredLevel] = useState<string | null>(null);
 
@@ -178,31 +247,6 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
   const levelCount = curriculumLevels.length;
   const pathHeight = Math.max(800, levelCount * 220 + 200); // 최소 800px로 줄여서 빈 공간 최소화
   const containerHeight = pathHeight + 100; // 여유 공간 추가
-
-  // 골목길 경로 생성 함수 - 뱀이 기어가듯 좌우로 출렁이는 곡선
-  const generateAlleyPath = () => {
-    let path = "M 400 50";
-    const segmentHeight = 200;
-    const centerX = 400;
-    const leftX = 300;
-    const rightX = 500;
-    
-    for (let i = 1; i < levelCount; i++) {
-      const y = 50 + i * segmentHeight;
-      const x = (i % 2 === 0) ? rightX : leftX;
-      const prevY = 50 + (i - 1) * segmentHeight;
-
-      // 제어점 X 좌표를 도착점 쪽으로 이동시켜서 진짜 곡선 만들기
-      const c1x = (x + centerX) / 2;
-      const c1y = prevY + segmentHeight / 3;
-      const c2x = (x + centerX) / 2;
-      const c2y = prevY + 2 * segmentHeight / 3;
-
-      path += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x} ${y}`;
-    }
-    
-    return path;
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-purple-50">
@@ -213,58 +257,31 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                 <div className="max-w-6xl mx-auto">
                   {/* 학습 경로 컨테이너 - 세로 스크롤 가능 */}
                   <div className="relative overflow-y-auto" style={{ minHeight: `${containerHeight}px` }}>
-                    {/* 골목길 경로 SVG - 구불구불한 길 */}
-                    <svg 
-                      className="absolute left-1/2 top-0 w-full h-full z-0" 
-                      viewBox={`0 0 800 ${pathHeight}`}
-                      preserveAspectRatio="none"
-                      style={{ transform: 'translateX(-50%)' }}
-                    >
-                      <motion.path
-                        d={generateAlleyPath()}
-                        stroke="#8B5CF6"
-                        strokeWidth="8"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 5, ease: "easeInOut" }}
-                      />
-                      <defs>
-                        <linearGradient id="alleyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#EC4899" />
-                          <stop offset="11%" stopColor="#3B82F6" />
-                          <stop offset="22%" stopColor="#10B981" />
-                          <stop offset="33%" stopColor="#8B5CF6" />
-                          <stop offset="44%" stopColor="#F59E0B" />
-                          <stop offset="55%" stopColor="#EF4444" />
-                          <stop offset="67%" stopColor="#6366F1" />
-                          <stop offset="78%" stopColor="#14B8A6" />
-                          <stop offset="100%" stopColor="#10B981" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
+                    {/* Canvas 기반 SnakeCurve - 진짜 부드러운 사인파 곡선 */}
+                    <SnakeCurveCanvas levelCount={levelCount} pathHeight={pathHeight} />
 
                     {/* 학년별 스테이지들 - 골목길을 따라 배치 */}
                     <div className="relative z-10">
                       {curriculumLevels.map((level, index) => {
-                        // 골목길을 따라 위치 계산 (세로로 쭉 배치, 뱀 기어가는 곡선에 맞춰)
-                        const baseY = 100 + index * 220;
-                        // 반응형 좌우 배치 - centerX 기준으로 상대적 위치
-                        const centerX = 400;
-                        const offset = 100; // centerX에서 좌우로 100px씩
-                        const xOffset = index % 2 === 0 ? centerX + offset : centerX - offset;
+                        // 일정한 간격으로 세로 배치
+                        const startY = 100;
+                        const y = startY + index * 220; // 220px 간격으로 일정하게 배치
+                        
+                        // 좌우 번갈아 배치 (일정한 규칙)
+                        const isLeft = index % 2 === 0;
+                        const leftX = 300;   // 왼쪽 고정 위치
+                        const rightX = 700;  // 오른쪽 고정 위치
+                        const x = isLeft ? leftX : rightX;
                         
                         return (
                           <motion.div
                             key={level.id}
                             className="absolute"
                             style={{
-                              left: `${xOffset - 60}px`,
-                              top: `${baseY - 60}px`,
+                              left: `${x - 60}px`,
+                              top: `${y - 60}px`,
                             }}
-                            initial={{ opacity: 0, scale: 0, x: xOffset < 400 ? -100 : 100 }}
+                            initial={{ opacity: 0, scale: 0, x: isLeft ? -150 : 150 }}
                             animate={{ opacity: 1, scale: 1, x: 0 }}
                             transition={{ 
                               duration: 0.8, 
@@ -364,43 +381,6 @@ export function LevelSelectionMap({ onLevelSelect }: LevelSelectionMapProps) {
                 </div>
               </div>
 
-      {/* 하단 네비게이션 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
-        <div className="max-w-md mx-auto px-6 py-4">
-          <div className="flex items-center justify-around">
-            <div className="flex flex-col items-center space-y-1">
-              <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm">🏠</span>
-              </div>
-              <span className="text-xs text-green-600 font-medium">홈</span>
-            </div>
-            <div className="flex flex-col items-center space-y-1">
-              <div className="w-8 h-8 bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-500 text-sm">📚</span>
-              </div>
-              <span className="text-xs text-gray-500">스토리</span>
-            </div>
-            <div className="flex flex-col items-center space-y-1">
-              <div className="w-8 h-8 bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-500 text-sm">💪</span>
-              </div>
-              <span className="text-xs text-gray-500">연습</span>
-            </div>
-            <div className="flex flex-col items-center space-y-1">
-              <div className="w-8 h-8 bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-500 text-sm">🌳</span>
-              </div>
-              <span className="text-xs text-gray-500">리더보드</span>
-            </div>
-            <div className="flex flex-col items-center space-y-1">
-              <div className="w-8 h-8 bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-500 text-sm">👤</span>
-              </div>
-              <span className="text-xs text-gray-500">프로필</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

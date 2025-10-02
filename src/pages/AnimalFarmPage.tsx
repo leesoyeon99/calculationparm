@@ -17,12 +17,15 @@ import {
   Car,
   Award,
   Star,
-  Sparkles
+  Sparkles,
+  Trophy,
+  TrendingUp,
+  Users
 } from 'lucide-react';
 
 export function AnimalFarmPage() {
   const navigate = useNavigate();
-  const { farm, adoptAnimal, feedAnimal, playWithAnimal, trainAnimal, addCoins, addStudyTime } = useGameStore();
+  const { farm, adoptAnimal, feedAnimal, playWithAnimal, trainAnimal, addCoins, addStudyTime, dailyStudyTime, getRankings } = useGameStore();
   const [activeTab, setActiveTab] = useState<'farm' | 'study'>('farm');
   const [showAdoptModal, setShowAdoptModal] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState<1 | 2 | 3>(1);
@@ -50,6 +53,9 @@ export function AnimalFarmPage() {
   });
   const [showGameModal, setShowGameModal] = useState(false);
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
+  const [showRankingModal, setShowRankingModal] = useState(false);
+  const [isHatching, setIsHatching] = useState(false);
+  const [pendingAnimal, setPendingAnimal] = useState<{animalType: string, animalLevel: number} | null>(null);
   
   // 랜덤 동물 타입 정의 (이미지와 함께)
   const animalTypes = [
@@ -96,6 +102,19 @@ export function AnimalFarmPage() {
     };
   }, [isRunning]);
 
+  // 부화 완료 후 동물 입양 처리
+  useEffect(() => {
+    if (pendingAnimal) {
+      console.log('동물 입양 실행:', pendingAnimal);
+      adoptAnimal(
+        pendingAnimal.animalType as any, 
+        pendingAnimal.animalLevel as any, 
+        { x: Math.random() * 300 + 50, y: Math.random() * 200 + 50 }
+      );
+      setPendingAnimal(null);
+    }
+  }, [pendingAnimal, adoptAnimal]);
+
   useEffect(() => {
     if (isRunning && timer % 60 === 0 && timer > 0) {
       // Every minute, update animal stats and show a cheering message
@@ -124,12 +143,25 @@ export function AnimalFarmPage() {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
-    const minutesStudied = Math.floor(timer / 60);
-    if (minutesStudied > 0) {
-      addStudyTime(minutesStudied, selectedSubject);
-      setCheeringMessage(`오늘 ${minutesStudied}분 공부 완료! 정말 대단해! 🎉`);
+    
+    // 초 단위까지 정확하게 저장
+    const totalSeconds = timer;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    
+    if (totalSeconds > 0) {
+      // 초 단위를 분으로 변환하여 저장 (소수점 포함)
+      const exactMinutes = totalSeconds / 60;
+      addStudyTime(exactMinutes, selectedSubject);
+      
+      setCheeringMessage(`오늘 ${minutes}분 ${seconds}초 공부 완료! 정말 대단해! 🎉`);
       setShowCheering(true);
       setTimeout(() => setShowCheering(false), 3000);
+      
+      // 공부 완료 후 랭킹 모달 표시
+      setTimeout(() => {
+        setShowRankingModal(true);
+      }, 2000);
     }
     setTimer(0);
   };
@@ -225,17 +257,34 @@ export function AnimalFarmPage() {
   };
 
   const handleAdopt = () => {
-    adoptAnimal(selectedLevel);
+    // 랜덤 동물 타입 선택
+    const randomAnimal = Math.random() < 0.6 ? 
+      animalTypes[Math.floor(Math.random() * 6)] : // 토끼들 (0-5)
+      animalTypes[Math.floor(Math.random() * animalTypes.length)]; // 전체
+    
+    const animalType = randomAnimal.type as 'rabbit' | 'rabbit1' | 'rabbit2' | 'rabbit3' | 'rabbit4' | 'rabbit5' | 'cat' | 'cat1' | 'cat2' | 'cat3' | 'fish' | 'fish1' | 'bird' | 'hamster' | 'dog';
+    const animalLevel = selectedLevel as 1 | 2 | 3;
+    
+    adoptAnimal(animalType, animalLevel, { x: Math.random() * 300 + 50, y: Math.random() * 200 + 50 });
     setShowAdoptModal(false);
   };
 
   const handleEggHatch = () => {
+    // 중복 호출 방지
+    if (isHatching) {
+      console.log('이미 부화 중입니다.');
+      return;
+    }
+    
     // 코인 확인
     if (farm.resources.coins < eggHatchCost) {
       setCurrentDialogue(`코인이 부족해요! ${eggHatchCost}개가 필요해요 💰`);
       setShowDialogueModal(true);
       return;
     }
+    
+    // 부화 시작
+    setIsHatching(true);
     
     // 코인 차감
     addCoins(-eggHatchCost);
@@ -254,7 +303,7 @@ export function AnimalFarmPage() {
             animalTypes[Math.floor(Math.random() * animalTypes.length)]; // 전체
           setHatchedAnimal(randomAnimal);
           
-          // 실제 동물 타입에 따라 입양
+          // 실제 동물 타입에 따라 입양 정보 저장
           const animalType = randomAnimal.type as 'rabbit' | 'rabbit1' | 'rabbit2' | 'rabbit3' | 'rabbit4' | 'rabbit5' | 'cat' | 'cat1' | 'cat2' | 'cat3' | 'fish' | 'fish1' | 'bird' | 'hamster' | 'dog';
           // selectedEggType을 level로 변환 (1->1, 2->2, 3->3)
           const animalLevel = selectedEggType as 1 | 2 | 3;
@@ -263,10 +312,11 @@ export function AnimalFarmPage() {
           console.log('동물 타입:', animalType);
           console.log('동물 레벨:', animalLevel);
           
-          // React 렌더링 경고를 피하기 위해 setTimeout으로 감싸기
-          setTimeout(() => {
-            adoptAnimal(animalType, animalLevel, { x: Math.random() * 300 + 50, y: Math.random() * 200 + 50 });
-          }, 0);
+          // 동물 입양 정보를 저장 (나중에 호출)
+          setPendingAnimal({ animalType, animalLevel });
+          
+          // 부화 완료
+          setIsHatching(false);
           
           return 100;
         }
@@ -404,7 +454,6 @@ export function AnimalFarmPage() {
                           onTalk={() => handleTalk(animal.id)}
                           onGift={() => handleGift(animal.id)}
                           onStudyTimer={() => handleRabbitClick(animal.id)}
-                          size={animal.level === 1 ? 'small' : animal.level === 2 ? 'medium' : 'large'}
                           isInTank={true}
                           tankSize={{ width: window.innerWidth - 100, height: window.innerHeight * 0.7 }}
                         />
@@ -653,7 +702,7 @@ export function AnimalFarmPage() {
                       whileTap={{ scale: 0.95 }}
                     >
                       <Check className="w-6 h-6 inline mr-2" />
-                      완료
+                      공부 완료
                     </motion.button>
                   </div>
                 </div>
@@ -664,15 +713,59 @@ export function AnimalFarmPage() {
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div className="bg-blue-50 rounded-xl p-4">
                       <div className="text-2xl font-bold text-blue-600">
-                        {Math.floor(timer / 60)}분
+                        {Math.floor(timer / 60)}분 {timer % 60}초
                       </div>
-                      <div className="text-sm text-gray-600">오늘 공부 시간</div>
+                      <div className="text-sm text-gray-600">현재 공부 시간</div>
                     </div>
                     <div className="bg-green-50 rounded-xl p-4">
                       <div className="text-2xl font-bold text-green-600">
                         {selectedSubject}
                       </div>
                       <div className="text-sm text-gray-600">현재 과목</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 랭킹 섹션 */}
+                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-6 shadow-lg border-2 border-orange-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                      <Trophy className="w-6 h-6 text-orange-500 mr-2" />
+                      수학 마스터 랭킹
+                    </h3>
+                    <motion.button
+                      onClick={() => navigate('/ranking')}
+                      className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-2 rounded-xl font-bold shadow-md hover:shadow-lg transition-all duration-300 flex items-center space-x-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <TrendingUp className="w-4 h-4" />
+                      <span>랭킹 보기</span>
+                    </motion.button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white rounded-xl p-4 text-center">
+                      <div className="text-2xl font-bold text-orange-600">
+                        {Math.floor(dailyStudyTime / 60)}시간 {Math.floor(dailyStudyTime % 60)}분
+                      </div>
+                      <div className="text-sm text-gray-600">오늘 총 공부시간</div>
+                    </div>
+                    <div className="bg-white rounded-xl p-4 text-center">
+                      <div className="text-2xl font-bold text-yellow-600">
+                        #{getRankings('daily').myRank || '?'}
+                      </div>
+                      <div className="text-sm text-gray-600">현재 등수</div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-gray-600 mb-2">
+                      친구들과 공부시간을 비교하고 경쟁해보세요! 🏆
+                    </p>
+                    <div className="flex items-center justify-center space-x-2 text-xs text-gray-500">
+                      <Users className="w-4 h-4" />
+                      <span>현재 267명이 공부 중</span>
                     </div>
                   </div>
                 </div>
@@ -844,6 +937,8 @@ export function AnimalFarmPage() {
                         setShowEggModal(false);
                         setHatchedAnimal(null);
                         setHatchingProgress(0);
+                        setIsHatching(false);
+                        setPendingAnimal(null);
                       }}
                       className="w-full py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300"
                       whileHover={{ scale: 1.02 }}
@@ -858,6 +953,8 @@ export function AnimalFarmPage() {
                           setShowEggModal(false);
                           setHatchingProgress(0);
                           setHatchedAnimal(null);
+                          setIsHatching(false);
+                          setPendingAnimal(null);
                         }}
                         className="flex-1 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition-colors"
                         whileHover={{ scale: 1.02 }}
@@ -867,16 +964,17 @@ export function AnimalFarmPage() {
                       </motion.button>
                       <motion.button
                         onClick={handleEggHatch}
-                        disabled={hatchingProgress > 0 || farm.resources.coins < eggHatchCost}
+                        disabled={hatchingProgress > 0 || farm.resources.coins < eggHatchCost || isHatching}
                         className={`flex-1 py-3 rounded-xl font-bold shadow-lg transition-all duration-300 ${
-                          farm.resources.coins < eggHatchCost
+                          farm.resources.coins < eggHatchCost || isHatching
                             ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                             : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white hover:shadow-xl'
                         }`}
-                        whileHover={farm.resources.coins >= eggHatchCost ? { scale: 1.02 } : {}}
-                        whileTap={farm.resources.coins >= eggHatchCost ? { scale: 0.98 } : {}}
+                        whileHover={farm.resources.coins >= eggHatchCost && !isHatching ? { scale: 1.02 } : {}}
+                        whileTap={farm.resources.coins >= eggHatchCost && !isHatching ? { scale: 0.98 } : {}}
                       >
                         {hatchingProgress > 0 ? '부화 중...' : 
+                         isHatching ? '부화 중...' :
                          farm.resources.coins < eggHatchCost ? '코인 부족' : '부화하기'}
                       </motion.button>
                     </>
@@ -983,6 +1081,73 @@ export function AnimalFarmPage() {
                   </div>
                 );
               })()}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 랭킹 모달 */}
+      <AnimatePresence>
+        {showRankingModal && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 bg-gradient-to-r from-orange-500 to-yellow-500">
+                  <Trophy className="w-10 h-10 text-white" />
+                </div>
+                
+                <h2 className="text-3xl font-bold text-gray-800 mb-4">공부 완료! 🎉</h2>
+                <p className="text-gray-600 mb-6">
+                  오늘 <span className="font-bold text-orange-600">{Math.floor(dailyStudyTime / 60)}시간 {Math.floor(dailyStudyTime % 60)}분</span> 공부했어요!
+                </p>
+                
+                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-4 mb-6">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <Trophy className="w-5 h-5 text-orange-600" />
+                    <span className="font-bold text-gray-800">현재 랭킹</span>
+                  </div>
+                  <div className="text-2xl font-bold text-orange-600">
+                    #{getRankings('daily').myRank || '?'}등
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    상위 {Math.round(((getRankings('daily').myRank || 0) / 20) * 100)}%
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <motion.button
+                    onClick={() => {
+                      setShowRankingModal(false);
+                      navigate('/ranking');
+                    }}
+                    className="w-full py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <TrendingUp className="w-6 h-6" />
+                    <span>전체 랭킹 보기</span>
+                  </motion.button>
+                  
+                  <motion.button
+                    onClick={() => setShowRankingModal(false)}
+                    className="w-full py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition-colors"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    계속 공부하기
+                  </motion.button>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}

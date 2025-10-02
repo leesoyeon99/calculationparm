@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { GameState, Stage, Animal, AnimalFarm, Somariter, Achievement } from '../types';
+import { GameState, Stage, Animal, AnimalFarm, Somariter, Achievement, StudyRecord, Ranking, RankingUser } from '../types';
 
 interface GameStore extends GameState {
   // Actions
@@ -18,7 +18,14 @@ interface GameStore extends GameState {
   resetGame: () => void;
   // Study Timer Actions
   addStudyTime: (minutes: number, subject: string) => void;
+  addStudyRecord: (record: Omit<StudyRecord, 'id'>) => void;
+  getStudyRecords: (date?: string) => StudyRecord[];
+  getTotalStudyTime: () => number;
+  getDailyStudyTime: (date?: string) => number;
   updateFarm: (farm: AnimalFarm) => void;
+  // Ranking Actions
+  getRankings: (type: 'daily' | 'weekly' | 'monthly', date?: string) => Ranking;
+  updateRankings: () => void;
 }
 
 // 초등학교 1-6학년, 중학교 1-3학년 커리큘럼 스테이지 생성
@@ -224,6 +231,63 @@ const initialAchievements: Achievement[] = [
   }
 ];
 
+// 더미 랭킹 데이터 생성
+const generateDummyRankings = (): RankingUser[] => {
+  const nicknames = [
+    '둘기단', '부송송부', '부꼬ㄱ1', '수학마스터', '공부왕', '열심히하는학생',
+    '토끼친구', '수학천재', '공부러버', '학습왕', '수학러버', '공부마스터',
+    '열공러버', '수학왕', '공부천재', '학습마스터', '수학러버2', '공부러버2'
+  ];
+  
+  return nicknames.map((nickname, index) => ({
+    id: `user-${index + 1}`,
+    nickname,
+    avatar: `/images/avatar-${(index % 5) + 1}.png`,
+    studyTime: Math.floor(Math.random() * 300) + 60, // 60-360분
+    rank: index + 1,
+    level: Math.floor(Math.random() * 10) + 1,
+    streak: Math.floor(Math.random() * 30) + 1,
+    isOnline: Math.random() > 0.3,
+    lastStudyTime: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000)
+  })).sort((a, b) => b.studyTime - a.studyTime);
+};
+
+// 더미 공부 기록 생성
+const generateDummyStudyRecords = (): StudyRecord[] => {
+  const records: StudyRecord[] = [];
+  const subjects = ['수학', '국어', '영어', '과학', '사회'];
+  const today = new Date();
+  
+  // 최근 7일간의 기록 생성
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toISOString().split('T')[0];
+    
+    // 하루에 1-3개의 공부 기록
+    const recordCount = Math.floor(Math.random() * 3) + 1;
+    for (let j = 0; j < recordCount; j++) {
+      const startTime = new Date(date);
+      startTime.setHours(9 + Math.random() * 8, Math.random() * 60, 0, 0);
+      const duration = Math.floor(Math.random() * 120) + 30; // 30-150분
+      const endTime = new Date(startTime.getTime() + duration * 60000);
+      
+      records.push({
+        id: `record-${dateStr}-${j}`,
+        date: dateStr,
+        subject: subjects[Math.floor(Math.random() * subjects.length)],
+        duration,
+        startTime,
+        endTime,
+        animalId: Math.random() > 0.5 ? `animal-${Math.floor(Math.random() * 3) + 1}` : undefined,
+        notes: Math.random() > 0.7 ? '집중해서 공부했어요!' : undefined
+      });
+    }
+  }
+  
+  return records.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+};
+
 export const useGameStore = create<GameStore>((set, get) => ({
   // Initial state
   user: {
@@ -242,6 +306,20 @@ export const useGameStore = create<GameStore>((set, get) => ({
   currentStage: undefined,
   isPlaying: false,
   lastPlayedAt: new Date(),
+  // 공부 기록 관련 초기 상태
+  studyRecords: generateDummyStudyRecords(),
+  rankings: [
+    {
+      id: 'daily-ranking',
+      type: 'daily',
+      date: new Date().toISOString().split('T')[0],
+      users: generateDummyRankings(),
+      myRank: 5,
+      myStudyTime: 120
+    }
+  ],
+  totalStudyTime: 0,
+  dailyStudyTime: 0,
 
   // Actions
   completeStage: (stageId) => {
@@ -622,8 +700,24 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   // Study Timer Actions
-  addStudyTime: (minutes: number, _subject: string) => {
-    const { farm } = get();
+  addStudyTime: (minutes: number, subject: string) => {
+    const { farm, studyRecords, totalStudyTime, dailyStudyTime } = get();
+    
+    // 공부 기록 추가
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const newRecord: StudyRecord = {
+      id: `record-${Date.now()}`,
+      date: today,
+      subject,
+      duration: minutes,
+      startTime: new Date(now.getTime() - minutes * 60000),
+      endTime: now,
+      animalId: farm.animals.length > 0 ? farm.animals[0].id : undefined,
+      notes: `${minutes}분 ${subject} 공부 완료!`
+    };
+    
+    // 동물 경험치 및 행복도 업데이트
     const updatedFarm = {
       ...farm,
       animals: farm.animals.map(animal => ({
@@ -636,7 +730,83 @@ export const useGameStore = create<GameStore>((set, get) => ({
         }
       }))
     };
-    set({ farm: updatedFarm });
+    
+    set({ 
+      farm: updatedFarm,
+      studyRecords: [newRecord, ...studyRecords],
+      totalStudyTime: totalStudyTime + minutes,
+      dailyStudyTime: dailyStudyTime + minutes
+    });
+  },
+
+  addStudyRecord: (record: Omit<StudyRecord, 'id'>) => {
+    const { studyRecords, totalStudyTime, dailyStudyTime } = get();
+    const newRecord: StudyRecord = {
+      ...record,
+      id: `record-${Date.now()}`
+    };
+    
+    const today = new Date().toISOString().split('T')[0];
+    const isToday = record.date === today;
+    
+    set({
+      studyRecords: [newRecord, ...studyRecords],
+      totalStudyTime: totalStudyTime + record.duration,
+      dailyStudyTime: isToday ? dailyStudyTime + record.duration : dailyStudyTime
+    });
+  },
+
+  getStudyRecords: (date?: string) => {
+    const { studyRecords } = get();
+    if (!date) return studyRecords;
+    return studyRecords.filter(record => record.date === date);
+  },
+
+  getTotalStudyTime: () => {
+    const { totalStudyTime } = get();
+    return totalStudyTime;
+  },
+
+  getDailyStudyTime: (date?: string) => {
+    const { studyRecords } = get();
+    const targetDate = date || new Date().toISOString().split('T')[0];
+    return studyRecords
+      .filter(record => record.date === targetDate)
+      .reduce((total, record) => total + record.duration, 0);
+  },
+
+  getRankings: (type: 'daily' | 'weekly' | 'monthly', date?: string) => {
+    const { rankings } = get();
+    const targetDate = date || new Date().toISOString().split('T')[0];
+    return rankings.find(ranking => 
+      ranking.type === type && ranking.date === targetDate
+    ) || {
+      id: `${type}-ranking-${targetDate}`,
+      type,
+      date: targetDate,
+      users: generateDummyRankings(),
+      myRank: 0,
+      myStudyTime: 0
+    };
+  },
+
+  updateRankings: () => {
+    // 실제 구현에서는 서버에서 랭킹 데이터를 가져와야 함
+    const { dailyStudyTime } = get();
+    const today = new Date().toISOString().split('T')[0];
+    
+    set({
+      rankings: [
+        {
+          id: 'daily-ranking',
+          type: 'daily',
+          date: today,
+          users: generateDummyRankings(),
+          myRank: Math.floor(Math.random() * 20) + 1,
+          myStudyTime: dailyStudyTime
+        }
+      ]
+    });
   },
 
   updateFarm: (farm: AnimalFarm) => {

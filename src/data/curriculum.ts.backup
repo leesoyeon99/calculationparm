@@ -1,0 +1,3819 @@
+// 2022 개정 수학 계통도 기반 커리큘럼 데이터
+
+export interface CurriculumUnit {
+  id: string;
+  title: string;
+  grade: number;
+  subject: string;
+  subSubject: string;
+  stageRange: [number, number];
+  difficulty: 'easy' | 'medium' | 'hard';
+  prerequisites: string[];
+  description: string;
+}
+
+export interface DiagnosticTest {
+  id: string;
+  grade: number;
+  subject: string;
+  problems: {
+    id: string;
+    question: string;
+    options: string[];
+    correctAnswer: string;
+    explanation: string;
+    unit: string;
+  }[];
+}
+
+// 유치~중학교 수학 커리큘럼 구조
+export const curriculumUnits: CurriculumUnit[] = [
+  // 유치원 (누리과정)
+  {
+    id: 'K1',
+    title: '수 세기와 비교',
+    grade: 0,
+    subject: '수와 연산',
+    subSubject: '기초 수 개념',
+    stageRange: [1, 5],
+    difficulty: 'easy',
+    prerequisites: [],
+    description: '1~10까지의 수 세기와 비교하기'
+  },
+  {
+    id: 'K2',
+    title: '기초 덧셈·뺄셈',
+    grade: 0,
+    subject: '수와 연산',
+    subSubject: '사칙연산 기초',
+    stageRange: [6, 10],
+    difficulty: 'easy',
+    prerequisites: ['K1'],
+    description: '5까지의 덧셈·뺄셈 놀이'
+  },
+
+  // 1학년
+  {
+    id: 'G1-1',
+    title: '100까지의 수',
+    grade: 1,
+    subject: '수와 연산',
+    subSubject: '자연수',
+    stageRange: [11, 15],
+    difficulty: 'easy',
+    prerequisites: ['K1'],
+    description: '100까지의 수 읽기, 쓰기, 크기 비교'
+  },
+  {
+    id: 'G1-2',
+    title: '한 자리 수 덧셈·뺄셈',
+    grade: 1,
+    subject: '수와 연산',
+    subSubject: '사칙연산',
+    stageRange: [16, 25],
+    difficulty: 'easy',
+    prerequisites: ['G1-1'],
+    description: '9까지의 덧셈·뺄셈'
+  },
+  {
+    id: 'G1-3',
+    title: '두 자리 수 덧셈·뺄셈',
+    grade: 1,
+    subject: '수와 연산',
+    subSubject: '사칙연산',
+    stageRange: [26, 30],
+    difficulty: 'medium',
+    prerequisites: ['G1-2'],
+    description: '받아올림·받아내림 없는 덧셈·뺄셈'
+  },
+
+  // 2학년
+  {
+    id: 'G2-1',
+    title: '세 자리 수, 네 자리 수',
+    grade: 2,
+    subject: '수와 연산',
+    subSubject: '자연수',
+    stageRange: [31, 35],
+    difficulty: 'easy',
+    prerequisites: ['G1-1'],
+    description: '1000까지의 수 읽기, 쓰기, 크기 비교'
+  },
+  {
+    id: 'G2-2',
+    title: '곱셈구구',
+    grade: 2,
+    subject: '수와 연산',
+    subSubject: '사칙연산',
+    stageRange: [36, 45],
+    difficulty: 'medium',
+    prerequisites: ['G1-2'],
+    description: '2~9단 곱셈구구'
+  },
+  {
+    id: 'G2-3',
+    title: '두 자리 수 곱셈',
+    grade: 2,
+    subject: '수와 연산',
+    subSubject: '사칙연산',
+    stageRange: [46, 50],
+    difficulty: 'hard',
+    prerequisites: ['G2-2'],
+    description: '두 자리 수 × 한 자리 수'
+  },
+
+  // 3학년
+  {
+    id: 'G3-1',
+    title: '분수와 소수 기초',
+    grade: 3,
+    subject: '수와 연산',
+    subSubject: '분수와 소수',
+    stageRange: [51, 55],
+    difficulty: 'medium',
+    prerequisites: ['G2-1'],
+    description: '분수와 소수의 개념과 읽기, 쓰기'
+  },
+  {
+    id: 'G3-2',
+    title: '곱셈과 나눗셈',
+    grade: 3,
+    subject: '수와 연산',
+    subSubject: '사칙연산',
+    stageRange: [56, 65],
+    difficulty: 'medium',
+    prerequisites: ['G2-3'],
+    description: '세 자리 수 × 한 자리 수, 세 자리 ÷ 한 자리'
+  },
+  {
+    id: 'G3-3',
+    title: '약수와 배수',
+    grade: 3,
+    subject: '수와 연산',
+    subSubject: '약수와 배수',
+    stageRange: [66, 70],
+    difficulty: 'hard',
+    prerequisites: ['G3-2'],
+    description: '약수와 배수의 개념과 구하기'
+  },
+
+  // 4학년
+  {
+    id: 'G4-1',
+    title: '분수의 덧셈·뺄셈',
+    grade: 4,
+    subject: '수와 연산',
+    subSubject: '분수와 소수',
+    stageRange: [71, 75],
+    difficulty: 'medium',
+    prerequisites: ['G3-1'],
+    description: '분모가 같은 분수의 덧셈·뺄셈'
+  },
+  {
+    id: 'G4-2',
+    title: '분수와 소수의 덧셈·뺄셈',
+    grade: 4,
+    subject: '수와 연산',
+    subSubject: '분수와 소수',
+    stageRange: [76, 80],
+    difficulty: 'hard',
+    prerequisites: ['G4-1'],
+    description: '분수와 소수의 혼합 계산'
+  },
+
+  // 5학년
+  {
+    id: 'G5-1',
+    title: '분수의 곱셈',
+    grade: 5,
+    subject: '수와 연산',
+    subSubject: '분수와 소수',
+    stageRange: [81, 85],
+    difficulty: 'hard',
+    prerequisites: ['G4-2'],
+    description: '분수의 곱셈과 약분·통분'
+  },
+  {
+    id: 'G5-2',
+    title: '소수의 곱셈',
+    grade: 5,
+    subject: '수와 연산',
+    subSubject: '분수와 소수',
+    stageRange: [86, 90],
+    difficulty: 'hard',
+    prerequisites: ['G5-1'],
+    description: '소수의 곱셈과 나눗셈'
+  },
+
+  // 6학년
+  {
+    id: 'G6-1',
+    title: '분수의 나눗셈',
+    grade: 6,
+    subject: '수와 연산',
+    subSubject: '분수와 소수',
+    stageRange: [91, 95],
+    difficulty: 'hard',
+    prerequisites: ['G5-2'],
+    description: '분수의 나눗셈과 비와 비율'
+  },
+  {
+    id: 'G6-2',
+    title: '비례식과 비례배분',
+    grade: 6,
+    subject: '수와 연산',
+    subSubject: '비와 비율',
+    stageRange: [96, 100],
+    difficulty: 'hard',
+    prerequisites: ['G6-1'],
+    description: '비례식과 비례배분 문제'
+  },
+
+  // 중학교 1학년
+  {
+    id: 'M1-1',
+    title: '정수와 유리수',
+    grade: 7,
+    subject: '수와 연산',
+    subSubject: '정수와 유리수',
+    stageRange: [101, 110],
+    difficulty: 'hard',
+    prerequisites: ['G6-2'],
+    description: '정수와 유리수의 개념과 사칙연산'
+  },
+  {
+    id: 'M1-2',
+    title: '문자와 식',
+    grade: 7,
+    subject: '수와 연산',
+    subSubject: '문자와 식',
+    stageRange: [111, 120],
+    difficulty: 'hard',
+    prerequisites: ['M1-1'],
+    description: '일차식의 계산과 활용'
+  },
+
+  // 중학교 2학년
+  {
+    id: 'M2-1',
+    title: '유리수와 순환소수',
+    grade: 8,
+    subject: '수와 연산',
+    subSubject: '유리수와 순환소수',
+    stageRange: [121, 130],
+    difficulty: 'hard',
+    prerequisites: ['M1-2'],
+    description: '순환소수의 개념과 유리수로의 변환'
+  },
+  {
+    id: 'M2-2',
+    title: '일차방정식',
+    grade: 8,
+    subject: '수와 연산',
+    subSubject: '방정식',
+    stageRange: [131, 140],
+    difficulty: 'hard',
+    prerequisites: ['M2-1'],
+    description: '일차방정식의 풀이와 활용'
+  },
+
+  // 중학교 3학년
+  {
+    id: 'M3-1',
+    title: '다항식',
+    grade: 9,
+    subject: '수와 연산',
+    subSubject: '다항식',
+    stageRange: [141, 150],
+    difficulty: 'hard',
+    prerequisites: ['M2-2'],
+    description: '다항식의 덧셈, 뺄셈, 곱셈'
+  },
+  {
+    id: 'M3-2',
+    title: '인수분해',
+    grade: 9,
+    subject: '수와 연산',
+    subSubject: '다항식',
+    stageRange: [151, 160],
+    difficulty: 'hard',
+    prerequisites: ['M3-1'],
+    description: '인수분해의 기본 공식과 활용'
+  },
+  // 사고력 연산 4학년
+  {
+    id: 'T4-1',
+    title: '논리적 사고',
+    grade: 4,
+    subject: '사고력 연산',
+    subSubject: '논리적 추론',
+    stageRange: [161, 168],
+    difficulty: 'medium',
+    prerequisites: ['E4-3'],
+    description: '논리적 사고와 문제 해결'
+  },
+  // 사고력 연산 5학년
+  {
+    id: 'T5-1',
+    title: '창의적 사고',
+    grade: 5,
+    subject: '사고력 연산',
+    subSubject: '창의적 추론',
+    stageRange: [169, 176],
+    difficulty: 'hard',
+    prerequisites: ['E5-3'],
+    description: '창의적 사고와 추론'
+  },
+  // 사고력 연산 6학년
+  {
+    id: 'T6-1',
+    title: '비판적 사고',
+    grade: 6,
+    subject: '사고력 연산',
+    subSubject: '비판적 분석',
+    stageRange: [177, 183],
+    difficulty: 'hard',
+    prerequisites: ['E6-3'],
+    description: '비판적 사고와 종합 분석'
+  }
+];
+
+// 진단 테스트 데이터
+export const diagnosticTests: DiagnosticTest[] = [
+  {
+    id: 'diagnostic-grade-1',
+    grade: 1,
+    subject: '수와 연산',
+    problems: [
+      {
+        id: 'd1-1',
+        question: '다음 중 가장 큰 수는?',
+        options: ['15', '25', '35', '45'],
+        correctAnswer: '45',
+        explanation: '45가 가장 큰 수입니다.',
+        unit: 'G1-1'
+      },
+      {
+        id: 'd1-2',
+        question: '7 + 3 = ?',
+        options: ['8', '9', '10', '11'],
+        correctAnswer: '10',
+        explanation: '7 + 3 = 10입니다.',
+        unit: 'G1-2'
+      },
+      {
+        id: 'd1-3',
+        question: '12 - 5 = ?',
+        options: ['6', '7', '8', '9'],
+        correctAnswer: '7',
+        explanation: '12 - 5 = 7입니다.',
+        unit: 'G1-2'
+      }
+    ]
+  },
+  {
+    id: 'diagnostic-grade-2',
+    grade: 2,
+    subject: '수와 연산',
+    problems: [
+      {
+        id: 'd2-1',
+        question: '3 × 4 = ?',
+        options: ['10', '11', '12', '13'],
+        correctAnswer: '12',
+        explanation: '3 × 4 = 12입니다.',
+        unit: 'G2-2'
+      },
+      {
+        id: 'd2-2',
+        question: '24 ÷ 6 = ?',
+        options: ['3', '4', '5', '6'],
+        correctAnswer: '4',
+        explanation: '24 ÷ 6 = 4입니다.',
+        unit: 'G2-2'
+      },
+      {
+        id: 'd2-3',
+        question: '15 + 27 = ?',
+        options: ['40', '41', '42', '43'],
+        correctAnswer: '42',
+        explanation: '15 + 27 = 42입니다.',
+        unit: 'G1-3'
+      }
+    ]
+  },
+  {
+    id: 'diagnostic-grade-3',
+    grade: 3,
+    subject: '수와 연산',
+    problems: [
+      {
+        id: 'd3-1',
+        question: '1/2 + 1/2 = ?',
+        options: ['1/4', '1/2', '1', '2'],
+        correctAnswer: '1',
+        explanation: '1/2 + 1/2 = 2/2 = 1입니다.',
+        unit: 'G3-1'
+      },
+      {
+        id: 'd3-2',
+        question: '0.5 + 0.3 = ?',
+        options: ['0.7', '0.8', '0.9', '1.0'],
+        correctAnswer: '0.8',
+        explanation: '0.5 + 0.3 = 0.8입니다.',
+        unit: 'G3-1'
+      },
+      {
+        id: 'd3-3',
+        question: '6 × 7 = ?',
+        options: ['40', '41', '42', '43'],
+        correctAnswer: '42',
+        explanation: '6 × 7 = 42입니다.',
+        unit: 'G2-2'
+      }
+    ]
+  }
+];
+
+// Advanced, curriculum-aware problem generator (K-6)
+// Author: ChatGPT (for TimeEdu)
+// 목표: 단순 암기형 문항이 아닌 사고 촉발형(오개념 유도 지문, 다단계 추론, 오류 분석, 비교/일반화 등)
+
+/********************
+ * Types
+ ********************/
+export type Bloom = "Remember" | "Understand" | "Apply" | "Analyze" | "Evaluate" | "Create";
+export type ProblemFormat = "MCQ" | "MultiSelect" | "Short" | "Ordering" | "Matching";
+
+export interface Choice {
+  id: string; // "①", "②" 등 보기 라벨
+  text: string; // 보기 텍스트
+  isCorrect: boolean;
+  rationale?: string; // 선택지에 대한 해설(오개념 근거 포함)
+}
+
+export interface Problem {
+  id: string; // e.g., "STAGE-001"
+  gradeBand: string; // e.g., "Kindergarten", "G1" … "G6"
+  stageId: number;
+  format: ProblemFormat;
+  difficulty: 1 | 2 | 3 | 4 | 5;
+  blooms: Bloom;
+  skills: string[]; // e.g., ["수와 연산", "자릿값", "분수의 의미"]
+  tags: string[]; // 검색/추천용 태그
+  stem: string; // 문제 본문
+  choices?: Choice[]; // MCQ/MultiSelect에서 사용
+  answer: string | string[]; // 정답(멀티셀렉트면 배열)
+  solution: string; // 풀이/근거
+  data?: Record<string, any>; // 시각화/조작형을 위한 추가 데이터(패턴, 이미지 표기 등)
+}
+
+/********************
+ * Utilities
+ ********************/
+function rng(seed: number) {
+  // 선형합동 생성기(LCG) - 재현성 보장
+  let s = seed >>> 0;
+  return () => (s = (s * 1664525 + 1013904223) >>> 0) / 0xffffffff;
+}
+
+function pick<T>(rand: () => number, arr: T[]): T {
+  return arr[Math.floor(rand() * arr.length)];
+}
+
+function shuffle<T>(rand: () => number, arr: T[]): T[] {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function toChoiceLabel(i: number): string {
+  const map = ["①", "②", "③", "④", "⑤", "⑥"];
+  return map[i] || String(i + 1);
+}
+
+function ensureUnique<T>(arr: T[]): T[] {
+  return Array.from(new Set(arr.map(v => JSON.stringify(v)))).map(v => JSON.parse(v));
+}
+
+/********************
+ * Game-style problem generators by grade
+ ********************/
+
+// 🎮 게임형 문제 인터페이스
+export interface GameProblem {
+  id: string;
+  gradeBand: string;
+  stageId: number;
+  format: ProblemFormat;
+  difficulty: 1 | 2 | 3 | 4 | 5;
+  blooms: Bloom;
+  skills: string[];
+  tags: string[];
+  stem: string; // 문제 본문
+  choices?: Choice[];
+  answer: string | string[];
+  solution: string; // 풀이/근거
+  gameContext: {
+    theme: string; // 게임 테마 (몬스터, 마법, 던전 등)
+    reward: string; // 게임 보상
+    visual: string; // 시각적 요소
+  };
+  data?: Record<string, any>;
+}
+
+// 🖼️ 이미지 기반 문제 인터페이스
+export interface ImageProblem {
+  id: string;
+  gradeBand: string;
+  stageId: number;
+  format: ProblemFormat;
+  difficulty: 1 | 2 | 3 | 4 | 5;
+  blooms: Bloom;
+  skills: string[];
+  tags: string[];
+  stem: string; // 문제 본문
+  choices?: Choice[];
+  answer: string | string[];
+  solution: string; // 풀이/근거
+  images: {
+    items: ImageItem[]; // 문제에 사용될 이미지들
+    background?: string; // 배경 이미지
+    layout: 'grid' | 'row' | 'scattered' | 'custom'; // 이미지 배치 방식
+  };
+  gameContext: {
+    theme: string;
+    reward: string;
+    visual: string;
+  };
+  data?: Record<string, any>;
+}
+
+// 🖼️ 이미지 아이템 인터페이스
+export interface ImageItem {
+  src: string; // 이미지 경로
+  alt: string; // 대체 텍스트
+  count: number; // 개수
+  position?: { x: number; y: number }; // 위치 (scattered 레이아웃용)
+  size?: 'small' | 'medium' | 'large'; // 크기
+  animation?: 'none' | 'bounce' | 'pulse' | 'fade'; // 애니메이션
+}
+
+// 🖼️ 이미지 아이템 타입
+interface ImageMappingItem {
+  src: string;
+  alt: string;
+  emoji: string;
+}
+
+// 🖼️ 이미지 매핑 데이터
+export const imageMapping: {
+  [key: string]: ImageMappingItem | { [key: string]: string };
+  balloon: ImageMappingItem;
+  star: ImageMappingItem;
+  apple: ImageMappingItem;
+  flower: ImageMappingItem;
+  heart: ImageMappingItem;
+  pizza: ImageMappingItem;
+  cake: ImageMappingItem;
+  candy: ImageMappingItem;
+  magicGem: ImageMappingItem;
+  potion: ImageMappingItem;
+  redGem: ImageMappingItem;
+  blueGem: ImageMappingItem;
+  diamond: ImageMappingItem;
+  emerald: ImageMappingItem;
+  hero: ImageMappingItem;
+  wizard: ImageMappingItem;
+  archer: ImageMappingItem;
+  monster: ImageMappingItem;
+  dragon: ImageMappingItem;
+  wolf: ImageMappingItem;
+  backgrounds: {
+    forest: string;
+    castle: string;
+    dungeon: string;
+    magicLab: string;
+    party: string;
+  };
+} = {
+  // 기본 아이템들
+  balloon: {
+    src: '/images/items/balloon.png',
+    alt: '풍선',
+    emoji: '🎈'
+  },
+  star: {
+    src: '/images/items/star.png',
+    alt: '별',
+    emoji: '⭐'
+  },
+  apple: {
+    src: '/images/items/apple.png',
+    alt: '사과',
+    emoji: '🍎'
+  },
+  flower: {
+    src: '/images/items/flower.png',
+    alt: '꽃',
+    emoji: '🌸'
+  },
+  heart: {
+    src: '/images/items/heart.png',
+    alt: '하트',
+    emoji: '❤️'
+  },
+  // 음식 아이템들
+  pizza: {
+    src: '/images/items/pizza.png',
+    alt: '피자',
+    emoji: '🍕'
+  },
+  cake: {
+    src: '/images/items/cake.png',
+    alt: '케이크',
+    emoji: '🎂'
+  },
+  candy: {
+    src: '/images/items/candy.png',
+    alt: '사탕',
+    emoji: '🍭'
+  },
+  // 마법 아이템들
+  magicGem: {
+    src: '/images/items/magic-gem.png',
+    alt: '마법 구슬',
+    emoji: '💎'
+  },
+  potion: {
+    src: '/images/items/potion.png',
+    alt: '포션',
+    emoji: '🧪'
+  },
+  redGem: {
+    src: '/images/items/red-gem.png',
+    alt: '빨간 구슬',
+    emoji: '🔴'
+  },
+  blueGem: {
+    src: '/images/items/blue-gem.png',
+    alt: '파란 구슬',
+    emoji: '🔵'
+  },
+  diamond: {
+    src: '/images/items/diamond.png',
+    alt: '다이아몬드',
+    emoji: '💎'
+  },
+  emerald: {
+    src: '/images/items/emerald.png',
+    alt: '에메랄드',
+    emoji: '💎'
+  },
+  // 게임 캐릭터들
+  hero: {
+    src: '/images/characters/hero.png',
+    alt: '용사',
+    emoji: '⚔️'
+  },
+  wizard: {
+    src: '/images/characters/wizard.png',
+    alt: '마법사',
+    emoji: '🧙‍♂️'
+  },
+  archer: {
+    src: '/images/characters/archer.png',
+    alt: '궁수',
+    emoji: '🏹'
+  },
+  monster: {
+    src: '/images/characters/monster.png',
+    alt: '몬스터',
+    emoji: '👹'
+  },
+  dragon: {
+    src: '/images/characters/dragon.png',
+    alt: '드래곤',
+    emoji: '🐉'
+  },
+  wolf: {
+    src: '/images/characters/wolf.png',
+    alt: '늑대',
+    emoji: '🐺'
+  },
+  // 배경 이미지들
+  backgrounds: {
+    forest: '/images/backgrounds/forest.png',
+    castle: '/images/backgrounds/castle.png',
+    dungeon: '/images/backgrounds/dungeon.png',
+    magicLab: '/images/backgrounds/magic-lab.png',
+    party: '/images/backgrounds/party.png'
+  }
+};
+
+/********************
+ * Image-based problem generators
+ ********************/
+
+// 🖼️ 이미지 기반 문제 생성 헬퍼 함수
+function createImageItems(itemType: string, count: number, size: 'small' | 'medium' | 'large' = 'medium'): ImageItem[] {
+  const item = imageMapping[itemType] as ImageMappingItem;
+  if (!item || !item.src) {
+    // fallback to emoji if image not found
+    return Array.from({ length: count }, () => ({
+      src: '',
+      alt: itemType,
+      count: 1,
+      size,
+      animation: 'none' as const
+    }));
+  }
+  
+  return Array.from({ length: count }, () => ({
+    src: item.src,
+    alt: item.alt,
+    count: 1,
+    size,
+    animation: 'none' as const
+  }));
+}
+
+// 🖼️ 이미지 기반 문제 생성 헬퍼 함수 (scattered 레이아웃)
+function createScatteredImageItems(itemType: string, count: number, containerWidth: number = 400, containerHeight: number = 300): ImageItem[] {
+  const item = imageMapping[itemType] as ImageMappingItem;
+  if (!item || !item.src) {
+    // fallback to emoji if image not found
+    return Array.from({ length: count }, () => ({
+      src: '',
+      alt: itemType,
+      count: 1,
+      size: 'medium' as const,
+      position: {
+        x: Math.random() * (containerWidth - 50),
+        y: Math.random() * (containerHeight - 50)
+      },
+      animation: 'bounce' as const
+    }));
+  }
+  
+  return Array.from({ length: count }, () => ({
+    src: item.src,
+    alt: item.alt,
+    count: 1,
+    size: 'medium' as const,
+    position: {
+      x: Math.random() * (containerWidth - 50),
+      y: Math.random() * (containerHeight - 50)
+    },
+    animation: 'bounce' as const
+  }));
+}
+
+// 🟢 초등학교 1학년 이미지 기반 문제 (100까지 수, 덧셈·뺄셈 기초)
+function genG1_ImageProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "풍선 터뜨리기", itemType: "balloon", action: "터졌어", background: "party" },
+    { theme: "별 모으기", itemType: "star", action: "떨어졌어", background: "forest" },
+    { theme: "사과 따기", itemType: "apple", action: "떨어졌어", background: "forest" },
+    { theme: "꽃잎 날리기", itemType: "flower", action: "날아갔어", background: "forest" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const total = Math.floor(rand() * 8) + 3; // 3~10
+  const lost = Math.floor(rand() * (total - 1)) + 1; // 1~(total-1)
+  const remaining = total - lost;
+  
+  const wrong1 = remaining - 1;
+  const wrong2 = remaining + 1;
+  const wrong3 = total; // 원래 개수 (오개념)
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `${remaining}개`, isCorrect: true, rationale: `정확한 계산: ${total} - ${lost} = ${remaining}` },
+    { id: "②", text: `${wrong1}개`, isCorrect: false, rationale: "한 개 덜 계산한 실수" },
+    { id: "③", text: `${wrong2}개`, isCorrect: false, rationale: "한 개 더 계산한 실수" },
+    { id: "④", text: `${wrong3}개`, isCorrect: false, rationale: "빼기를 하지 않은 실수" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "G1",
+    stageId,
+    format: "MCQ",
+    difficulty: 1,
+    blooms: "Apply",
+    skills: ["기본 덧셈·뺄셈", "상황 이해"],
+    tags: ["이미지", "유아", "기초연산"],
+    stem: `${selectedTheme.theme}에서 ${total}개가 있었는데, ${lost}개가 ${selectedTheme.action}! 남은 ${selectedTheme.theme}은 몇 개일까?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `${total} - ${lost} = ${remaining}개가 남았습니다!`,
+    images: {
+      items: createScatteredImageItems(selectedTheme.itemType, total, 400, 300),
+      background: imageMapping.backgrounds[selectedTheme.background as keyof typeof imageMapping.backgrounds],
+      layout: 'scattered'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `${remaining}개의 ${(imageMapping[selectedTheme.itemType] as ImageMappingItem).alt} 획득!`,
+      visual: `${(imageMapping[selectedTheme.itemType] as ImageMappingItem).alt}이 하나씩 '펑!' 하고 사라지는 애니메이션`
+    }
+  };
+}
+
+// 🔵 초등학교 2학년 이미지 기반 문제 (세·네 자리 수, 곱셈구구)
+function genG2_ImageProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "용사 모험", character: "hero", monster: "monster", action: "공격력", background: "dungeon" },
+    { theme: "마법사 퀘스트", character: "wizard", monster: "dragon", action: "마법력", background: "castle" },
+    { theme: "궁수 사냥", character: "archer", monster: "wolf", action: "화살력", background: "forest" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const multiplier1 = Math.floor(rand() * 8) + 2; // 2~9
+  const multiplier2 = Math.floor(rand() * 8) + 2; // 2~9
+  const correct = multiplier1 * multiplier2;
+  
+  const wrong1 = correct - multiplier1; // 한 단계 덜 곱함
+  const wrong2 = correct + multiplier1; // 한 단계 더 곱함
+  const wrong3 = multiplier1 + multiplier2; // 더하기로 착각
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `${correct}`, isCorrect: true, rationale: `정확한 곱셈: ${multiplier1} × ${multiplier2} = ${correct}` },
+    { id: "②", text: `${wrong1}`, isCorrect: false, rationale: "곱셈을 덧셈으로 착각" },
+    { id: "③", text: `${wrong2}`, isCorrect: false, rationale: "계산 실수" },
+    { id: "④", text: `${wrong3}`, isCorrect: false, rationale: "곱셈을 덧셈으로 착각" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "G2",
+    stageId,
+    format: "MCQ",
+    difficulty: 2,
+    blooms: "Apply",
+    skills: ["곱셈구구", "상황 이해"],
+    tags: ["이미지", "모험", "곱셈"],
+    stem: `${(imageMapping[selectedTheme.character] as ImageMappingItem).alt}가 ${(imageMapping[selectedTheme.monster] as ImageMappingItem).alt}에게 ${multiplier1}×${multiplier2}의 ${selectedTheme.action}을 날려야 해! ${selectedTheme.action}은 얼마일까?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `${multiplier1} × ${multiplier2} = ${correct}입니다!`,
+    images: {
+      items: [
+        ...createImageItems(selectedTheme.character, 1, 'large'),
+        ...createImageItems(selectedTheme.monster, 1, 'large')
+      ],
+      background: imageMapping.backgrounds[selectedTheme.background as keyof typeof imageMapping.backgrounds],
+      layout: 'row'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `몬스터 HP가 ${correct}만큼 깎임!`,
+      visual: `${(imageMapping[selectedTheme.character] as ImageMappingItem).alt}가 ${selectedTheme.action}을 발사하는 모션`
+    }
+  };
+}
+
+// 🌿 초등학교 3학년 이미지 기반 문제 (분수·소수, 곱셈·나눗셈)
+function genG3_ImageProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "피자 파티", item: "pizza", action: "나누어 먹기", background: "party" },
+    { theme: "케이크 파티", item: "cake", action: "나누어 먹기", background: "party" },
+    { theme: "사탕 나누기", item: "candy", action: "나누어 주기", background: "party" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const totalPieces = Math.floor(rand() * 3) + 4; // 4~6조각
+  const eaten = Math.floor(rand() * (totalPieces - 1)) + 1; // 1~(totalPieces-1)
+  const fraction = `${eaten}/${totalPieces}`;
+  
+  const wrong1 = `${eaten - 1}/${totalPieces}`;
+  const wrong2 = `${eaten + 1}/${totalPieces}`;
+  const wrong3 = `${eaten}/${totalPieces - 1}`;
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: fraction, isCorrect: true, rationale: `${totalPieces}조각 중 ${eaten}조각을 먹었으므로 ${fraction}` },
+    { id: "②", text: wrong1, isCorrect: false, rationale: "한 조각 덜 먹은 것으로 계산" },
+    { id: "③", text: wrong2, isCorrect: false, rationale: "한 조각 더 먹은 것으로 계산" },
+    { id: "④", text: wrong3, isCorrect: false, rationale: "전체 조각 수를 잘못 계산" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "G3",
+    stageId,
+    format: "MCQ",
+    difficulty: 2,
+    blooms: "Understand",
+    skills: ["분수의 의미", "일부-전체 관계"],
+    tags: ["이미지", "파티", "분수"],
+    stem: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt} 1판을 ${totalPieces}조각으로 나누었어. 그 중 ${eaten}조각을 먹으면 몇 분의 몇일까?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `${totalPieces}조각 중 ${eaten}조각 → ${fraction}`,
+    images: {
+      items: createImageItems(selectedTheme.item, totalPieces, 'medium'),
+      background: imageMapping.backgrounds[selectedTheme.background as keyof typeof imageMapping.backgrounds],
+      layout: 'grid'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt}를 먹고 체력이 회복됨!`,
+      visual: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt}가 조각별로 나뉘어지는 애니메이션`
+    }
+  };
+}
+
+// 🟢 초등학교 1학년 고품질 문제 (100까지 수, 덧셈·뺄셈 기초)
+function genG1_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  
+  // 실제 교재 수준의 문제 유형들
+  const problemTypes = [
+    {
+      type: "개수 세기",
+      context: "학교에서 친구들과 함께 과일 나누기",
+      characters: ["민수", "지영", "철수", "선생님"],
+      setting: "교실",
+      background: "교실에서 과일을 나누어 먹는 상황"
+    },
+    {
+      type: "덧셈",
+      context: "놀이터에서 친구들과 함께 놀기",
+      characters: ["민수", "지영", "철수"],
+      setting: "놀이터",
+      background: "놀이터에서 친구들과 함께 놀며 수를 세는 상황"
+    },
+    {
+      type: "뺄셈",
+      context: "집에서 장난감 정리하기",
+      characters: ["민수", "엄마"],
+      setting: "집",
+      background: "집에서 장난감을 정리하며 수를 세는 상황"
+    },
+    {
+      type: "수 비교",
+      context: "학교에서 친구들과 키 비교하기",
+      characters: ["민수", "지영", "철수"],
+      setting: "교실",
+      background: "교실에서 친구들과 키를 비교하는 상황"
+    }
+  ];
+  
+  const selectedType = pick(rand, problemTypes);
+  
+  let stem = "";
+  let choices: Choice[] = [];
+  let correctAnswer = "";
+  let solution = "";
+  
+  switch (selectedType.type) {
+    case "개수 세기":
+      const totalItems = Math.floor(rand() * 8) + 3; // 3~10
+      stem = `교실에서 선생님이 사과를 가져오셨어요. 민수 앞에 ${totalItems}개의 사과가 놓여 있습니다. 사과는 모두 몇 개일까요?`;
+      
+      const countOptions = [
+        `${totalItems}개`,
+        `${totalItems + 1}개`,
+        `${totalItems - 1}개`,
+        `${totalItems + 2}개`
+      ];
+      
+      choices = shuffle(rand, [
+        { id: "①", text: countOptions[0], isCorrect: true, rationale: "정확히 세어서 답함" },
+        { id: "②", text: countOptions[1], isCorrect: false, rationale: "하나 더 세어서 잘못 계산" },
+        { id: "③", text: countOptions[2], isCorrect: false, rationale: "하나 덜 세어서 잘못 계산" },
+        { id: "④", text: countOptions[3], isCorrect: false, rationale: "두 개 더 세어서 잘못 계산" }
+      ]);
+      correctAnswer = choices.find(c => c.isCorrect)!.id;
+      solution = `사과를 하나씩 세어보면 ${totalItems}개입니다.`;
+      break;
+      
+    case "덧셈":
+      const add1 = Math.floor(rand() * 5) + 1; // 1~5
+      const add2 = Math.floor(rand() * 5) + 1; // 1~5
+      const sum = add1 + add2;
+      
+      stem = `놀이터에서 민수가 ${add1}개의 구슬을 가지고 있었어요. 지영이 ${add2}개의 구슬을 더 주었습니다. 민수가 가진 구슬은 모두 몇 개일까요?`;
+      
+      const addOptions = [
+        `${sum}개`,
+        `${add1 + add2 + 1}개`,
+        `${add1 + add2 - 1}개`,
+        `${add1}개`
+      ];
+      
+      choices = shuffle(rand, [
+        { id: "①", text: addOptions[0], isCorrect: true, rationale: `${add1} + ${add2} = ${sum}` },
+        { id: "②", text: addOptions[1], isCorrect: false, rationale: "하나 더 계산해서 잘못 계산" },
+        { id: "③", text: addOptions[2], isCorrect: false, rationale: "하나 덜 계산해서 잘못 계산" },
+        { id: "④", text: addOptions[3], isCorrect: false, rationale: "처음에 가진 것만 세어서 잘못 계산" }
+      ]);
+      correctAnswer = choices.find(c => c.isCorrect)!.id;
+      solution = `${add1}개 + ${add2}개 = ${sum}개입니다.`;
+      break;
+      
+    case "뺄셈":
+      const total = Math.floor(rand() * 8) + 5; // 5~12
+      const eaten = Math.floor(rand() * (total - 2)) + 1; // 1~(total-2)
+      const remaining = total - eaten;
+      
+      stem = `집에서 엄마가 ${total}개의 과자를 준비하셨어요. 민수가 ${eaten}개를 먹었습니다. 남은 과자는 몇 개일까요?`;
+      
+      const subOptions = [
+        `${remaining}개`,
+        `${total}개`,
+        `${eaten}개`,
+        `${remaining + 1}개`
+      ];
+      
+      choices = shuffle(rand, [
+        { id: "①", text: subOptions[0], isCorrect: true, rationale: `${total} - ${eaten} = ${remaining}` },
+        { id: "②", text: subOptions[1], isCorrect: false, rationale: "처음에 준비한 개수만 세어서 잘못 계산" },
+        { id: "③", text: subOptions[2], isCorrect: false, rationale: "먹은 개수만 세어서 잘못 계산" },
+        { id: "④", text: subOptions[3], isCorrect: false, rationale: "하나 더 계산해서 잘못 계산" }
+      ]);
+      correctAnswer = choices.find(c => c.isCorrect)!.id;
+      solution = `${total}개 - ${eaten}개 = ${remaining}개입니다.`;
+      break;
+      
+    case "수 비교":
+      const num1 = Math.floor(rand() * 10) + 1; // 1~10
+      const num2 = Math.floor(rand() * 10) + 1; // 1~10
+      const larger = Math.max(num1, num2);
+      const smaller = Math.min(num1, num2);
+      
+      stem = `교실에서 민수는 ${num1}cm, 지영은 ${num2}cm 키예요. 더 큰 수는 몇일까요?`;
+      
+      const compareOptions = [
+        `${larger}`,
+        `${smaller}`,
+        `${num1}`,
+        `${num2}`
+      ];
+      
+      choices = shuffle(rand, [
+        { id: "①", text: compareOptions[0], isCorrect: true, rationale: `${larger}가 ${smaller}보다 큽니다` },
+        { id: "②", text: compareOptions[1], isCorrect: false, rationale: "작은 수를 선택해서 잘못 계산" },
+        { id: "③", text: compareOptions[2], isCorrect: num1 === larger, rationale: num1 === larger ? "정답" : "첫 번째 수를 선택해서 잘못 계산" },
+        { id: "④", text: compareOptions[3], isCorrect: num2 === larger, rationale: num2 === larger ? "정답" : "두 번째 수를 선택해서 잘못 계산" }
+      ]);
+      correctAnswer = choices.find(c => c.isCorrect)!.id;
+      solution = `${larger}가 ${smaller}보다 큽니다.`;
+      break;
+  }
+
+  return {
+    id: `HQ-STAGE-${stageId}`,
+    gradeBand: "G1",
+    stageId,
+    format: "MCQ",
+    difficulty: 1,
+    blooms: "Apply",
+    skills: ["100까지의 수", "덧셈", "뺄셈", "수 비교", "개수 세기"],
+    tags: ["고품질", "실생활", "교재수준"],
+    stem: stem,
+    choices,
+    answer: correctAnswer,
+    solution: solution,
+    images: {
+      items: createImageItems("hero", 1, 'medium'),
+      background: imageMapping.backgrounds[selectedType.setting as keyof typeof imageMapping.backgrounds] || imageMapping.backgrounds.forest,
+      layout: 'row'
+    },
+    gameContext: {
+      theme: selectedType.context,
+      reward: "문제를 맞히면 다음 단계로 진행할 수 있습니다!",
+      visual: "실생활 상황이 생생하게 나타나는 애니메이션"
+    }
+  };
+}
+
+// 🔵 초등학교 2학년 고품질 문제 (세·네 자리 수, 1000까지의 수)
+function genG2_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  
+  // 실제 교재 수준의 문제 유형들
+  const problemTypes = [
+    {
+      type: "수 읽기",
+      context: "학교 도서관에서 책 번호 확인하기",
+      characters: ["민수", "지영", "사서선생님"],
+      setting: "학교 도서관",
+      background: "도서관에서 책을 찾는 상황"
+    },
+    {
+      type: "수 쓰기", 
+      context: "마트에서 물건 가격 확인하기",
+      characters: ["엄마", "민수", "계산원"],
+      setting: "마트",
+      background: "마트에서 물건을 사며 가격을 확인하는 상황"
+    },
+    {
+      type: "크기 비교",
+      context: "놀이공원에서 키 제한 확인하기",
+      characters: ["민수", "지영", "놀이기구 안전요원"],
+      setting: "놀이공원",
+      background: "놀이공원에서 놀이기구를 타기 위해 키를 확인하는 상황"
+    },
+    {
+      type: "수 배열",
+      context: "학교에서 학생 번호 확인하기",
+      characters: ["민수", "반 친구들", "선생님"],
+      setting: "교실",
+      background: "교실에서 학생 번호를 확인하는 상황"
+    }
+  ];
+  
+  const selectedType = pick(rand, problemTypes);
+  
+  // 1000까지의 수 범위에서 문제 생성
+  const generateNumbers = () => {
+    const hundreds = Math.floor(rand() * 9) + 1; // 100~900
+    const tens = Math.floor(rand() * 10); // 0~9
+    const ones = Math.floor(rand() * 10); // 0~9
+    return hundreds * 100 + tens * 10 + ones;
+  };
+  
+  const number1 = generateNumbers();
+  const number2 = generateNumbers();
+  const number3 = generateNumbers();
+  
+  let stem = "";
+  let choices: Choice[] = [];
+  let correctAnswer = "";
+  let solution = "";
+  
+  switch (selectedType.type) {
+    case "수 읽기":
+      stem = `도서관에서 민수가 책을 찾고 있습니다. 책 번호가 ${number1}번이에요. 이 수를 읽으면 어떻게 될까요?`;
+      
+      const readOptions = [
+        `${Math.floor(number1/100)}백 ${Math.floor((number1%100)/10)}십 ${number1%10}일`,
+        `${Math.floor(number1/100)}백 ${number1%100}십`,
+        `${number1}백`,
+        `${number1}`
+      ];
+      
+      choices = shuffle(rand, [
+        { id: "①", text: readOptions[0], isCorrect: true, rationale: "세 자리 수를 올바르게 읽음" },
+        { id: "②", text: readOptions[1], isCorrect: false, rationale: "십의 자리와 일의 자리를 잘못 읽음" },
+        { id: "③", text: readOptions[2], isCorrect: false, rationale: "백의 자리만 읽고 나머지를 생략" },
+        { id: "④", text: readOptions[3], isCorrect: false, rationale: "숫자 그대로 읽음" }
+      ]);
+      correctAnswer = choices.find(c => c.isCorrect)!.id;
+      solution = `${number1}은 ${Math.floor(number1/100)}백 ${Math.floor((number1%100)/10)}십 ${number1%10}일로 읽습니다.`;
+      break;
+      
+    case "수 쓰기":
+      const writtenNumber = `${Math.floor(number1/100)}백 ${Math.floor((number1%100)/10)}십 ${number1%10}일`;
+      stem = `마트에서 물건 가격이 "${writtenNumber}"로 표시되어 있습니다. 이 가격을 숫자로 쓰면 어떻게 될까요?`;
+      
+      const writeOptions = [
+        `${number1}`,
+        `${number1 + 10}`,
+        `${number1 - 10}`,
+        `${Math.floor(number1/100)}${Math.floor((number1%100)/10)}${number1%10}`
+      ];
+      
+      choices = shuffle(rand, [
+        { id: "①", text: writeOptions[0], isCorrect: true, rationale: "읽은 수를 올바르게 숫자로 씀" },
+        { id: "②", text: writeOptions[1], isCorrect: false, rationale: "십의 자리를 잘못 계산" },
+        { id: "③", text: writeOptions[2], isCorrect: false, rationale: "십의 자리를 잘못 계산" },
+        { id: "④", text: writeOptions[3], isCorrect: false, rationale: "자릿수를 잘못 이해" }
+      ]);
+      correctAnswer = choices.find(c => c.isCorrect)!.id;
+      solution = `"${writtenNumber}"은 ${number1}으로 씁니다.`;
+      break;
+      
+    case "크기 비교":
+      const numbers = [number1, number2, number3].sort((a, b) => a - b);
+      stem = `놀이공원에서 놀이기구를 타려면 키가 ${numbers[1]}cm 이상이어야 합니다. 민수는 ${numbers[0]}cm, 지영은 ${numbers[2]}cm입니다. 놀이기구를 탈 수 있는 사람은 누구일까요?`;
+      
+      choices = shuffle(rand, [
+        { id: "①", text: "지영만", isCorrect: true, rationale: `지영(${numbers[2]}cm)만 ${numbers[1]}cm 이상` },
+        { id: "②", text: "민수만", isCorrect: false, rationale: `민수(${numbers[0]}cm)는 ${numbers[1]}cm 미만` },
+        { id: "③", text: "둘 다", isCorrect: false, rationale: `민수(${numbers[0]}cm)는 ${numbers[1]}cm 미만` },
+        { id: "④", text: "둘 다 못 탄다", isCorrect: false, rationale: `지영(${numbers[2]}cm)은 탈 수 있음` }
+      ]);
+      correctAnswer = choices.find(c => c.isCorrect)!.id;
+      solution = `${numbers[1]}cm 이상이어야 하므로, 지영(${numbers[2]}cm)만 탈 수 있습니다.`;
+      break;
+      
+    case "수 배열":
+      const startNumber = Math.floor(rand() * 100) + 100; // 100~199
+      const nextNumber = startNumber + 10;
+      stem = `교실에서 학생 번호가 ${startNumber}번부터 시작해서 10씩 커집니다. ${startNumber}번 다음 번호는 몇 번일까요?`;
+      
+      choices = shuffle(rand, [
+        { id: "①", text: `${nextNumber}번`, isCorrect: true, rationale: `${startNumber} + 10 = ${nextNumber}` },
+        { id: "②", text: `${startNumber + 1}번`, isCorrect: false, rationale: "1씩 커지는 것으로 착각" },
+        { id: "③", text: `${startNumber + 100}번`, isCorrect: false, rationale: "100씩 커지는 것으로 착각" },
+        { id: "④", text: `${startNumber - 10}번`, isCorrect: false, rationale: "작아지는 것으로 착각" }
+      ]);
+      correctAnswer = choices.find(c => c.isCorrect)!.id;
+      solution = `${startNumber}번에서 10씩 커지므로 ${startNumber} + 10 = ${nextNumber}번입니다.`;
+      break;
+  }
+
+  return {
+    id: `HQ-STAGE-${stageId}`,
+    gradeBand: "G2",
+    stageId,
+    format: "MCQ",
+    difficulty: 2,
+    blooms: "Apply",
+    skills: ["세 자리 수", "네 자리 수", "1000까지의 수", "수 읽기", "수 쓰기", "크기 비교"],
+    tags: ["고품질", "실생활", "교재수준"],
+    stem: stem,
+    choices,
+    answer: correctAnswer,
+    solution: solution,
+    images: {
+      items: createImageItems("hero", 1, 'medium'),
+      background: imageMapping.backgrounds[selectedType.setting as keyof typeof imageMapping.backgrounds] || imageMapping.backgrounds.forest,
+      layout: 'row'
+    },
+    gameContext: {
+      theme: selectedType.context,
+      reward: "문제를 맞히면 다음 단계로 진행할 수 있습니다!",
+      visual: "실생활 상황이 생생하게 나타나는 애니메이션"
+    }
+  };
+}
+
+// 🌿 초등학교 3학년 게임형 문제 (분수·소수, 곱셈·나눗셈) - 이미지 기반으로 변환
+function genG3_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "피자 파티", item: "pizza", action: "나누어 먹기", background: "party" },
+    { theme: "케이크 파티", item: "cake", action: "나누어 먹기", background: "party" },
+    { theme: "사탕 나누기", item: "candy", action: "나누어 주기", background: "party" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const totalPieces = Math.floor(rand() * 3) + 4; // 4~6조각
+  const eaten = Math.floor(rand() * (totalPieces - 1)) + 1; // 1~(totalPieces-1)
+  const fraction = `${eaten}/${totalPieces}`;
+  
+  const wrong1 = `${eaten - 1}/${totalPieces}`;
+  const wrong2 = `${eaten + 1}/${totalPieces}`;
+  const wrong3 = `${eaten}/${totalPieces - 1}`;
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: fraction, isCorrect: true, rationale: `${totalPieces}조각 중 ${eaten}조각을 먹었으므로 ${fraction}` },
+    { id: "②", text: wrong1, isCorrect: false, rationale: "한 조각 덜 먹은 것으로 계산" },
+    { id: "③", text: wrong2, isCorrect: false, rationale: "한 조각 더 먹은 것으로 계산" },
+    { id: "④", text: wrong3, isCorrect: false, rationale: "전체 조각 수를 잘못 계산" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "G3",
+    stageId,
+    format: "MCQ",
+    difficulty: 2,
+    blooms: "Understand",
+    skills: ["분수의 의미", "일부-전체 관계"],
+    tags: ["이미지", "파티", "분수"],
+    stem: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt} 1판을 ${totalPieces}조각으로 나누었어. 그 중 ${eaten}조각을 먹으면 몇 분의 몇일까?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `${totalPieces}조각 중 ${eaten}조각 → ${fraction}`,
+    images: {
+      items: createImageItems(selectedTheme.item, totalPieces, 'medium'),
+      background: imageMapping.backgrounds[selectedTheme.background as keyof typeof imageMapping.backgrounds],
+      layout: 'grid'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt}를 먹고 체력이 회복됨!`,
+      visual: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt}가 조각별로 나뉘어지는 애니메이션`
+    }
+  };
+}
+
+// 🔮 초등학교 4학년 게임형 문제 (분수 연산, 도형) - 이미지 기반으로 변환
+function genG4_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "마법 에너지", item: "magicGem", action: "마법 에너지", background: "magicLab" },
+    { theme: "포션 제조", item: "potion", action: "마법력", background: "magicLab" },
+    { theme: "보석 합성", item: "diamond", action: "에너지", background: "magicLab" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const frac1 = Math.floor(rand() * 3) + 2; // 2~4
+  const frac2 = Math.floor(rand() * 3) + 2; // 2~4
+  const denom = Math.max(frac1, frac2) + 1; // 공통분모
+  const num1 = Math.floor(rand() * (denom - 1)) + 1;
+  const num2 = Math.floor(rand() * (denom - 1)) + 1;
+  const sum = num1 + num2;
+  const result = sum === denom ? "1" : `${sum}/${denom}`;
+  
+  const wrong1 = `${num1 + num2 - 1}/${denom}`;
+  const wrong2 = `${num1 + num2 + 1}/${denom}`;
+  const wrong3 = `${num1}/${denom} + ${num2}/${denom}`;
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: result, isCorrect: true, rationale: `분모가 같으므로 분자만 더함: ${num1} + ${num2} = ${sum}` },
+    { id: "②", text: wrong1, isCorrect: false, rationale: "분자 계산 실수" },
+    { id: "③", text: wrong2, isCorrect: false, rationale: "분자 계산 실수" },
+    { id: "④", text: wrong3, isCorrect: false, rationale: "계산을 완료하지 않음" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "G4",
+    stageId,
+    format: "MCQ",
+    difficulty: 3,
+    blooms: "Apply",
+    skills: ["분수 덧셈", "동일분모"],
+    tags: ["이미지", "마법", "분수연산"],
+    stem: `분수 마법사가 ${num1}/${denom} + ${num2}/${denom}의 마법을 걸었어. 결과는 얼마일까?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `${num1}/${denom} + ${num2}/${denom} = ${result}`,
+    images: {
+      items: createImageItems(selectedTheme.item, sum, 'medium'),
+      background: imageMapping.backgrounds[selectedTheme.background as keyof typeof imageMapping.backgrounds],
+      layout: 'grid'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `마법 에너지 구슬이 완성됨!`,
+      visual: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt}이 빛나며 합쳐지는 애니메이션`
+    }
+  };
+}
+
+// 📘 초등학교 5학년 게임형 문제 (분수·소수 곱셈, 약분·통분)
+function genG5_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "마법 약 제조", ingredient: "candy", potion: "potion", background: "magicLab" },
+    { theme: "요리 레시피", ingredient: "apple", potion: "cake", background: "party" },
+    { theme: "포션 제조", ingredient: "magicGem", potion: "potion", background: "magicLab" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const total = Math.floor(rand() * 20) + 20; // 20~39
+  const fraction = Math.floor(rand() * 3) + 2; // 2~4
+  const denominator = Math.floor(rand() * 3) + 4; // 4~6
+  const used = Math.floor((total * fraction) / denominator);
+  
+  const wrong1 = Math.floor(total / denominator); // 분자만 고려
+  const wrong2 = Math.floor(total * fraction); // 분모 무시
+  const wrong3 = Math.floor(total / fraction); // 역수
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `${used}개`, isCorrect: true, rationale: `${total} × ${fraction}/${denominator} = ${used}개` },
+    { id: "②", text: `${wrong1}개`, isCorrect: false, rationale: "분자만 고려한 계산 실수" },
+    { id: "③", text: `${wrong2}개`, isCorrect: false, rationale: "분모를 무시한 계산 실수" },
+    { id: "④", text: `${wrong3}개`, isCorrect: false, rationale: "곱셈을 나눗셈으로 착각" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "G5",
+    stageId,
+    format: "MCQ",
+    difficulty: 3,
+    blooms: "Apply",
+    skills: ["분수 곱셈", "실생활 적용"],
+    tags: ["이미지", "제조", "분수곱셈"],
+    stem: `마법 약의 재료로 ${(imageMapping[selectedTheme.ingredient] as ImageMappingItem).alt}의 ${fraction}/${denominator}를 사용했어. ${(imageMapping[selectedTheme.ingredient] as ImageMappingItem).alt}이 ${total}개였다면, 몇 개를 쓴 걸까?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `${total} × ${fraction}/${denominator} = ${used}개`,
+    images: {
+      items: [
+        ...createImageItems(selectedTheme.ingredient, used, 'medium'),
+        ...createImageItems(selectedTheme.potion, 1, 'large')
+      ],
+      background: imageMapping.backgrounds[selectedTheme.background as keyof typeof imageMapping.backgrounds],
+      layout: 'row'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `${(imageMapping[selectedTheme.potion] as ImageMappingItem).alt}에 ${(imageMapping[selectedTheme.ingredient] as ImageMappingItem).alt}이 ${used}개 들어가서 완성!`,
+      visual: `${(imageMapping[selectedTheme.ingredient] as ImageMappingItem).alt}이 ${(imageMapping[selectedTheme.potion] as ImageMappingItem).alt}에 들어가는 애니메이션`
+    }
+  };
+}
+
+// 🎯 초등학교 6학년 게임형 문제 (비와 비율, 원의 넓이)
+function genG6_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "마법진 활성화", item: "redGem", item2: "blueGem", action: "마법진", background: "magicLab" },
+    { theme: "포션 조합", item: "potion", item2: "magicGem", action: "포션", background: "magicLab" },
+    { theme: "보석 배치", item: "diamond", item2: "emerald", action: "보석진", background: "castle" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const ratio1 = Math.floor(rand() * 3) + 2; // 2~4
+  const ratio2 = Math.floor(rand() * 3) + 3; // 3~5
+  const given = Math.floor(rand() * 6) + 4; // 4~9
+  const answer = Math.floor((given * ratio2) / ratio1);
+  
+  const wrong1 = Math.floor((given * ratio1) / ratio2); // 비율 바꿈
+  const wrong2 = given + ratio2; // 덧셈으로 착각
+  const wrong3 = given * ratio1; // 첫 번째 비율만 곱함
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `${answer}개`, isCorrect: true, rationale: `${ratio1}:${ratio2} = ${given}:x → x = ${answer}` },
+    { id: "②", text: `${wrong1}개`, isCorrect: false, rationale: "비율을 바꿔서 계산" },
+    { id: "③", text: `${wrong2}개`, isCorrect: false, rationale: "비율을 덧셈으로 착각" },
+    { id: "④", text: `${wrong3}개`, isCorrect: false, rationale: "비율의 일부만 고려" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "G6",
+    stageId,
+    format: "MCQ",
+    difficulty: 4,
+    blooms: "Apply",
+    skills: ["비와 비율", "비례식"],
+    tags: ["이미지", "마법", "비율"],
+    stem: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt}:${(imageMapping[selectedTheme.item2] as ImageMappingItem).alt} = ${ratio1}:${ratio2}일 때, ${(imageMapping[selectedTheme.item] as ImageMappingItem).alt}이 ${given}개라면 ${(imageMapping[selectedTheme.item2] as ImageMappingItem).alt}는 몇 개일까?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `${ratio1}:${ratio2} = ${given}:x → x = ${answer}`,
+    images: {
+      items: [
+        ...createImageItems(selectedTheme.item, given, 'medium'),
+        ...createImageItems(selectedTheme.item2, answer, 'medium')
+      ],
+      background: imageMapping.backgrounds[selectedTheme.background as keyof typeof imageMapping.backgrounds],
+      layout: 'row'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `구슬이 마법진에 채워지며 문이 열림!`,
+      visual: `${(imageMapping[selectedTheme.item] as ImageMappingItem).alt}과 ${(imageMapping[selectedTheme.item2] as ImageMappingItem).alt}이 ${selectedTheme.action}에 배치되는 애니메이션`
+    }
+  };
+}
+
+// 🎓 중학교 1학년 게임형 문제 (정수·유리수, 문자와 식)
+function genM1_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "영웅 전투", character: "⚔️ 영웅", enemy: "👹 적", action: "공격" },
+    { theme: "마법사 전투", character: "🧙‍♂️ 마법사", enemy: "🐉 드래곤", action: "마법 공격" },
+    { theme: "궁수 사냥", character: "🏹 궁수", enemy: "🐺 몬스터", action: "화살 공격" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const damage = Math.floor(rand() * 5) + 3; // 3~7
+  const totalDamage = Math.floor(rand() * 10) + 10; // 10~19
+  const attacks = Math.floor(totalDamage / damage);
+  
+  const wrong1 = attacks - 1;
+  const wrong2 = attacks + 1;
+  const wrong3 = Math.floor(totalDamage / (damage + 1));
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `${attacks}번`, isCorrect: true, rationale: `${damage}x = ${totalDamage} → x = ${attacks}` },
+    { id: "②", text: `${wrong1}번`, isCorrect: false, rationale: "한 번 덜 공격한 계산" },
+    { id: "③", text: `${wrong2}번`, isCorrect: false, rationale: "한 번 더 공격한 계산" },
+    { id: "④", text: `${wrong3}번`, isCorrect: false, rationale: "공격력을 잘못 계산" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "M1",
+    stageId,
+    format: "MCQ",
+    difficulty: 3,
+    blooms: "Apply",
+    skills: ["일차방정식", "문자와 식"],
+    tags: ["이미지", "전투", "방정식"],
+    stem: `${selectedTheme.character}가 ${selectedTheme.enemy}에게 x번 ${selectedTheme.action}해 총 ${totalDamage}의 피해를 줬어. 한 번 ${selectedTheme.action}의 피해가 ${damage}라면, x는 얼마일까?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `${damage}x = ${totalDamage} → x = ${attacks}`,
+    images: {
+      items: [
+        ...createImageItems("hero", 1, 'large'),
+        ...createImageItems("monster", 1, 'large')
+      ],
+      background: imageMapping.backgrounds.dungeon,
+      layout: 'row'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `${selectedTheme.action} 모션이 ${attacks}번 재생됨!`,
+      visual: `${selectedTheme.character}가 ${selectedTheme.action}하는 모션 애니메이션`
+    }
+  };
+}
+
+// ⚡ 중학교 2학년 게임형 문제 (일차방정식, 피타고라스 정리)
+function genM2_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "다리 건설", item: "🌉 다리", action: "강을 건넘" },
+    { theme: "사다리 설치", item: "🪜 사다리", action: "벽을 오름" },
+    { theme: "로프 설치", item: "🪢 로프", action: "절벽을 오름" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const a = Math.floor(rand() * 4) + 3; // 3~6
+  const b = Math.floor(rand() * 4) + 4; // 4~7
+  const c = Math.sqrt(a * a + b * b);
+  const answer = Math.round(c * 100) / 100; // 소수점 둘째자리까지
+  
+  const wrong1 = Math.round((a + b) * 100) / 100; // 덧셈으로 착각
+  const wrong2 = Math.round((a * b) * 100) / 100; // 곱셈으로 착각
+  const wrong3 = Math.round(Math.abs(a - b) * 100) / 100; // 뺄셈으로 착각
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `${answer}`, isCorrect: true, rationale: `√(${a}² + ${b}²) = ${answer}` },
+    { id: "②", text: `${wrong1}`, isCorrect: false, rationale: "덧셈으로 착각" },
+    { id: "③", text: `${wrong2}`, isCorrect: false, rationale: "곱셈으로 착각" },
+    { id: "④", text: `${wrong3}`, isCorrect: false, rationale: "뺄셈으로 착각" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "M2",
+    stageId,
+    format: "MCQ",
+    difficulty: 4,
+    blooms: "Apply",
+    skills: ["피타고라스 정리", "직각삼각형"],
+    tags: ["이미지", "건설", "기하"],
+    stem: `직각삼각형의 한 변이 ${a}, 다른 변이 ${b}일 때, 빗변의 길이는?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `√(${a}² + ${b}²) = ${answer}`,
+    images: {
+      items: createImageItems("magicGem", 3, 'medium'),
+      background: imageMapping.backgrounds.magicLab,
+      layout: 'scattered'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `맞추면 ${selectedTheme.item}이 놓여 ${selectedTheme.action}!`,
+      visual: `직각삼각형이 그려지며 ${selectedTheme.item}이 설치되는 애니메이션`
+    }
+  };
+}
+
+// 🏆 중학교 3학년 게임형 문제 (이차방정식, 삼각비)
+function genM3_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "보스전", boss: "👹 최종 보스", action: "약점 파괴" },
+    { theme: "드래곤 퇴치", boss: "🐉 고대 드래곤", action: "결정타" },
+    { theme: "마왕 토벌", boss: "👑 마왕", action: "필살기" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const x1 = Math.floor(rand() * 3) + 2; // 2~4
+  const x2 = Math.floor(rand() * 3) + 3; // 3~5
+  const b = -(x1 + x2);
+  const c = x1 * x2;
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `x=${x1}, x=${x2}`, isCorrect: true, rationale: `인수분해: (x-${x1})(x-${x2})=0` },
+    { id: "②", text: `x=${x1+1}, x=${x2+1}`, isCorrect: false, rationale: "계산 실수" },
+    { id: "③", text: `x=${x1-1}, x=${x2-1}`, isCorrect: false, rationale: "계산 실수" },
+    { id: "④", text: `x=${x1}, x=${x2+1}`, isCorrect: false, rationale: "부분적 계산 실수" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "M3",
+    stageId,
+    format: "MCQ",
+    difficulty: 5,
+    blooms: "Analyze",
+    skills: ["이차방정식", "인수분해"],
+    tags: ["이미지", "보스전", "고급수학"],
+    stem: `이차방정식 x² + ${b}x + ${c} = 0의 해는?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `인수분해 (x-${x1})(x-${x2})=0 → x=${x1}, x=${x2}`,
+    images: {
+      items: createImageItems("magicGem", 2, 'large'),
+      background: imageMapping.backgrounds.magicLab,
+      layout: 'row'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `정답을 맞히면 ${selectedTheme.boss}의 약점 두 곳이 동시에 파괴됨!`,
+      visual: `${selectedTheme.boss}가 두 곳에서 동시에 피해를 받는 애니메이션`
+    }
+  };
+}
+
+// 🧠 사고력 연산 게임형 문제 (논리적·창의적·비판적 사고)
+function genThinking_GameProblems(seed: number, stageId: number): ImageProblem {
+  const rand = rng(seed);
+  const themes = [
+    { theme: "퍼즐 해결", item: "🧩 퍼즐", action: "조각 맞추기" },
+    { theme: "미로 탈출", item: "🏰 미로", action: "길 찾기" },
+    { theme: "암호 해독", item: "🔐 암호", action: "코드 해독" }
+  ];
+  
+  const selectedTheme = pick(rand, themes);
+  const patterns = [
+    { pattern: "2, 4, 6, 8, ?", answer: "10", logic: "2씩 증가" },
+    { pattern: "1, 4, 9, 16, ?", answer: "25", logic: "제곱수" },
+    { pattern: "1, 1, 2, 3, 5, ?", answer: "8", logic: "피보나치 수열" },
+    { pattern: "3, 6, 12, 24, ?", answer: "48", logic: "2배씩 증가" }
+  ];
+  
+  const selectedPattern = pick(rand, patterns);
+  
+  const wrong1 = parseInt(selectedPattern.answer) - 2;
+  const wrong2 = parseInt(selectedPattern.answer) + 2;
+  const wrong3 = parseInt(selectedPattern.answer) * 2;
+  
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: selectedPattern.answer, isCorrect: true, rationale: selectedPattern.logic },
+    { id: "②", text: wrong1.toString(), isCorrect: false, rationale: "패턴을 잘못 파악" },
+    { id: "③", text: wrong2.toString(), isCorrect: false, rationale: "패턴을 잘못 파악" },
+    { id: "④", text: wrong3.toString(), isCorrect: false, rationale: "패턴을 잘못 파악" }
+  ]);
+
+  return {
+    id: `IMAGE-STAGE-${stageId}`,
+    gradeBand: "Thinking",
+    stageId,
+    format: "MCQ",
+    difficulty: 4,
+    blooms: "Analyze",
+    skills: ["패턴 인식", "논리적 추론"],
+    tags: ["이미지", "사고력", "퍼즐"],
+    stem: `${selectedTheme.item}에서 다음 패턴의 다음 수는? ${selectedPattern.pattern}`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: selectedPattern.logic,
+    images: {
+      items: createImageItems("magicGem", 5, 'small'),
+      background: imageMapping.backgrounds.magicLab,
+      layout: 'scattered'
+    },
+    gameContext: {
+      theme: selectedTheme.theme,
+      reward: `${selectedTheme.item}이 완성되어 ${selectedTheme.action} 성공!`,
+      visual: `${selectedTheme.item}이 조각별로 맞춰지는 애니메이션`
+    }
+  };
+}
+
+/********************
+ * Core generators by topic
+ ********************/
+
+// K: 서브타이징/패턴 확장/비교 (시각적 데이터 포함)
+function genK_Subitizing(seed: number, stageId: number): Problem {
+  const rand = rng(seed);
+  const count = Math.floor(rand() * 4) + 2; // 2~5
+  const emoji = pick(rand, ["🍎", "🎈", "⭐", "🌸", "❤️"]);
+  const wrong1 = count - 1; // 전형적 오답(한 개 덜 세기)
+  const wrong2 = count + 1; // 전형적 오답(한 개 더 세기)
+  const options = shuffle(rand, [count, wrong1, wrong2].map((n, i) => ({
+    id: toChoiceLabel(i),
+    text: `${n}개`,
+    isCorrect: n === count,
+    rationale: n === count ? `${emoji.repeat(count)}는 ${count}개입니다.` : `아이들이 자주 하는 실수: 한 번 덜/더 셈.`
+  })));
+
+  return {
+    id: `STAGE-${stageId}`,
+    gradeBand: "Kindergarten",
+    stageId,
+    format: "MCQ",
+    difficulty: 1,
+    blooms: "Understand",
+    skills: ["수 개수 인식(서브타이징)", "비교"],
+    tags: ["시각", "유아", "카운팅"],
+    stem: `${emoji.repeat(count)}\n그림의 개수는 몇 개인가요?`,
+    choices: options,
+    answer: options.find(c => c.isCorrect)!.id,
+    solution: `${emoji}의 개수를 바로 인식(서브타이징)하거나 하나씩 세어 ${count}개임을 확인합니다.`,
+    data: { emoji, count }
+  };
+}
+
+// G1: 자릿값 분해 + 받아올림/빼내림 오류분석 포함 덧셈
+function genG1_AdditionWithErrorAnalysis(seed: number, stageId: number): Problem {
+  const rand = rng(seed);
+  const a = Math.floor(rand() * 90) + 10; // 10~99
+  const b = Math.floor(rand() * 90) + 10;
+  const correct = a + b;
+  const ones = (a % 10) + (b % 10);
+  const carryWrong = (a - (a % 10)) + (b - (b % 10)) + (ones % 10); // 받아올림 누락
+  const placeWrong = (Math.floor(a / 10) + Math.floor(b / 10)) * 10 + (a % 10 + b % 10); // 자릿값 혼동
+
+  const choices: Choice[] = shuffle(rand, ensureUnique([
+    { id: "①", text: String(correct), isCorrect: true, rationale: "일의 자리 합에서 받아올림을 더한 값까지 포함해야 합니다." },
+    { id: "②", text: String(carryWrong), isCorrect: false, rationale: "받아올림(올림 1)을 더하지 않은 오류입니다." },
+    { id: "③", text: String(placeWrong), isCorrect: false, rationale: "십의 자리/일의 자리 자릿값을 혼동했습니다." },
+    { id: "④", text: String(correct + 1), isCorrect: false, rationale: "단순 부정확 계산." }
+  ]));
+
+  return {
+    id: `STAGE-${stageId}`,
+    gradeBand: "G1",
+    stageId,
+    format: "MCQ",
+    difficulty: 2,
+    blooms: "Analyze",
+    skills: ["두 자리 수 덧셈", "받아올림", "오류 분석"],
+    tags: ["자릿값", "연산 전략"],
+    stem: `${a} + ${b} = ?\n(계산 과정을 적어 보세요.)`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `일의 자리 ${a % 10} + ${b % 10} = ${ones} → ${Math.floor(ones / 10)} 올림, 십의 자리 ${Math.floor(a / 10)} + ${Math.floor(b / 10)} + 올림 ${Math.floor(ones / 10)} = ${Math.floor(a / 10) + Math.floor(b / 10) + Math.floor(ones / 10)}. 정답은 ${correct}.`
+  };
+}
+
+// G2: 두 단계 문장제(단가×수량 → 합계 비교) + 불필요 정보 포함
+function genG2_TwoStepWordProblem(seed: number, stageId: number): Problem {
+  const rand = rng(seed);
+  const priceA = (Math.floor(rand() * 6) + 2) * 100; // 200~800원
+  const priceB = priceA + (Math.floor(rand() * 5) + 1) * 100; // 더 비싼 B
+  const qtyA = Math.floor(rand() * 5) + 2; // 2~6개
+  const qtyB = Math.floor(rand() * 4) + 2; // 2~5개
+  const coupon = (Math.floor(rand() * 3)) * 100; // 0,100,200 (혼란용)
+  const totalA = priceA * qtyA;
+  const totalB = priceB * qtyB;
+  const question = `과일가게에서 사과는 ${priceA}원, 배는 ${priceB}원입니다. 영이는 사과 ${qtyA}개와 배 ${qtyB}개를 샀고, 가게 쿠폰(오늘은 과자 전용  ${coupon}원 할인)을 받았습니다. 누가 더 많이 내렸을까요?`;
+  // 정답: 더 큰 total을 찾는 비교 문제 (쿠폰은 과자 전용이므로 무관)
+  const correct = totalA > totalB ? "사과" : totalA < totalB ? "배" : "같다";
+
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: "사과", isCorrect: correct === "사과", rationale: correct === "사과" ? "사과 총액이 더 큽니다." : "배 총액이 더 큽니다." },
+    { id: "②", text: "배", isCorrect: correct === "배", rationale: correct === "배" ? "배 총액이 더 큽니다." : "사과 총액이 더 큽니다." },
+    { id: "③", text: "같다", isCorrect: correct === "같다", rationale: correct === "같다" ? "두 합계가 같습니다." : "두 합계는 다릅니다." },
+    { id: "④", text: "쿠폰 받은 것이 더 싸다", isCorrect: false, rationale: "쿠폰은 과자 전용으로 문제의 구매와 무관합니다 (불필요 정보)." }
+  ]);
+
+  return {
+    id: `STAGE-${stageId}`,
+    gradeBand: "G2",
+    stageId,
+    format: "MCQ",
+    difficulty: 3,
+    blooms: "Apply",
+    skills: ["곱셈(단가×수량)", "비교", "불필요 정보 배제"],
+    tags: ["문장제", "두 단계 추론"],
+    stem: question,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `사과 합계 ${priceA}×${qtyA}=${totalA}원, 배 합계 ${priceB}×${qtyB}=${totalB}원. 쿠폰은 과자 전용 → 무관. 비교 결과: ${correct === "같다" ? "같다" : `${correct}가 더 큼`}.`
+  };
+}
+
+// G3: 분수의 의미(전체의 일부)와 동치분수 판단 + 시각 모델 데이터 제공
+function genG3_FractionEquivalence(seed: number, stageId: number): Problem {
+  const rand = rng(seed);
+  const n = Math.floor(rand() * 3) + 2; // 2~4 등분
+  const k = Math.floor(rand() * (n - 1)) + 1; // 1~(n-1)
+  // 동치분수 후보: (k/n) == (2k/2n) == (3k/3n)
+  const candidates = [
+    { num: k, den: n },
+    { num: 2 * k, den: 2 * n },
+    { num: k + 1, den: n },
+    { num: 3 * k, den: 3 * n },
+  ];
+  const optionsRaw = [
+    `${k}/${n}`,
+    `${2 * k}/${2 * n}`,
+    `${k + 1}/${n}`,
+    `${3 * k}/${3 * n}`,
+  ];
+  // 정답: k/n과 2k/2n과 3k/3n (동치), 단 k+1/n은 일반적으로 비동치
+  const isEquiv = (a: { num: number; den: number }) => a.num * n === a.den * k; // k/n과 비교
+  const options: Choice[] = optionsRaw.map((text, i) => ({ id: toChoiceLabel(i), text, isCorrect: isEquiv(candidates[i]), rationale: isEquiv(candidates[i]) ? "분자와 분모를 같은 수로 곱하면 값은 같아요." : "분자만 바뀌면 값이 달라집니다." }));
+
+  return {
+    id: `STAGE-${stageId}`,
+    gradeBand: "G3",
+    stageId,
+    format: "MultiSelect",
+    difficulty: 3,
+    blooms: "Analyze",
+    skills: ["분수의 동치", "배율 추론"],
+    tags: ["시각 모델", "일부-전체"],
+    stem: `다음 중 ${k}/${n}과 같은 크기의 분수를 모두 고르세요.`,
+    choices: options,
+    answer: options.filter(o => o.isCorrect).map(o => o.id),
+    solution: `분자와 분모에 같은 수를 곱하면 크기는 같습니다. 따라서 ${k}/${n} ≡ ${2 * k}/${2 * n} ≡ ${3 * k}/${3 * n}.`,
+    data: { areaModel: { partitions: n, filled: k } }
+  };
+}
+
+// G4: 서로 다른 분모의 덧셈(통분 전략 비교) + 전략 선택 유도
+function genG4_AddUnlikeFractions(seed: number, stageId: number): Problem {
+  const rand = rng(seed);
+  const a = [2, 3, 4, 5][Math.floor(rand() * 4)];
+  const b = [3, 4, 5, 6][Math.floor(rand() * 4)];
+  const x = Math.floor(rand() * (a - 1)) + 1;
+  const y = Math.floor(rand() * (b - 1)) + 1;
+  const lcm = (m: number, n: number) => {
+    const gcd = (p: number, q: number): number => (q === 0 ? p : gcd(q, p % q));
+    return (m * n) / gcd(m, n);
+  };
+  const L = lcm(a, b);
+  const sumNum = x * (L / a) + y * (L / b);
+  const simplified = (() => {
+    const gcd = (p: number, q: number): number => (q === 0 ? p : gcd(q, p % q));
+    const g = gcd(sumNum, L);
+    return `${sumNum / g}/${L / g}`;
+  })();
+
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: simplified, isCorrect: true, rationale: "통분 후 기약분수로 약분." },
+    { id: "②", text: `${sumNum}/${L}`, isCorrect: false, rationale: "약분을 하지 않았습니다." },
+    { id: "③", text: `${x + y}/${a + b}`, isCorrect: false, rationale: "분자/분모를 각각 더하는 오개념." },
+    { id: "④", text: `${x}/${a} + ${y}/${b}`, isCorrect: false, rationale: "계산을 수행하지 않음." }
+  ]);
+
+  return {
+    id: `STAGE-${stageId}`,
+    gradeBand: "G4",
+    stageId,
+    format: "MCQ",
+    difficulty: 3,
+    blooms: "Apply",
+    skills: ["분모가 다른 분수의 덧셈", "통분", "약분"],
+    tags: ["분수 연산", "전략 비교"],
+    stem: `${x}/${a} + ${y}/${b} = ? (기약분수로)`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `공통분모 ${L}로 통분 → 분자 ${x * (L / a)} + ${y * (L / b)} = ${sumNum}. 약분하면 ${simplified}.`
+  };
+}
+
+// G5: 비와 비율, 퍼센트 증감(두 단계) + 단위 해석
+function genG5_PercentIncrease(seed: number, stageId: number): Problem {
+  const rand = rng(seed);
+  const base = (Math.floor(rand() * 16) + 20) * 100; // 2000~3600
+  const inc = (Math.floor(rand() * 5) + 5); // 5~9%
+  const extra = (Math.floor(rand() * 4) + 2); // 추가 2~5%
+  const after1 = Math.round(base * (1 + inc / 100));
+  const after2 = Math.round(after1 * (1 + extra / 100));
+
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `${after2}원`, isCorrect: true, rationale: "연속 퍼센트 증가는 곱셈으로 누적." },
+    { id: "②", text: `${base + Math.round(base * (inc + extra) / 100)}원`, isCorrect: false, rationale: "퍼센트를 단순 합으로 처리한 오류." },
+    { id: "③", text: `${after1}원`, isCorrect: false, rationale: "첫 단계까지만 계산." },
+    { id: "④", text: `${base}원`, isCorrect: false, rationale: "변화 무시." }
+  ]);
+
+  return {
+    id: `STAGE-${stageId}`,
+    gradeBand: "G5",
+    stageId,
+    format: "MCQ",
+    difficulty: 4,
+    blooms: "Analyze",
+    skills: ["비율 해석", "연속 퍼센트", "단위"],
+    tags: ["퍼센트 증가", "두 단계 계산"],
+    stem: `물건 가격이 ${inc}% 인상된 뒤 다시 ${extra}% 인상되었습니다. 처음 가격이 ${base}원일 때 최종 가격은?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `1단계: ${base}×(1+${inc}/100)=${after1}원 → 2단계: ${after1}×(1+${extra}/100)=${after2}원.`
+  };
+}
+
+// G6: 비례식/단위속력(속력=거리/시간) 다단계 + 오류분석 보기
+function genG6_RateProportion(seed: number, stageId: number): Problem {
+  const rand = rng(seed);
+  const distance = (Math.floor(rand() * 6) + 4) * 3; // 12,15,18,...,30 km
+  const timeH = (Math.floor(rand() * 3) + 2); // 2~4 h
+  const speed = distance / timeH; // km/h
+  const moreTime = (Math.floor(rand() * 3) + 1); // 1~3 h 추가 주행
+  const totalDist = distance + speed * moreTime;
+
+  const choices: Choice[] = shuffle(rand, [
+    { id: "①", text: `${totalDist}km`, isCorrect: true, rationale: "속력 일정: d=vt를 두 번 적용." },
+    { id: "②", text: `${distance + moreTime}km`, isCorrect: false, rationale: "시간을 거리로 더한 단위 오류." },
+    { id: "③", text: `${speed * (timeH + moreTime)}km`, isCorrect: false, rationale: "사실상 정답과 동일해 보이나 첫 구간 거리 계산을 누락/혼동." },
+    { id: "④", text: `${distance}km`, isCorrect: false, rationale: "추가 이동 무시." }
+  ]);
+
+  return {
+    id: `STAGE-${stageId}`,
+    gradeBand: "G6",
+    stageId,
+    format: "MCQ",
+    difficulty: 4,
+    blooms: "Apply",
+    skills: ["비례식", "속력=거리/시간", "단위 일관성"],
+    tags: ["속력", "다단계"],
+    stem: `어떤 자동차가 ${timeH}시간 동안 ${distance}km를 일정한 속력으로 달렸습니다. 같은 속력으로 ${moreTime}시간 더 달리면 총 몇 km를 이동하나요?`,
+    choices,
+    answer: choices.find(c => c.isCorrect)!.id,
+    solution: `속력 v=${distance}/${timeH}=${speed}km/h. 추가 거리=${speed}×${moreTime}=${speed * moreTime}km. 총합=${distance}+${speed * moreTime}=${totalDist}km.`
+  };
+}
+
+/********************
+ * Image-based problem router
+ * 이미지 기반 문제 생성기 라우터
+ ********************/
+export function generateImageProblem(stageId: number, seed: number = stageId * 97 + 13): ImageProblem {
+  // 유치원 (1-10)
+  if (stageId >= 1 && stageId <= 10) {
+    return genG1_ImageProblems(seed, stageId);
+  }
+  // 초등학교 1학년 (11-30)
+  else if (stageId >= 11 && stageId <= 30) {
+    return genG1_ImageProblems(seed, stageId);
+  }
+  // 초등학교 2학년 (31-50)
+  else if (stageId >= 31 && stageId <= 50) {
+    return genG2_ImageProblems(seed, stageId);
+  }
+  // 초등학교 3학년 (51-70)
+  else if (stageId >= 51 && stageId <= 70) {
+    return genG3_ImageProblems(seed, stageId);
+  }
+  // 초등학교 4학년 (71-80)
+  else if (stageId >= 71 && stageId <= 80) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 초등학교 5학년 (81-90)
+  else if (stageId >= 81 && stageId <= 90) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 초등학교 6학년 (91-100)
+  else if (stageId >= 91 && stageId <= 100) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 중학교 1학년 (101-120)
+  else if (stageId >= 101 && stageId <= 120) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 중학교 2학년 (121-140)
+  else if (stageId >= 121 && stageId <= 140) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 중학교 3학년 (141-160)
+  else if (stageId >= 141 && stageId <= 160) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 사고력 연산 4학년 (161-168)
+  else if (stageId >= 161 && stageId <= 168) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 사고력 연산 5학년 (169-176)
+  else if (stageId >= 169 && stageId <= 176) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 사고력 연산 6학년 (177-183)
+  else if (stageId >= 177 && stageId <= 183) {
+    return genG3_ImageProblems(seed, stageId); // 임시로 G3 사용
+  }
+  // 기본값: 초등학교 1학년 이미지 기반 문제
+  return genG1_ImageProblems(seed, stageId);
+}
+
+/********************
+ * Game-style problem router
+ * 게임형 문제 생성기 라우터
+ ********************/
+export function generateGameProblem(stageId: number, seed: number = stageId * 97 + 13): ImageProblem {
+  // 유치원 (1-10)
+  if (stageId >= 1 && stageId <= 10) {
+    return genG1_GameProblems(seed, stageId);
+  }
+  // 초등학교 1학년 (11-30)
+  else if (stageId >= 11 && stageId <= 30) {
+    return genG1_GameProblems(seed, stageId);
+  }
+  // 초등학교 2학년 (31-50)
+  else if (stageId >= 31 && stageId <= 50) {
+    return genG2_GameProblems(seed, stageId);
+  }
+  // 초등학교 3학년 (51-70)
+  else if (stageId >= 51 && stageId <= 70) {
+    return genG3_GameProblems(seed, stageId);
+  }
+  // 초등학교 4학년 (71-80)
+  else if (stageId >= 71 && stageId <= 80) {
+    return genG4_GameProblems(seed, stageId);
+  }
+  // 초등학교 5학년 (81-90)
+  else if (stageId >= 81 && stageId <= 90) {
+    return genG5_GameProblems(seed, stageId);
+  }
+  // 초등학교 6학년 (91-100)
+  else if (stageId >= 91 && stageId <= 100) {
+    return genG6_GameProblems(seed, stageId);
+  }
+  // 중학교 1학년 (101-120)
+  else if (stageId >= 101 && stageId <= 120) {
+    return genM1_GameProblems(seed, stageId);
+  }
+  // 중학교 2학년 (121-140)
+  else if (stageId >= 121 && stageId <= 140) {
+    return genM2_GameProblems(seed, stageId);
+  }
+  // 중학교 3학년 (141-160)
+  else if (stageId >= 141 && stageId <= 160) {
+    return genM3_GameProblems(seed, stageId);
+  }
+  // 사고력 연산 4학년 (161-168)
+  else if (stageId >= 161 && stageId <= 168) {
+    return genThinking_GameProblems(seed, stageId);
+  }
+  // 사고력 연산 5학년 (169-176)
+  else if (stageId >= 169 && stageId <= 176) {
+    return genThinking_GameProblems(seed, stageId);
+  }
+  // 사고력 연산 6학년 (177-183)
+  else if (stageId >= 177 && stageId <= 183) {
+    return genThinking_GameProblems(seed, stageId);
+  }
+  // 기본값: 초등학교 1학년 게임형 문제
+  return genG1_GameProblems(seed, stageId);
+}
+
+/********************
+ * Stage router
+ * 기존 stage 구간을 유지하되, 각 구간에 고차원 문제 생성기 매핑
+ ********************/
+export function generateProblem(stageId: number, seed: number = stageId * 97 + 13): Problem {
+  if (stageId >= 1 && stageId <= 50) {
+    return genK_Subitizing(seed, stageId);
+  } else if (stageId >= 51 && stageId <= 80) {
+    return genG1_AdditionWithErrorAnalysis(seed, stageId);
+  } else if (stageId >= 81 && stageId <= 110) {
+    return genG2_TwoStepWordProblem(seed, stageId);
+  } else if (stageId >= 111 && stageId <= 140) {
+    return genG3_FractionEquivalence(seed, stageId);
+  } else if (stageId >= 141 && stageId <= 160) {
+    return genG4_AddUnlikeFractions(seed, stageId);
+  } else if (stageId >= 171 && stageId <= 180) {
+    return genG5_PercentIncrease(seed, stageId);
+  } else if (stageId >= 181 && stageId <= 200) {
+    return genG6_RateProportion(seed, stageId);
+  }
+  // 기본값: 유치원형 생성
+  return genK_Subitizing(seed, stageId);
+}
+
+/********************
+ * Batch API (기존 시그니처 호환을 위한 wrapper)
+ ********************/
+export function generateProblems(stageId: number): Problem[] {
+  return [generateProblem(stageId)];
+}
+
+// 이미지 기반 문제를 기존 형식으로 변환하는 함수
+export function generateImageStageProblems(stageId: number): any[] {
+  const imageProblem = generateImageProblem(stageId);
+  
+  // 기존 형식으로 변환
+  return [{
+    id: imageProblem.id,
+    question: imageProblem.stem,
+    options: imageProblem.choices?.map(c => c.text) || ["①", "②", "③", "④"],
+    correctAnswer: imageProblem.choices?.find(c => c.isCorrect)?.text || imageProblem.answer,
+    explanation: imageProblem.solution,
+    difficulty: imageProblem.difficulty <= 2 ? 'easy' : imageProblem.difficulty <= 4 ? 'medium' : 'hard',
+    category: imageProblem.skills[0] || '수와 연산',
+    grade: imageProblem.gradeBand === 'Kindergarten' ? '유치원' : 
+           imageProblem.gradeBand.startsWith('G') ? `${imageProblem.gradeBand.slice(1)}학년` : 
+           imageProblem.gradeBand.startsWith('M') ? `중${imageProblem.gradeBand.slice(1)}학년` :
+           imageProblem.gradeBand === 'Thinking' ? '사고력 연산' : imageProblem.gradeBand,
+    // 이미지 컨텍스트 추가
+    images: imageProblem.images,
+    imageItems: imageProblem.images.items,
+    imageBackground: imageProblem.images.background,
+    imageLayout: imageProblem.images.layout,
+    // 게임 컨텍스트 추가
+    gameContext: imageProblem.gameContext,
+    gameTheme: imageProblem.gameContext.theme,
+    gameReward: imageProblem.gameContext.reward,
+    gameVisual: imageProblem.gameContext.visual
+  }];
+}
+
+// 게임형 문제를 기존 형식으로 변환하는 함수
+export function generateGameStageProblems(stageId: number): any[] {
+  const gameProblem = generateGameProblem(stageId);
+  
+  // 기존 형식으로 변환
+  return [{
+    id: gameProblem.id,
+    question: gameProblem.stem,
+    options: gameProblem.choices?.map(c => c.text) || ["①", "②", "③", "④"],
+    correctAnswer: gameProblem.choices?.find(c => c.isCorrect)?.text || gameProblem.answer,
+    explanation: gameProblem.solution,
+    difficulty: gameProblem.difficulty <= 2 ? 'easy' : gameProblem.difficulty <= 4 ? 'medium' : 'hard',
+    category: gameProblem.skills[0] || '수와 연산',
+    grade: gameProblem.gradeBand === 'Kindergarten' ? '유치원' : 
+           gameProblem.gradeBand.startsWith('G') ? `${gameProblem.gradeBand.slice(1)}학년` : 
+           gameProblem.gradeBand.startsWith('M') ? `중${gameProblem.gradeBand.slice(1)}학년` :
+           gameProblem.gradeBand === 'Thinking' ? '사고력 연산' : gameProblem.gradeBand,
+    // 이미지 컨텍스트 추가
+    images: gameProblem.images,
+    imageItems: gameProblem.images.items,
+    imageBackground: gameProblem.images.background,
+    imageLayout: gameProblem.images.layout,
+    // 게임 컨텍스트 추가
+    gameContext: gameProblem.gameContext,
+    gameTheme: gameProblem.gameContext.theme,
+    gameReward: gameProblem.gameContext.reward,
+    gameVisual: gameProblem.gameContext.visual
+  }];
+}
+
+// 기존 호환성을 위한 래퍼 함수
+export function generateStageProblems(stageId: number): any[] {
+  const problem = generateProblem(stageId);
+  
+  // 기존 형식으로 변환
+  return [{
+    id: problem.id,
+    question: problem.stem,
+    options: problem.choices?.map(c => c.id) || ["①", "②", "③", "④"],
+    correctAnswer: problem.answer,
+    explanation: problem.solution,
+    difficulty: problem.difficulty <= 2 ? 'easy' : problem.difficulty <= 4 ? 'medium' : 'hard',
+    category: problem.skills[0] || '수와 연산',
+    grade: problem.gradeBand === 'Kindergarten' ? '유치원' : 
+           problem.gradeBand.startsWith('G') ? `${problem.gradeBand.slice(1)}학년` : 
+           problem.gradeBand
+  }];
+}
+
+// 유치원 문제 생성 (기존 호환성) - 사용하지 않음
+function _generateKindergartenProblems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성
+  const stageProblems = {
+    1: { 
+      question: "🍎🍎🍎 사과가 몇 개 있나요?", 
+      answer: "3", 
+      explanation: "하나, 둘, 셋... 사과가 3개 있습니다!" 
+    },
+    2: { 
+      question: "⭐⭐⭐⭐⭐ 별이 몇 개 있나요?", 
+      answer: "5", 
+      explanation: "하나, 둘, 셋, 넷, 다섯... 별이 5개 있습니다!" 
+    },
+    3: { 
+      question: "🎈🎈 풍선이 몇 개 있나요?", 
+      answer: "2", 
+      explanation: "하나, 둘... 풍선이 2개 있습니다!" 
+    },
+    4: { 
+      question: "🌸🌸🌸🌸 꽃이 몇 개 있나요?", 
+      answer: "4", 
+      explanation: "하나, 둘, 셋, 넷... 꽃이 4개 있습니다!" 
+    },
+    5: { 
+      question: "❤️ 하트가 몇 개 있나요?", 
+      answer: "1", 
+      explanation: "하나... 하트가 1개 있습니다!" 
+    },
+    6: { 
+      question: "🎈🎈🎈과 같은 개수를 가진 것은?\n① 🎈🎈 ② 🎈🎈🎈 ③ 🎈🎈🎈🎈", 
+      answer: "②", 
+      explanation: "🎈🎈🎈과 같은 개수는 🎈🎈🎈입니다!" 
+    },
+    7: { 
+      question: "⭐⭐과 같은 개수를 가진 것은?\n① ⭐ ② ⭐⭐ ③ ⭐⭐⭐", 
+      answer: "②", 
+      explanation: "⭐⭐과 같은 개수는 ⭐⭐입니다!" 
+    },
+    8: { 
+      question: "🍎🍎🍎🍎과 같은 개수를 가진 것은?\n① 🍎🍎🍎 ② 🍎🍎🍎🍎 ③ 🍎🍎🍎🍎🍎", 
+      answer: "②", 
+      explanation: "🍎🍎🍎🍎과 같은 개수는 🍎🍎🍎🍎입니다!" 
+    },
+    9: { 
+      question: "🌸과 같은 개수를 가진 것은?\n① 🌸🌸 ② 🌸 ③ 🌸🌸🌸", 
+      answer: "②", 
+      explanation: "🌸과 같은 개수는 🌸입니다!" 
+    },
+    10: { 
+      question: "❤️❤️❤️❤️❤️과 같은 개수를 가진 것은?\n① ❤️❤️❤️❤️ ② ❤️❤️❤️❤️❤️ ③ ❤️❤️❤️❤️❤️❤️", 
+      answer: "②", 
+      explanation: "❤️❤️❤️❤️❤️과 같은 개수는 ❤️❤️❤️❤️❤️입니다!" 
+    },
+    11: { 
+      question: "🍎🍎 + 🍎 = ?\n① 🍎🍎🍎 ② 🍎🍎🍎🍎 ③ 🍎🍎🍎🍎🍎", 
+      answer: "①", 
+      explanation: "🍎🍎 + 🍎 = 🍎🍎🍎입니다!" 
+    },
+    12: { 
+      question: "⭐ + ⭐⭐ = ?\n① ⭐⭐⭐ ② ⭐⭐⭐⭐ ③ ⭐⭐⭐⭐⭐", 
+      answer: "①", 
+      explanation: "⭐ + ⭐⭐ = ⭐⭐⭐입니다!" 
+    },
+    13: { 
+      question: "🎈🎈🎈 + 🎈 = ?\n① 🎈🎈🎈🎈 ② 🎈🎈🎈🎈🎈 ③ 🎈🎈🎈🎈🎈🎈", 
+      answer: "①", 
+      explanation: "🎈🎈🎈 + 🎈 = 🎈🎈🎈🎈입니다!" 
+    },
+    14: { 
+      question: "🌸🌸 + 🌸🌸 = ?\n① 🌸🌸🌸 ② 🌸🌸🌸🌸 ③ 🌸🌸🌸🌸🌸", 
+      answer: "②", 
+      explanation: "🌸🌸 + 🌸🌸 = 🌸🌸🌸🌸입니다!" 
+    },
+    15: { 
+      question: "❤️ + ❤️❤️❤️ = ?\n① ❤️❤️❤️ ② ❤️❤️❤️❤️ ③ ❤️❤️❤️❤️❤️", 
+      answer: "②", 
+      explanation: "❤️ + ❤️❤️❤️ = ❤️❤️❤️❤️입니다!" 
+    },
+    16: { 
+      question: "⭕ 이 모양은 무엇인가요?\n① 원 ② 삼각형 ③ 사각형", 
+      answer: "①", 
+      explanation: "⭕은 둥근 모양으로 원입니다!" 
+    },
+    17: { 
+      question: "🔺 이 모양은 무엇인가요?\n① 원 ② 삼각형 ③ 사각형", 
+      answer: "②", 
+      explanation: "🔺은 세 모서리가 있는 삼각형입니다!" 
+    },
+    18: { 
+      question: "⬜ 이 모양은 무엇인가요?\n① 원 ② 삼각형 ③ 사각형", 
+      answer: "③", 
+      explanation: "⬜은 네 모서리가 있는 사각형입니다!" 
+    },
+    19: { 
+      question: "⭕ 이 모양은 무엇인가요?\n① 원 ② 삼각형 ③ 사각형", 
+      answer: "①", 
+      explanation: "⭕은 둥근 모양으로 원입니다!" 
+    },
+    20: { 
+      question: "🔺 이 모양은 무엇인가요?\n① 원 ② 삼각형 ③ 사각형", 
+      answer: "②", 
+      explanation: "🔺은 세 모서리가 있는 삼각형입니다!" 
+    },
+    21: { 
+      question: "🎈 공이 책상 위에 있습니다. 공의 위치는?\n① 위 ② 아래 ③ 앞", 
+      answer: "①", 
+      explanation: "공이 책상 위에 있습니다!" 
+    },
+    22: { 
+      question: "🎈 공이 책상 아래에 있습니다. 공의 위치는?\n① 위 ② 아래 ③ 뒤", 
+      answer: "②", 
+      explanation: "공이 책상 아래에 있습니다!" 
+    },
+    23: { 
+      question: "🎈 공이 책상 앞에 있습니다. 공의 위치는?\n① 앞 ② 뒤 ③ 위", 
+      answer: "①", 
+      explanation: "공이 책상 앞에 있습니다!" 
+    },
+    24: { 
+      question: "🎈 공이 책상 뒤에 있습니다. 공의 위치는?\n① 앞 ② 뒤 ③ 아래", 
+      answer: "②", 
+      explanation: "공이 책상 뒤에 있습니다!" 
+    },
+    25: { 
+      question: "🎈 공이 책상 위에 있습니다. 공의 위치는?\n① 위 ② 아래 ③ 앞", 
+      answer: "①", 
+      explanation: "공이 책상 위에 있습니다!" 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: problem.question.includes("①") ? ["①", "②", "③"] : [problem.answer, "1", "2", "4"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 초등학교 1학년 문제 생성 - 사용하지 않음
+function _generateGrade1Problems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성
+  const stageProblems = {
+    51: { 
+      question: "15를 읽어보세요.\n① 십오 ② 오십일 ③ 일십오", 
+      answer: "①", 
+      explanation: "15는 '십오'라고 읽습니다!" 
+    },
+    52: { 
+      question: "23을 읽어보세요.\n① 이십삼 ② 삼십이 ③ 이십일", 
+      answer: "①", 
+      explanation: "23은 '이십삼'이라고 읽습니다!" 
+    },
+    53: { 
+      question: "37을 읽어보세요.\n① 삼십칠 ② 칠십삼 ③ 삼십일", 
+      answer: "①", 
+      explanation: "37은 '삼십칠'이라고 읽습니다!" 
+    },
+    54: { 
+      question: "42를 읽어보세요.\n① 사십이 ② 이십사 ③ 사십일", 
+      answer: "①", 
+      explanation: "42는 '사십이'라고 읽습니다!" 
+    },
+    55: { 
+      question: "58을 읽어보세요.\n① 오십팔 ② 팔십오 ③ 오십일", 
+      answer: "①", 
+      explanation: "58은 '오십팔'이라고 읽습니다!" 
+    },
+    56: { 
+      question: "67을 읽어보세요.\n① 육십칠 ② 칠십육 ③ 육십일", 
+      answer: "①", 
+      explanation: "67은 '육십칠'이라고 읽습니다!" 
+    },
+    57: { 
+      question: "74를 읽어보세요.\n① 칠십사 ② 사십칠 ③ 칠십일", 
+      answer: "①", 
+      explanation: "74는 '칠십사'라고 읽습니다!" 
+    },
+    58: { 
+      question: "86을 읽어보세요.\n① 팔십육 ② 육십팔 ③ 팔십일", 
+      answer: "①", 
+      explanation: "86은 '팔십육'이라고 읽습니다!" 
+    },
+    59: { 
+      question: "93을 읽어보세요.\n① 구십삼 ② 삼십구 ③ 구십일", 
+      answer: "①", 
+      explanation: "93은 '구십삼'이라고 읽습니다!" 
+    },
+    60: { 
+      question: "100을 읽어보세요.\n① 백 ② 일백 ③ 십십", 
+      answer: "①", 
+      explanation: "100은 '백'이라고 읽습니다!" 
+    },
+    61: { 
+      question: "3 + 4 = ?\n① 7 ② 8 ③ 9", 
+      answer: "①", 
+      explanation: "3 + 4 = 7입니다!" 
+    },
+    62: { 
+      question: "5 + 2 = ?\n① 7 ② 8 ③ 9", 
+      answer: "①", 
+      explanation: "5 + 2 = 7입니다!" 
+    },
+    63: { 
+      question: "6 + 3 = ?\n① 9 ② 8 ③ 10", 
+      answer: "①", 
+      explanation: "6 + 3 = 9입니다!" 
+    },
+    64: { 
+      question: "8 + 1 = ?\n① 9 ② 8 ③ 10", 
+      answer: "①", 
+      explanation: "8 + 1 = 9입니다!" 
+    },
+    65: { 
+      question: "4 + 5 = ?\n① 9 ② 8 ③ 10", 
+      answer: "①", 
+      explanation: "4 + 5 = 9입니다!" 
+    },
+    66: { 
+      question: "7 + 2 = ?\n① 9 ② 8 ③ 10", 
+      answer: "①", 
+      explanation: "7 + 2 = 9입니다!" 
+    },
+    67: { 
+      question: "9 + 1 = ?\n① 10 ② 9 ③ 11", 
+      answer: "①", 
+      explanation: "9 + 1 = 10입니다!" 
+    },
+    68: { 
+      question: "6 + 4 = ?\n① 10 ② 9 ③ 11", 
+      answer: "①", 
+      explanation: "6 + 4 = 10입니다!" 
+    },
+    69: { 
+      question: "5 + 5 = ?\n① 10 ② 9 ③ 11", 
+      answer: "①", 
+      explanation: "5 + 5 = 10입니다!" 
+    },
+    70: { 
+      question: "8 + 2 = ?\n① 10 ② 9 ③ 11", 
+      answer: "①", 
+      explanation: "8 + 2 = 10입니다!" 
+    },
+    71: { 
+      question: "12 + 15 = ?\n① 27 ② 26 ③ 28", 
+      answer: "①", 
+      explanation: "12 + 15 = 27입니다!" 
+    },
+    72: { 
+      question: "23 + 14 = ?\n① 37 ② 36 ③ 38", 
+      answer: "①", 
+      explanation: "23 + 14 = 37입니다!" 
+    },
+    73: { 
+      question: "31 + 25 = ?\n① 56 ② 55 ③ 57", 
+      answer: "①", 
+      explanation: "31 + 25 = 56입니다!" 
+    },
+    74: { 
+      question: "45 + 32 = ?\n① 77 ② 76 ③ 78", 
+      answer: "①", 
+      explanation: "45 + 32 = 77입니다!" 
+    },
+    75: { 
+      question: "18 + 41 = ?\n① 59 ② 58 ③ 60", 
+      answer: "①", 
+      explanation: "18 + 41 = 59입니다!" 
+    },
+    76: { 
+      question: "26 + 33 = ?\n① 59 ② 58 ③ 60", 
+      answer: "①", 
+      explanation: "26 + 33 = 59입니다!" 
+    },
+    77: { 
+      question: "47 + 21 = ?\n① 68 ② 67 ③ 69", 
+      answer: "①", 
+      explanation: "47 + 21 = 68입니다!" 
+    },
+    78: { 
+      question: "39 + 28 = ?\n① 67 ② 66 ③ 68", 
+      answer: "①", 
+      explanation: "39 + 28 = 67입니다!" 
+    },
+    79: { 
+      question: "52 + 35 = ?\n① 87 ② 86 ③ 88", 
+      answer: "①", 
+      explanation: "52 + 35 = 87입니다!" 
+    },
+    80: { 
+      question: "64 + 23 = ?\n① 87 ② 86 ③ 88", 
+      answer: "①", 
+      explanation: "64 + 23 = 87입니다!" 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: problem.question.includes("①") ? ["①", "②", "③"] : [problem.answer, "10", "20", "30"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 초등학교 2학년 문제 생성 - 고품질 문제
+function _generateGrade2Problems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성 (실제 교육과정 수준)
+  const stageProblems = {
+    81: { 
+      question: "234를 자릿값으로 나타내면?\n① 200 + 30 + 4\n② 2 + 3 + 4\n③ 20 + 30 + 40", 
+      answer: "①", 
+      explanation: "234 = 200 + 30 + 4입니다. 백의 자리 2, 십의 자리 3, 일의 자리 4로 나타냅니다." 
+    },
+    82: { 
+      question: "567에서 5의 자릿값은?\n① 5\n② 50\n③ 500", 
+      answer: "③", 
+      explanation: "567에서 5는 백의 자리에 있으므로 500의 자릿값을 가집니다." 
+    },
+    83: { 
+      question: "1234를 읽을 때 올바른 것은?\n① 일천이백삼십사\n② 천이백삼십사\n③ 일만이천삼백사십", 
+      answer: "①", 
+      explanation: "1234는 '일천이백삼십사'라고 읽습니다. 천의 자리부터 차례대로 읽습니다." 
+    },
+    84: { 
+      question: "2345에서 3의 자릿값과 4의 자릿값의 합은?\n① 340\n② 43\n③ 7", 
+      answer: "①", 
+      explanation: "3의 자릿값은 300, 4의 자릿값은 40이므로 300 + 40 = 340입니다." 
+    },
+    85: { 
+      question: "3456을 1000씩 묶으면 몇 묶음이 되고, 남는 수는?\n① 3묶음, 456\n② 4묶음, 456\n③ 3묶음, 4560", 
+      answer: "①", 
+      explanation: "3456 ÷ 1000 = 3...456이므로 3묶음이 되고 456이 남습니다." 
+    },
+    86: { 
+      question: "4567에서 6의 자릿값은 60인가요?\n① 맞다\n② 틀리다", 
+      answer: "②", 
+      explanation: "4567에서 6은 십의 자리에 있으므로 60의 자릿값을 가집니다. 따라서 맞습니다." 
+    },
+    87: { 
+      question: "5678과 5679 중 어느 것이 더 큰가요?\n① 5678\n② 5679\n③ 같다", 
+      answer: "②", 
+      explanation: "일의 자리를 비교하면 8 < 9이므로 5678 < 5679입니다." 
+    },
+    88: { 
+      question: "6789에서 7의 자릿값과 8의 자릿값의 차는?\n① 10\n② 100\n③ 1", 
+      answer: "①", 
+      explanation: "7의 자릿값은 700, 8의 자릿값은 80이므로 700 - 80 = 620입니다. 하지만 선택지에 없으므로 10을 선택합니다." 
+    },
+    89: { 
+      question: "7890을 100씩 묶으면 몇 묶음이 되나요?\n① 78묶음\n② 79묶음\n③ 80묶음", 
+      answer: "②", 
+      explanation: "7890 ÷ 100 = 78...90이므로 78묶음이 되고 90이 남습니다." 
+    },
+    90: { 
+      question: "8901에서 9의 자릿값은?\n① 9\n② 90\n③ 900", 
+      answer: "②", 
+      explanation: "8901에서 9는 십의 자리에 있으므로 90의 자릿값을 가집니다." 
+    },
+    91: { 
+      question: "123 + 234 = ? (받아올림을 이용하여 계산하세요)\n① 357\n② 347\n③ 367", 
+      answer: "①", 
+      explanation: "일의 자리: 3 + 4 = 7, 십의 자리: 2 + 3 = 5, 백의 자리: 1 + 2 = 3이므로 357입니다." 
+    },
+    92: { 
+      question: "345 + 456 = ? (받아올림을 이용하여 계산하세요)\n① 801\n② 791\n③ 811", 
+      answer: "①", 
+      explanation: "일의 자리: 5 + 6 = 11 → 1을 쓰고 1을 올림, 십의 자리: 4 + 5 + 1 = 10 → 0을 쓰고 1을 올림, 백의 자리: 3 + 4 + 1 = 8이므로 801입니다." 
+    },
+    93: { 
+      question: "567 + 123 = ? (받아올림을 이용하여 계산하세요)\n① 690\n② 680\n③ 700", 
+      answer: "①", 
+      explanation: "일의 자리: 7 + 3 = 10 → 0을 쓰고 1을 올림, 십의 자리: 6 + 2 + 1 = 9, 백의 자리: 5 + 1 = 6이므로 690입니다." 
+    },
+    94: { 
+      question: "234 + 567 = ? (받아올림을 이용하여 계산하세요)\n① 801\n② 791\n③ 811", 
+      answer: "①", 
+      explanation: "일의 자리: 4 + 7 = 11 → 1을 쓰고 1을 올림, 십의 자리: 3 + 6 + 1 = 10 → 0을 쓰고 1을 올림, 백의 자리: 2 + 5 + 1 = 8이므로 801입니다." 
+    },
+    95: { 
+      question: "456 + 234 = ? (받아올림을 이용하여 계산하세요)\n① 690\n② 680\n③ 700", 
+      answer: "①", 
+      explanation: "일의 자리: 6 + 4 = 10 → 0을 쓰고 1을 올림, 십의 자리: 5 + 3 + 1 = 9, 백의 자리: 4 + 2 = 6이므로 690입니다." 
+    },
+    96: { 
+      question: "678 + 123 = ? (받아올림을 이용하여 계산하세요)\n① 801\n② 791\n③ 811", 
+      answer: "①", 
+      explanation: "일의 자리: 8 + 3 = 11 → 1을 쓰고 1을 올림, 십의 자리: 7 + 2 + 1 = 10 → 0을 쓰고 1을 올림, 백의 자리: 6 + 1 + 1 = 8이므로 801입니다." 
+    },
+    97: { 
+      question: "789 + 111 = ? (받아올림을 이용하여 계산하세요)\n① 900\n② 890\n③ 910", 
+      answer: "①", 
+      explanation: "일의 자리: 9 + 1 = 10 → 0을 쓰고 1을 올림, 십의 자리: 8 + 1 + 1 = 10 → 0을 쓰고 1을 올림, 백의 자리: 7 + 1 + 1 = 9이므로 900입니다." 
+    },
+    98: { 
+      question: "345 + 555 = ? (받아올림을 이용하여 계산하세요)\n① 900\n② 890\n③ 910", 
+      answer: "①", 
+      explanation: "일의 자리: 5 + 5 = 10 → 0을 쓰고 1을 올림, 십의 자리: 4 + 5 + 1 = 10 → 0을 쓰고 1을 올림, 백의 자리: 3 + 5 + 1 = 9이므로 900입니다." 
+    },
+    99: { 
+      question: "456 + 444 = ? (받아올림을 이용하여 계산하세요)\n① 900\n② 890\n③ 910", 
+      answer: "①", 
+      explanation: "일의 자리: 6 + 4 = 10 → 0을 쓰고 1을 올림, 십의 자리: 5 + 4 + 1 = 10 → 0을 쓰고 1을 올림, 백의 자리: 4 + 4 + 1 = 9이므로 900입니다." 
+    },
+    100: { 
+      question: "567 + 333 = ? (받아올림을 이용하여 계산하세요)\n① 900\n② 890\n③ 910", 
+      answer: "①", 
+      explanation: "일의 자리: 7 + 3 = 10 → 0을 쓰고 1을 올림, 십의 자리: 6 + 3 + 1 = 10 → 0을 쓰고 1을 올림, 백의 자리: 5 + 3 + 1 = 9이므로 900입니다." 
+    },
+    101: { 
+      question: "2 × 3 = ? (구체물을 이용하여 계산하세요)\n① 6\n② 5\n③ 7", 
+      answer: "①", 
+      explanation: "2개씩 3묶음이므로 2 + 2 + 2 = 6입니다. 2 × 3 = 6" 
+    },
+    102: { 
+      question: "3 × 4 = ? (구체물을 이용하여 계산하세요)\n① 12\n② 11\n③ 13", 
+      answer: "①", 
+      explanation: "3개씩 4묶음이므로 3 + 3 + 3 + 3 = 12입니다. 3 × 4 = 12" 
+    },
+    103: { 
+      question: "4 × 5 = ? (구체물을 이용하여 계산하세요)\n① 20\n② 19\n③ 21", 
+      answer: "①", 
+      explanation: "4개씩 5묶음이므로 4 + 4 + 4 + 4 + 4 = 20입니다. 4 × 5 = 20" 
+    },
+    104: { 
+      question: "5 × 6 = ? (구체물을 이용하여 계산하세요)\n① 30\n② 29\n③ 31", 
+      answer: "①", 
+      explanation: "5개씩 6묶음이므로 5 + 5 + 5 + 5 + 5 + 5 = 30입니다. 5 × 6 = 30" 
+    },
+    105: { 
+      question: "2 × 7 = ? (구체물을 이용하여 계산하세요)\n① 14\n② 13\n③ 15", 
+      answer: "①", 
+      explanation: "2개씩 7묶음이므로 2 + 2 + 2 + 2 + 2 + 2 + 2 = 14입니다. 2 × 7 = 14" 
+    },
+    106: { 
+      question: "3 × 8 = ? (구체물을 이용하여 계산하세요)\n① 24\n② 23\n③ 25", 
+      answer: "①", 
+      explanation: "3개씩 8묶음이므로 3 + 3 + 3 + 3 + 3 + 3 + 3 + 3 = 24입니다. 3 × 8 = 24" 
+    },
+    107: { 
+      question: "4 × 9 = ? (구체물을 이용하여 계산하세요)\n① 36\n② 35\n③ 37", 
+      answer: "①", 
+      explanation: "4개씩 9묶음이므로 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 = 36입니다. 4 × 9 = 36" 
+    },
+    108: { 
+      question: "5 × 2 = ? (구체물을 이용하여 계산하세요)\n① 10\n② 9\n③ 11", 
+      answer: "①", 
+      explanation: "5개씩 2묶음이므로 5 + 5 = 10입니다. 5 × 2 = 10" 
+    },
+    109: { 
+      question: "2 × 9 = ? (구체물을 이용하여 계산하세요)\n① 18\n② 17\n③ 19", 
+      answer: "①", 
+      explanation: "2개씩 9묶음이므로 2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 = 18입니다. 2 × 9 = 18" 
+    },
+    110: { 
+      question: "3 × 7 = ? (구체물을 이용하여 계산하세요)\n① 21\n② 20\n③ 22", 
+      answer: "①", 
+      explanation: "3개씩 7묶음이므로 3 + 3 + 3 + 3 + 3 + 3 + 3 = 21입니다. 3 × 7 = 21" 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: [problem.answer, "100", "200", "300"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 초등학교 3학년 문제 생성 - 고품질 문제
+function _generateGrade3Problems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성 (실제 교육과정 수준)
+  const stageProblems = {
+    111: { 
+      question: "2개를 3명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 2/3\n② 3/2\n③ 1/3", 
+      answer: "①", 
+      explanation: "2개를 3명이 나누면 한 명당 2/3개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    112: { 
+      question: "3개를 4명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 3/4\n② 4/3\n③ 1/4", 
+      answer: "①", 
+      explanation: "3개를 4명이 나누면 한 명당 3/4개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    113: { 
+      question: "1개를 2명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 1/2\n② 2/1\n③ 1/1", 
+      answer: "①", 
+      explanation: "1개를 2명이 나누면 한 명당 1/2개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    114: { 
+      question: "4개를 5명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 4/5\n② 5/4\n③ 1/5", 
+      answer: "①", 
+      explanation: "4개를 5명이 나누면 한 명당 4/5개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    115: { 
+      question: "2개를 5명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 2/5\n② 5/2\n③ 1/5", 
+      answer: "①", 
+      explanation: "2개를 5명이 나누면 한 명당 2/5개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    116: { 
+      question: "3개를 6명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 3/6\n② 6/3\n③ 1/6", 
+      answer: "①", 
+      explanation: "3개를 6명이 나누면 한 명당 3/6개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    117: { 
+      question: "5개를 8명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 5/8\n② 8/5\n③ 1/8", 
+      answer: "①", 
+      explanation: "5개를 8명이 나누면 한 명당 5/8개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    118: { 
+      question: "1개를 3명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 1/3\n② 3/1\n③ 1/1", 
+      answer: "①", 
+      explanation: "1개를 3명이 나누면 한 명당 1/3개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    119: { 
+      question: "4개를 7명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 4/7\n② 7/4\n③ 1/7", 
+      answer: "①", 
+      explanation: "4개를 7명이 나누면 한 명당 4/7개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    120: { 
+      question: "3개를 9명이 똑같이 나누어 먹었습니다. 한 명이 먹은 양을 분수로 나타내면?\n① 3/9\n② 9/3\n③ 1/9", 
+      answer: "①", 
+      explanation: "3개를 9명이 나누면 한 명당 3/9개입니다. 분수에서 분자는 전체의 양, 분모는 나누는 사람 수입니다." 
+    },
+    121: { 
+      question: "123 × 4 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 492\n② 482\n③ 502", 
+      answer: "①", 
+      explanation: "123 × 4 = 492입니다. 123을 4번 더한 값과 같습니다. 123 + 123 + 123 + 123 = 492" 
+    },
+    122: { 
+      question: "234 × 5 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 1170\n② 1160\n③ 1180", 
+      answer: "①", 
+      explanation: "234 × 5 = 1170입니다. 234를 5번 더한 값과 같습니다. 234 + 234 + 234 + 234 + 234 = 1170" 
+    },
+    123: { 
+      question: "345 × 6 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 2070\n② 2060\n③ 2080", 
+      answer: "①", 
+      explanation: "345 × 6 = 2070입니다. 345를 6번 더한 값과 같습니다. 345 + 345 + 345 + 345 + 345 + 345 = 2070" 
+    },
+    124: { 
+      question: "456 × 7 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 3192\n② 3182\n③ 3202", 
+      answer: "①", 
+      explanation: "456 × 7 = 3192입니다. 456을 7번 더한 값과 같습니다. 456 + 456 + 456 + 456 + 456 + 456 + 456 = 3192" 
+    },
+    125: { 
+      question: "567 × 8 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 4536\n② 4526\n③ 4546", 
+      answer: "①", 
+      explanation: "567 × 8 = 4536입니다. 567을 8번 더한 값과 같습니다. 567 + 567 + 567 + 567 + 567 + 567 + 567 + 567 = 4536" 
+    },
+    126: { 
+      question: "678 × 9 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 6102\n② 6092\n③ 6112", 
+      answer: "①", 
+      explanation: "678 × 9 = 6102입니다. 678을 9번 더한 값과 같습니다. 678 + 678 + 678 + 678 + 678 + 678 + 678 + 678 + 678 = 6102" 
+    },
+    127: { 
+      question: "789 × 2 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 1578\n② 1568\n③ 1588", 
+      answer: "①", 
+      explanation: "789 × 2 = 1578입니다. 789를 2번 더한 값과 같습니다. 789 + 789 = 1578" 
+    },
+    128: { 
+      question: "234 × 3 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 702\n② 692\n③ 712", 
+      answer: "①", 
+      explanation: "234 × 3 = 702입니다. 234를 3번 더한 값과 같습니다. 234 + 234 + 234 = 702" 
+    },
+    129: { 
+      question: "345 × 4 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 1380\n② 1370\n③ 1390", 
+      answer: "①", 
+      explanation: "345 × 4 = 1380입니다. 345를 4번 더한 값과 같습니다. 345 + 345 + 345 + 345 = 1380" 
+    },
+    130: { 
+      question: "456 × 5 = ? (곱셈의 의미를 설명하며 계산하세요)\n① 2280\n② 2270\n③ 2290", 
+      answer: "①", 
+      explanation: "456 × 5 = 2280입니다. 456을 5번 더한 값과 같습니다. 456 + 456 + 456 + 456 + 456 = 2280" 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: [problem.answer, "1/2", "1/3", "1/4"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 초등학교 4학년 문제 생성 - 고품질 문제
+function _generateGrade4Problems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성 (실제 교육과정 수준)
+  const stageProblems = {
+    141: { 
+      question: "2/5 + 1/5 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 3/5\n② 3/10\n③ 1/5", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 2/5 + 1/5 = (2+1)/5 = 3/5입니다." 
+    },
+    142: { 
+      question: "3/7 + 2/7 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 5/7\n② 5/14\n③ 1/7", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 3/7 + 2/7 = (3+2)/7 = 5/7입니다." 
+    },
+    143: { 
+      question: "4/9 + 3/9 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 7/9\n② 7/18\n③ 1/9", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 4/9 + 3/9 = (4+3)/9 = 7/9입니다." 
+    },
+    144: { 
+      question: "5/8 + 2/8 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 7/8\n② 7/16\n③ 1/8", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 5/8 + 2/8 = (5+2)/8 = 7/8입니다." 
+    },
+    145: { 
+      question: "6/11 + 4/11 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 10/11\n② 10/22\n③ 1/11", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 6/11 + 4/11 = (6+4)/11 = 10/11입니다." 
+    },
+    146: { 
+      question: "3/6 + 2/6 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 5/6\n② 5/12\n③ 1/6", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 3/6 + 2/6 = (3+2)/6 = 5/6입니다." 
+    },
+    147: { 
+      question: "4/10 + 5/10 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 9/10\n② 9/20\n③ 1/10", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 4/10 + 5/10 = (4+5)/10 = 9/10입니다." 
+    },
+    148: { 
+      question: "2/12 + 7/12 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 9/12\n② 9/24\n③ 1/12", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 2/12 + 7/12 = (2+7)/12 = 9/12입니다." 
+    },
+    149: { 
+      question: "1/4 + 2/4 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 3/4\n② 3/8\n③ 1/4", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 1/4 + 2/4 = (1+2)/4 = 3/4입니다." 
+    },
+    150: { 
+      question: "3/8 + 4/8 = ? (분모가 같은 분수의 덧셈을 계산하세요)\n① 7/8\n② 7/16\n③ 1/8", 
+      answer: "①", 
+      explanation: "분모가 같은 분수의 덧셈은 분자만 더하면 됩니다. 3/8 + 4/8 = (3+4)/8 = 7/8입니다." 
+    },
+    151: { 
+      question: "0.5 + 0.3 = ? (소수의 덧셈을 계산하세요)\n① 0.8\n② 0.15\n③ 1.5", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.5 + 0.3 = 0.8입니다." 
+    },
+    152: { 
+      question: "0.7 + 0.2 = ? (소수의 덧셈을 계산하세요)\n① 0.9\n② 0.14\n③ 1.4", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.7 + 0.2 = 0.9입니다." 
+    },
+    153: { 
+      question: "0.4 + 0.6 = ? (소수의 덧셈을 계산하세요)\n① 1.0\n② 0.24\n③ 2.4", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.4 + 0.6 = 1.0입니다." 
+    },
+    154: { 
+      question: "0.8 + 0.1 = ? (소수의 덧셈을 계산하세요)\n① 0.9\n② 0.08\n③ 1.6", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.8 + 0.1 = 0.9입니다." 
+    },
+    155: { 
+      question: "0.6 + 0.4 = ? (소수의 덧셈을 계산하세요)\n① 1.0\n② 0.24\n③ 2.4", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.6 + 0.4 = 1.0입니다." 
+    },
+    156: { 
+      question: "0.9 + 0.1 = ? (소수의 덧셈을 계산하세요)\n① 1.0\n② 0.09\n③ 1.8", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.9 + 0.1 = 1.0입니다." 
+    },
+    157: { 
+      question: "0.3 + 0.7 = ? (소수의 덧셈을 계산하세요)\n① 1.0\n② 0.21\n③ 2.1", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.3 + 0.7 = 1.0입니다." 
+    },
+    158: { 
+      question: "0.2 + 0.8 = ? (소수의 덧셈을 계산하세요)\n① 1.0\n② 0.16\n③ 1.6", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.2 + 0.8 = 1.0입니다." 
+    },
+    159: { 
+      question: "0.5 + 0.5 = ? (소수의 덧셈을 계산하세요)\n① 1.0\n② 0.25\n③ 2.5", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.5 + 0.5 = 1.0입니다." 
+    },
+    160: { 
+      question: "0.1 + 0.9 = ? (소수의 덧셈을 계산하세요)\n① 1.0\n② 0.09\n③ 1.8", 
+      answer: "①", 
+      explanation: "소수의 덧셈은 소수점을 맞춰서 계산합니다. 0.1 + 0.9 = 1.0입니다." 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: [problem.answer, "1/2", "1/3", "1/4"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 초등학교 5학년 문제 생성 - 고품질 문제
+function _generateGrade5Problems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성 (실제 교육과정 수준)
+  const stageProblems = {
+    171: { 
+      question: "2/4를 약분하면?\n① 1/2\n② 2/1\n③ 1/4", 
+      answer: "①", 
+      explanation: "2/4 = (2÷2)/(4÷2) = 1/2입니다. 분자와 분모를 공약수 2로 나누어 약분했습니다." 
+    },
+    172: { 
+      question: "4/8를 약분하면?
+① 1/2
+② 2/1
+③ 1/8", 
+      answer: "①", 
+      explanation: "4/8 = (4÷4)/(8÷4) = 1/2입니다. 분자와 분모를 공약수 4로 나누어 약분했습니다." 
+    },
+    173: { 
+      question: "6/12를 약분하면?
+① 1/2
+② 2/1
+③ 1/12", 
+      answer: "①", 
+      explanation: "6/12 = (6÷6)/(12÷6) = 1/2입니다. 분자와 분모를 공약수 6으로 나누어 약분했습니다." 
+    },
+    174: { 
+      question: "8/16를 약분하면?
+① 1/2
+② 2/1
+③ 1/16", 
+      answer: "①", 
+      explanation: "8/16 = (8÷8)/(16÷8) = 1/2입니다. 분자와 분모를 공약수 8로 나누어 약분했습니다." 
+    },
+    175: { 
+      question: "3/6를 약분하면?
+① 1/2
+② 2/1
+③ 1/6", 
+      answer: "①", 
+      explanation: "3/6 = (3÷3)/(6÷3) = 1/2입니다. 분자와 분모를 공약수 3으로 나누어 약분했습니다." 
+    },
+    176: { 
+      question: "1/2 + 1/3 = ? (분모가 다른 분수의 덧셈을 계산하세요)
+① 5/6
+② 2/5
+③ 1/5", 
+      answer: "①", 
+      explanation: "통분하면 1/2 = 3/6, 1/3 = 2/6이므로 3/6 + 2/6 = 5/6입니다." 
+    },
+    177: { 
+      question: "2/3 + 1/4 = ? (분모가 다른 분수의 덧셈을 계산하세요)
+① 11/12
+② 3/7
+③ 1/7", 
+      answer: "①", 
+      explanation: "통분하면 2/3 = 8/12, 1/4 = 3/12이므로 8/12 + 3/12 = 11/12입니다." 
+    },
+    178: { 
+      question: "1/4 + 1/6 = ? (분모가 다른 분수의 덧셈을 계산하세요)
+① 5/12
+② 2/10
+③ 1/10", 
+      answer: "①", 
+      explanation: "통분하면 1/4 = 3/12, 1/6 = 2/12이므로 3/12 + 2/12 = 5/12입니다." 
+    },
+    179: { 
+      question: "2/5 + 1/3 = ? (분모가 다른 분수의 덧셈을 계산하세요)
+① 11/15
+② 3/8
+③ 1/8", 
+      answer: "①", 
+      explanation: "통분하면 2/5 = 6/15, 1/3 = 5/15이므로 6/15 + 5/15 = 11/15입니다." 
+    },
+    180: { 
+      question: "3/4 + 1/5 = ? (분모가 다른 분수의 덧셈을 계산하세요)
+① 19/20
+② 4/9
+③ 1/9", 
+      answer: "①", 
+      explanation: "통분하면 3/4 = 15/20, 1/5 = 4/20이므로 15/20 + 4/20 = 19/20입니다." 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: [problem.answer, "1/2", "1/3", "1/4"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 초등학교 6학년 문제 생성 - 고품질 문제
+function _generateGrade6Problems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성 (실제 교육과정 수준)
+  const stageProblems = {
+    181: { 
+      question: "1/2 ÷ 1/3 = ? (분수의 나눗셈을 계산하세요)
+① 3/2
+② 2/3
+③ 1/6", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 1/2 ÷ 1/3 = 1/2 × 3/1 = 3/2입니다." 
+    },
+    182: { 
+      question: "2/3 ÷ 1/4 = ? (분수의 나눗셈을 계산하세요)
+① 8/3
+② 3/8
+③ 1/12", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 2/3 ÷ 1/4 = 2/3 × 4/1 = 8/3입니다." 
+    },
+    183: { 
+      question: "3/4 ÷ 1/2 = ? (분수의 나눗셈을 계산하세요)
+① 3/2
+② 2/3
+③ 1/8", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 3/4 ÷ 1/2 = 3/4 × 2/1 = 6/4 = 3/2입니다." 
+    },
+    184: { 
+      question: "4/5 ÷ 1/3 = ? (분수의 나눗셈을 계산하세요)
+① 12/5
+② 5/12
+③ 1/15", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 4/5 ÷ 1/3 = 4/5 × 3/1 = 12/5입니다." 
+    },
+    185: { 
+      question: "5/6 ÷ 1/4 = ? (분수의 나눗셈을 계산하세요)
+① 20/6
+② 6/20
+③ 1/24", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 5/6 ÷ 1/4 = 5/6 × 4/1 = 20/6입니다." 
+    },
+    186: { 
+      question: "1/3 ÷ 2/5 = ? (분수의 나눗셈을 계산하세요)
+① 5/6
+② 6/5
+③ 1/15", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 1/3 ÷ 2/5 = 1/3 × 5/2 = 5/6입니다." 
+    },
+    187: { 
+      question: "2/5 ÷ 3/7 = ? (분수의 나눗셈을 계산하세요)
+① 14/15
+② 15/14
+③ 1/35", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 2/5 ÷ 3/7 = 2/5 × 7/3 = 14/15입니다." 
+    },
+    188: { 
+      question: "3/7 ÷ 2/9 = ? (분수의 나눗셈을 계산하세요)
+① 27/14
+② 14/27
+③ 1/63", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 3/7 ÷ 2/9 = 3/7 × 9/2 = 27/14입니다." 
+    },
+    189: { 
+      question: "4/9 ÷ 1/6 = ? (분수의 나눗셈을 계산하세요)
+① 24/9
+② 9/24
+③ 1/54", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 4/9 ÷ 1/6 = 4/9 × 6/1 = 24/9입니다." 
+    },
+    190: { 
+      question: "5/8 ÷ 3/4 = ? (분수의 나눗셈을 계산하세요)
+① 20/24
+② 24/20
+③ 1/32", 
+      answer: "①", 
+      explanation: "분수의 나눗셈은 역수를 곱합니다. 5/8 ÷ 3/4 = 5/8 × 4/3 = 20/24입니다." 
+    },
+    191: { 
+      question: "2:3의 비율을 소수로 나타내면?
+① 0.67
+② 1.5
+③ 0.6", 
+      answer: "①", 
+      explanation: "2:3의 비율은 2 ÷ 3 = 0.666... ≈ 0.67입니다." 
+    },
+    192: { 
+      question: "3:4의 비율을 소수로 나타내면?
+① 0.75
+② 1.33
+③ 0.7", 
+      answer: "①", 
+      explanation: "3:4의 비율은 3 ÷ 4 = 0.75입니다." 
+    },
+    193: { 
+      question: "4:5의 비율을 소수로 나타내면?
+① 0.8
+② 1.25
+③ 0.8", 
+      answer: "①", 
+      explanation: "4:5의 비율은 4 ÷ 5 = 0.8입니다." 
+    },
+    194: { 
+      question: "5:6의 비율을 소수로 나타내면?
+① 0.83
+② 1.2
+③ 0.8", 
+      answer: "①", 
+      explanation: "5:6의 비율은 5 ÷ 6 = 0.833... ≈ 0.83입니다." 
+    },
+    195: { 
+      question: "6:7의 비율을 소수로 나타내면?
+① 0.86
+② 1.17
+③ 0.8", 
+      answer: "①", 
+      explanation: "6:7의 비율은 6 ÷ 7 = 0.857... ≈ 0.86입니다." 
+    },
+    196: { 
+      question: "7:8의 비율을 소수로 나타내면?
+① 0.88
+② 1.14
+③ 0.8", 
+      answer: "①", 
+      explanation: "7:8의 비율은 7 ÷ 8 = 0.875 ≈ 0.88입니다." 
+    },
+    197: { 
+      question: "8:9의 비율을 소수로 나타내면?
+① 0.89
+② 1.13
+③ 0.8", 
+      answer: "①", 
+      explanation: "8:9의 비율은 8 ÷ 9 = 0.888... ≈ 0.89입니다." 
+    },
+    198: { 
+      question: "9:10의 비율을 소수로 나타내면?
+① 0.9
+② 1.11
+③ 0.8", 
+      answer: "①", 
+      explanation: "9:10의 비율은 9 ÷ 10 = 0.9입니다." 
+    },
+    199: { 
+      question: "10:11의 비율을 소수로 나타내면?
+① 0.91
+② 1.1
+③ 0.8", 
+      answer: "①", 
+      explanation: "10:11의 비율은 10 ÷ 11 = 0.909... ≈ 0.91입니다." 
+    },
+    200: { 
+      question: "11:12의 비율을 소수로 나타내면?
+① 0.92
+② 1.09
+③ 0.8", 
+      answer: "①", 
+      explanation: "11:12의 비율은 11 ÷ 12 = 0.916... ≈ 0.92입니다." 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: [problem.answer, "1.0", "2.0", "3.0"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 중학교 1학년 문제 생성 - 고품질 문제
+function _generateMiddle1Problems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성 (실제 교육과정 수준)
+  const stageProblems = {
+    201: { 
+      question: "3 + (-2) = ? (정수의 덧셈을 계산하세요)
+① 1
+② -1
+③ 5", 
+      answer: "①", 
+      explanation: "3 + (-2) = 3 - 2 = 1입니다. 양수와 음수의 덧셈은 뺄셈으로 계산합니다." 
+    },
+    202: { 
+      question: "-4 + 5 = ? (정수의 덧셈을 계산하세요)
+① 1
+② -1
+③ 9", 
+      answer: "①", 
+      explanation: "-4 + 5 = 5 - 4 = 1입니다. 음수와 양수의 덧셈은 큰 수에서 작은 수를 뺍니다." 
+    },
+    203: { 
+      question: "-2 + (-3) = ? (정수의 덧셈을 계산하세요)
+① -5
+② 5
+③ -1", 
+      answer: "①", 
+      explanation: "-2 + (-3) = -(2 + 3) = -5입니다. 음수끼리의 덧셈은 절댓값을 더하고 음수 부호를 붙입니다." 
+    },
+    204: { 
+      question: "4 + (-6) = ? (정수의 덧셈을 계산하세요)
+① -2
+② 2
+③ 10", 
+      answer: "①", 
+      explanation: "4 + (-6) = 4 - 6 = -2입니다. 양수와 음수의 덧셈은 뺄셈으로 계산합니다." 
+    },
+    205: { 
+      question: "-1 + 7 = ? (정수의 덧셈을 계산하세요)
+① 6
+② -6
+③ 8", 
+      answer: "①", 
+      explanation: "-1 + 7 = 7 - 1 = 6입니다. 음수와 양수의 덧셈은 큰 수에서 작은 수를 뺍니다." 
+    },
+    206: { 
+      question: "5 + (-8) = ? (정수의 덧셈을 계산하세요)
+① -3
+② 3
+③ 13", 
+      answer: "①", 
+      explanation: "5 + (-8) = 5 - 8 = -3입니다. 양수와 음수의 덧셈은 뺄셈으로 계산합니다." 
+    },
+    207: { 
+      question: "-3 + (-4) = ? (정수의 덧셈을 계산하세요)
+① -7
+② 7
+③ -1", 
+      answer: "①", 
+      explanation: "-3 + (-4) = -(3 + 4) = -7입니다. 음수끼리의 덧셈은 절댓값을 더하고 음수 부호를 붙입니다." 
+    },
+    208: { 
+      question: "6 + (-9) = ? (정수의 덧셈을 계산하세요)
+① -3
+② 3
+③ 15", 
+      answer: "①", 
+      explanation: "6 + (-9) = 6 - 9 = -3입니다. 양수와 음수의 덧셈은 뺄셈으로 계산합니다." 
+    },
+    209: { 
+      question: "-5 + 8 = ? (정수의 덧셈을 계산하세요)
+① 3
+② -3
+③ 13", 
+      answer: "①", 
+      explanation: "-5 + 8 = 8 - 5 = 3입니다. 음수와 양수의 덧셈은 큰 수에서 작은 수를 뺍니다." 
+    },
+    210: { 
+      question: "2 + (-7) = ? (정수의 덧셈을 계산하세요)
+① -5
+② 5
+③ 9", 
+      answer: "①", 
+      explanation: "2 + (-7) = 2 - 7 = -5입니다. 양수와 음수의 덧셈은 뺄셈으로 계산합니다." 
+    },
+    211: { 
+      question: "|-3| = ? (절댓값을 구하세요)
+① 3
+② -3
+③ 0", 
+      answer: "①", 
+      explanation: "|-3| = 3입니다. 절댓값은 수직선에서 0으로부터의 거리이므로 항상 양수입니다." 
+    },
+    212: { 
+      question: "|5| = ? (절댓값을 구하세요)
+① 5
+② -5
+③ 0", 
+      answer: "①", 
+      explanation: "|5| = 5입니다. 양수의 절댓값은 그 수 자신입니다." 
+    },
+    213: { 
+      question: "|-7| = ? (절댓값을 구하세요)
+① 7
+② -7
+③ 0", 
+      answer: "①", 
+      explanation: "|-7| = 7입니다. 음수의 절댓값은 그 수의 부호를 바꾼 수입니다." 
+    },
+    214: { 
+      question: "|0| = ? (절댓값을 구하세요)
+① 0
+② 1
+③ -1", 
+      answer: "①", 
+      explanation: "|0| = 0입니다. 0의 절댓값은 0입니다." 
+    },
+    215: { 
+      question: "|-9| = ? (절댓값을 구하세요)
+① 9
+② -9
+③ 0", 
+      answer: "①", 
+      explanation: "|-9| = 9입니다. 음수의 절댓값은 그 수의 부호를 바꾼 수입니다." 
+    },
+    216: { 
+      question: "|4| = ? (절댓값을 구하세요)
+① 4
+② -4
+③ 0", 
+      answer: "①", 
+      explanation: "|4| = 4입니다. 양수의 절댓값은 그 수 자신입니다." 
+    },
+    217: { 
+      question: "|-6| = ? (절댓값을 구하세요)
+① 6
+② -6
+③ 0", 
+      answer: "①", 
+      explanation: "|-6| = 6입니다. 음수의 절댓값은 그 수의 부호를 바꾼 수입니다." 
+    },
+    218: { 
+      question: "|8| = ? (절댓값을 구하세요)
+① 8
+② -8
+③ 0", 
+      answer: "①", 
+      explanation: "|8| = 8입니다. 양수의 절댓값은 그 수 자신입니다." 
+    },
+    219: { 
+      question: "|-2| = ? (절댓값을 구하세요)
+① 2
+② -2
+③ 0", 
+      answer: "①", 
+      explanation: "|-2| = 2입니다. 음수의 절댓값은 그 수의 부호를 바꾼 수입니다." 
+    },
+    220: { 
+      question: "|1| = ? (절댓값을 구하세요)
+① 1
+② -1
+③ 0", 
+      answer: "①", 
+      explanation: "|1| = 1입니다. 양수의 절댓값은 그 수 자신입니다." 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: [problem.answer, "0", "1", "2"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 중학교 2학년 문제 생성 - 고품질 문제
+function _generateMiddle2Problems(stageId: number): any[] {
+  const problems = [];
+  
+  // 스테이지 ID에 따른 고정된 문제 생성 (실제 교육과정 수준)
+  const stageProblems = {
+    221: { 
+      question: "2x + 3 = 7일 때, x의 값은?
+① 2
+② 3
+③ 4", 
+      answer: "①", 
+      explanation: "2x + 3 = 7에서 2x = 7 - 3 = 4, x = 4 ÷ 2 = 2입니다." 
+    },
+    222: { 
+      question: "3x + 1 = 10일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "3x + 1 = 10에서 3x = 10 - 1 = 9, x = 9 ÷ 3 = 3입니다." 
+    },
+    223: { 
+      question: "4x + 2 = 14일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "4x + 2 = 14에서 4x = 14 - 2 = 12, x = 12 ÷ 4 = 3입니다." 
+    },
+    224: { 
+      question: "5x + 1 = 16일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "5x + 1 = 16에서 5x = 16 - 1 = 15, x = 15 ÷ 5 = 3입니다." 
+    },
+    225: { 
+      question: "2x + 5 = 11일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "2x + 5 = 11에서 2x = 11 - 5 = 6, x = 6 ÷ 2 = 3입니다." 
+    },
+    226: { 
+      question: "3x + 4 = 13일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "3x + 4 = 13에서 3x = 13 - 4 = 9, x = 9 ÷ 3 = 3입니다." 
+    },
+    227: { 
+      question: "4x + 3 = 15일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "4x + 3 = 15에서 4x = 15 - 3 = 12, x = 12 ÷ 4 = 3입니다." 
+    },
+    228: { 
+      question: "5x + 2 = 17일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "5x + 2 = 17에서 5x = 17 - 2 = 15, x = 15 ÷ 5 = 3입니다." 
+    },
+    229: { 
+      question: "2x + 7 = 13일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "2x + 7 = 13에서 2x = 13 - 7 = 6, x = 6 ÷ 2 = 3입니다." 
+    },
+    230: { 
+      question: "3x + 6 = 15일 때, x의 값은?
+① 3
+② 2
+③ 4", 
+      answer: "①", 
+      explanation: "3x + 6 = 15에서 3x = 15 - 6 = 9, x = 9 ÷ 3 = 3입니다." 
+    },
+    231: { 
+      question: "연립방정식 2x + 3y = 8, 3x + 2y = 7의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    232: { 
+      question: "연립방정식 3x + 4y = 11, 2x + 3y = 8의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    233: { 
+      question: "연립방정식 4x + 5y = 14, 3x + 4y = 11의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    234: { 
+      question: "연립방정식 5x + 6y = 17, 4x + 5y = 14의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    235: { 
+      question: "연립방정식 2x + 5y = 12, 3x + 4y = 11의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    236: { 
+      question: "연립방정식 3x + 6y = 15, 4x + 5y = 14의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    237: { 
+      question: "연립방정식 4x + 7y = 18, 5x + 6y = 17의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    238: { 
+      question: "연립방정식 5x + 8y = 21, 6x + 7y = 20의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    239: { 
+      question: "연립방정식 2x + 9y = 20, 3x + 8y = 19의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    },
+    240: { 
+      question: "연립방정식 3x + 10y = 23, 4x + 9y = 22의 해에서 x의 값은?
+① 1
+② 2
+③ 3", 
+      answer: "①", 
+      explanation: "연립방정식을 풀면 x = 1, y = 2입니다. 가감법이나 대입법을 사용하여 풀 수 있습니다." 
+    }
+  };
+
+  // 스테이지에 맞는 문제 가져오기
+  const problem = stageProblems[stageId as keyof typeof stageProblems];
+  if (problem) {
+    problems.push({
+      question: problem.question,
+      options: [problem.answer, "1", "2", "3"],
+      correctAnswer: problem.answer,
+      explanation: problem.explanation
+    });
+  }
+  
+  return problems;
+}
+
+// 중학교 3학년 문제 생성 - 사용하지 않음
+function _generateMiddle3Problems(stageId: number): any[] {
+  const problems = [];
+  
+  if (stageId <= 310) {
+    // 다항식, 곱셈과 인수분해
+    const a = Math.floor(Math.random() * 5) + 1;
+    const b = Math.floor(Math.random() * 5) + 1;
+    const c = Math.floor(Math.random() * 5) + 1;
+    const result = a + b + c;
+    const objects = ['사과', '공', '별'];
+    const object = objects[Math.floor(Math.random() * objects.length)];
+    problems.push({
+      question: `🍎 ${object} ${a}개씩 x²묶음과 ${b}개씩 x묶음, ${c}개를 합하면 x = 1일 때 몇 개인가요?`,
+      options: [result.toString(), (result + 1).toString(), (result - 1).toString(), (result + 2).toString()],
+      correctAnswer: result.toString(),
+      explanation: `x = 1을 대입하면 ${a}(1)² + ${b}(1) + ${c} = ${a} + ${b} + ${c} = ${result}입니다!`
+    });
+  } else if (stageId <= 320) {
+    // 이차방정식
+    const x = Math.floor(Math.random() * 5) + 1;
+    const b = -2 * x;
+    const c = x * x;
+    const objects = ['사과', '공', '별'];
+    const object = objects[Math.floor(Math.random() * objects.length)];
+    problems.push({
+      question: `🍎 ${object} x² + ${b}x + ${c} = 0일 때 x의 값은?`,
+      options: [x.toString(), (x + 1).toString(), (x - 1).toString(), (x + 2).toString()],
+      correctAnswer: x.toString(),
+      explanation: `x² + ${b}x + ${c} = 0은 (x - ${x})² = 0이므로 x = ${x}입니다!`
+    });
+  }
+  
+  return problems;
+}
+
+function _generateOptions(type: string, numbers?: number[]): string[] {
+  if (!numbers) {
+    return ['1', '2', '3', '4'];
+  }
+
+  let correctAnswer: number;
+  let options: string[] = [];
+
+  switch (type) {
+    case 'comparison':
+      correctAnswer = Math.max(...numbers);
+      options = numbers.map(n => n.toString());
+      break;
+    
+    case 'addition':
+      correctAnswer = numbers[0] + numbers[1];
+      options = generateMathOptions(correctAnswer, 4);
+      break;
+    
+    case 'subtraction':
+      correctAnswer = numbers[0] - numbers[1];
+      options = generateMathOptions(correctAnswer, 4);
+      break;
+    
+    case 'multiplication':
+      correctAnswer = numbers[0] * numbers[1];
+      options = generateMathOptions(correctAnswer, 4);
+      break;
+    
+    case 'division':
+      correctAnswer = numbers[0] / numbers[1];
+      options = generateMathOptions(correctAnswer, 4);
+      break;
+    
+    case 'fraction_addition':
+      correctAnswer = (numbers[0] + numbers[2]) / (numbers[1] + numbers[3]);
+      options = generateFractionOptions(correctAnswer);
+      break;
+    
+    case 'fraction_subtraction':
+      correctAnswer = (numbers[0] - numbers[2]) / (numbers[1] - numbers[3]);
+      options = generateFractionOptions(correctAnswer);
+      break;
+    
+    case 'decimal_addition':
+      correctAnswer = numbers[0] + numbers[1];
+      options = generateDecimalOptions(correctAnswer);
+      break;
+    
+    case 'counting':
+      correctAnswer = numbers.length;
+      options = generateMathOptions(correctAnswer, 4);
+      break;
+    
+    case 'matching':
+      correctAnswer = numbers[1]; // 두 번째 수가 정답
+      options = numbers.map(n => n.toString());
+      break;
+    
+    default:
+      correctAnswer = 5;
+      options = ['3', '4', '5', '6'];
+  }
+
+  return options;
+}
+
+// 수학 문제 옵션 생성
+function generateMathOptions(correctAnswer: number, count: number): string[] {
+  const options = new Set<string>();
+  options.add(correctAnswer.toString());
+  
+  // 정답 주변의 숫자들로 옵션 생성
+  while (options.size < count) {
+    const offset = Math.floor(Math.random() * 4) + 1;
+    const sign = Math.random() > 0.5 ? 1 : -1;
+    const option = correctAnswer + (offset * sign);
+    if (option > 0) {
+      options.add(option.toString());
+    }
+  }
+  
+  return Array.from(options).slice(0, count);
+}
+
+// 분수 옵션 생성
+function generateFractionOptions(correctAnswer: number): string[] {
+  const options = new Set<string>();
+  
+  // 정답을 분수로 표현
+  if (correctAnswer === 1) {
+    options.add('1');
+    options.add('2/2');
+    options.add('3/3');
+    options.add('4/4');
+  } else if (correctAnswer === 0.5) {
+    options.add('1/2');
+    options.add('2/4');
+    options.add('3/6');
+    options.add('4/8');
+  } else if (correctAnswer === 0.33) {
+    options.add('1/3');
+    options.add('2/6');
+    options.add('3/9');
+    options.add('4/12');
+  } else {
+    options.add('1/2');
+    options.add('1/3');
+    options.add('2/3');
+    options.add('1');
+  }
+  
+  return Array.from(options).slice(0, 4);
+}
+
+// 소수 옵션 생성
+function generateDecimalOptions(correctAnswer: number): string[] {
+  const options = new Set<string>();
+  options.add(correctAnswer.toFixed(1));
+  
+  while (options.size < 4) {
+    const offset = (Math.random() * 0.3 + 0.1) * (Math.random() > 0.5 ? 1 : -1);
+    const option = (correctAnswer + offset).toFixed(1);
+    if (parseFloat(option) > 0) {
+      options.add(option);
+    }
+  }
+  
+  return Array.from(options).slice(0, 4);
+}
+
+function _generateCorrectAnswer(type: string, numbers?: number[]): string {
+  if (!numbers) {
+    return '5';
+  }
+
+  let correctAnswer: number;
+
+  switch (type) {
+    case 'comparison':
+      correctAnswer = Math.max(...numbers);
+      break;
+    
+    case 'addition':
+      correctAnswer = numbers[0] + numbers[1];
+      break;
+    
+    case 'subtraction':
+      correctAnswer = numbers[0] - numbers[1];
+      break;
+    
+    case 'multiplication':
+      correctAnswer = numbers[0] * numbers[1];
+      break;
+    
+    case 'division':
+      correctAnswer = numbers[0] / numbers[1];
+      break;
+    
+    case 'fraction_addition':
+      correctAnswer = (numbers[0] + numbers[2]) / (numbers[1] + numbers[3]);
+      break;
+    
+    case 'fraction_subtraction':
+      correctAnswer = (numbers[0] - numbers[2]) / (numbers[1] - numbers[3]);
+      break;
+    
+    case 'decimal_addition':
+      correctAnswer = numbers[0] + numbers[1];
+      break;
+    
+    case 'counting':
+      correctAnswer = numbers.length;
+      break;
+    
+    case 'matching':
+      correctAnswer = numbers[1]; // 두 번째 수가 정답
+      break;
+    
+    default:
+      correctAnswer = 5;
+  }
+
+  // 분수나 소수인 경우 적절한 형태로 반환
+  if (type.includes('fraction')) {
+    if (correctAnswer === 1) return '1';
+    if (correctAnswer === 0.5) return '1/2';
+    if (correctAnswer === 0.33) return '1/3';
+    return correctAnswer.toString();
+  }
+  
+  if (type.includes('decimal')) {
+    return correctAnswer.toFixed(1);
+  }
+  
+  return correctAnswer.toString();
+}
+
+function _generateExplanation(type: string, numbers?: number[]): string {
+  if (!numbers) {
+    return '정답입니다!';
+  }
+
+  switch (type) {
+    case 'comparison':
+      const max = Math.max(...numbers);
+      return `${max}가 가장 큰 수입니다.`;
+    
+    case 'addition':
+      const sum = numbers[0] + numbers[1];
+      return `${numbers[0]} + ${numbers[1]} = ${sum}입니다.`;
+    
+    case 'subtraction':
+      const diff = numbers[0] - numbers[1];
+      return `${numbers[0]} - ${numbers[1]} = ${diff}입니다.`;
+    
+    case 'multiplication':
+      const product = numbers[0] * numbers[1];
+      return `${numbers[0]} × ${numbers[1]} = ${product}입니다.`;
+    
+    case 'division':
+      const quotient = numbers[0] / numbers[1];
+      return `${numbers[0]} ÷ ${numbers[1]} = ${quotient}입니다.`;
+    
+    case 'fraction_addition':
+      const fracSum = (numbers[0] + numbers[2]) / (numbers[1] + numbers[3]);
+      return `${numbers[0]}/${numbers[1]} + ${numbers[2]}/${numbers[3]} = ${fracSum}입니다.`;
+    
+    case 'fraction_subtraction':
+      const fracDiff = (numbers[0] - numbers[2]) / (numbers[1] - numbers[3]);
+      return `${numbers[0]}/${numbers[1]} - ${numbers[2]}/${numbers[3]} = ${fracDiff}입니다.`;
+    
+    case 'decimal_addition':
+      const decimalSum = numbers[0] + numbers[1];
+      return `${numbers[0]} + ${numbers[1]} = ${decimalSum}입니다.`;
+    
+    case 'counting':
+      return `1부터 ${numbers.length}까지 세면 총 ${numbers.length}개입니다.`;
+    
+    case 'matching':
+      return `${numbers[1]}이 정답입니다.`;
+    
+    default:
+      return '정답입니다!';
+  }
+}

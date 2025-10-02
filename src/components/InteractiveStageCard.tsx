@@ -102,7 +102,6 @@ export function InteractiveStageCard({ stage, unit, onStart, index }: Interactiv
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onTapStart={() => setIsPressed(true)}
-      onTapEnd={() => setIsPressed(false)}
     >
       {/* 연결선 */}
       {index < 5 && (

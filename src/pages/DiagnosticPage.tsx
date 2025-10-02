@@ -42,7 +42,7 @@ export function DiagnosticPage() {
 
   const handleGradeSelect = (grade: number) => {
     setSelectedGrade(grade);
-    const test = diagnosticTests.find(t => t.grade === grade);
+    const test = diagnosticTests[grade - 1] || diagnosticTests[0];
     if (test) {
       setCurrentTest(test);
     }
@@ -106,24 +106,74 @@ export function DiagnosticPage() {
   };
 
   const getRecommendedStage = (grade: number, passRate: number): number => {
-    const unit = curriculumUnits.find(u => u.grade === grade);
+    const unit = curriculumUnits[grade] || curriculumUnits[1];
     if (!unit) return 1;
     
-    // 통과율에 따라 시작 스테이지 조정
+    // 스테이지 ID에 따른 범위 설정
+    let stageStart: number, stageEnd: number;
+    if (grade === 9) { // 중3
+      stageStart = 81;
+      stageEnd = 84;
+    } else if (grade === 8) { // 중2
+      stageStart = 71;
+      stageEnd = 74;
+    } else if (grade === 7) { // 중1
+      stageStart = 61;
+      stageEnd = 64;
+    } else if (grade === 6) { // 6학년
+      stageStart = 51;
+      stageEnd = 54;
+    } else if (grade === 5) { // 5학년
+      stageStart = 41;
+      stageEnd = 44;
+    } else if (grade === 4) { // 4학년
+      stageStart = 31;
+      stageEnd = 34;
+    } else if (grade === 3) { // 3학년
+      stageStart = 21;
+      stageEnd = 24;
+    } else if (grade === 2) { // 2학년
+      stageStart = 11;
+      stageEnd = 14;
+    } else { // 1학년
+      stageStart = 1;
+      stageEnd = 4;
+    }
+    
     if (passRate >= 0.9) {
-      return unit.stageRange[1] - 2; // 상위 레벨
+      return stageEnd - 2; // 상위 레벨
     } else if (passRate >= 0.8) {
-      return unit.stageRange[0] + 2; // 중간 레벨
+      return stageStart + 2; // 중간 레벨
     } else {
-      return unit.stageRange[0]; // 기본 레벨
+      return stageStart; // 기본 레벨
     }
   };
 
   const getRemedialStage = (grade: number): number => {
     // 보충 학습을 위한 이전 학년 단원
     const remedialGrade = Math.max(1, grade - 1);
-    const unit = curriculumUnits.find(u => u.grade === remedialGrade);
-    return unit ? unit.stageRange[0] : 1;
+    const unit = curriculumUnits[remedialGrade] || curriculumUnits[1];
+    
+    // 스테이지 ID에 따른 보충 학습 스테이지 설정
+    if (remedialGrade === 9) { // 중3
+      return 81;
+    } else if (remedialGrade === 8) { // 중2
+      return 71;
+    } else if (remedialGrade === 7) { // 중1
+      return 61;
+    } else if (remedialGrade === 6) { // 6학년
+      return 51;
+    } else if (remedialGrade === 5) { // 5학년
+      return 41;
+    } else if (remedialGrade === 4) { // 4학년
+      return 31;
+    } else if (remedialGrade === 3) { // 3학년
+      return 21;
+    } else if (remedialGrade === 2) { // 2학년
+      return 11;
+    } else { // 1학년
+      return 1;
+    }
   };
 
   const handleStartLearning = () => {

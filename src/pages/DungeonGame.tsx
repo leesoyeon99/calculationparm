@@ -229,7 +229,7 @@ export function DungeonGame() {
       }
     } else {
       // 오답 - 플레이어에게 데미지
-      const damage = currentMonster.attack + Math.floor(Math.random() * 10)
+      const damage = (currentMonster?.attack || 0) + Math.floor(Math.random() * 10)
       setPlayer(prev => {
         const newHp = Math.max(0, prev.hp - damage)
         if (newHp <= 0) {
