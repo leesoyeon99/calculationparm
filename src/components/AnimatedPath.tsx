@@ -7,7 +7,7 @@ interface AnimatedPathProps {
   completedStages: number;
 }
 
-export function AnimatedPath({ progress, totalStages, completedStages }: AnimatedPathProps) {
+export function AnimatedPath({ progress }: AnimatedPathProps) {
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
   useEffect(() => {

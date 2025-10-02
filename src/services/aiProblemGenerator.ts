@@ -1,7 +1,8 @@
 // 🤖 AI 기반 고품질 문제 생성 서비스
 // 실제 AI API를 연동하여 교재 수준의 문제를 생성
 
-import { HighQualityProblem } from '../data/highQualityProblems';
+// 임시로 비활성화 - HighQualityProblem 타입이 정의되지 않음
+/*
 
 // AI API 설정
 interface AIConfig {
@@ -296,5 +297,6 @@ export const useHighQualityProblemGenerator = () => {
 
   return { generateProblem };
 };
+*/
 
-export default AIProblemGenerator;
+// export default AIProblemGenerator;

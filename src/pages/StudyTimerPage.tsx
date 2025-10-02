@@ -52,7 +52,7 @@ const StudyTimerPage: React.FC = () => {
     }, 3000);
 
     // 타이머 시작
-    intervalRef.current = setInterval(() => {
+    intervalRef.current = window.setInterval(() => {
       setStudyTime(prev => prev + 1);
     }, 1000);
   };

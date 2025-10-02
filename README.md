@@ -79,6 +79,19 @@ npm run build
 npm run preview
 ```
 
+## 🌐 GitHub Pages 배포
+
+이 프로젝트는 GitHub Pages에서 호스팅됩니다:
+
+1. **빌드 설정**: `vite.config.ts`에서 `outDir: 'docs'`로 설정
+2. **베이스 경로**: `/somariter-math-app/`으로 설정
+3. **배포 방법**: 
+   - `npm run build` 실행
+   - `docs` 폴더의 내용을 GitHub 저장소에 커밋
+   - GitHub 저장소 설정에서 Pages 소스를 `docs` 폴더로 설정
+
+**라이브 데모**: [GitHub Pages에서 확인하기](https://your-username.github.io/somariter-math-app/)
+
 ## 📱 화면 구성
 
 ### 1. 홈 화면

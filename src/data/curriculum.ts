@@ -1522,16 +1522,30 @@ export function generateImageProblem(): ImageProblem {
     id: "img-1",
     question: "그림에서 보이는 숫자를 세어보세요.",
     items: [
-      { id: "1", type: "number", value: 3, image: "/images/apple.png", position: { x: 50, y: 100 } },
-      { id: "2", type: "number", value: 2, image: "/images/banana.png", position: { x: 150, y: 100 } },
-      { id: "3", type: "number", value: 1, image: "/images/orange.png", position: { x: 250, y: 100 } }
+      { id: "1", type: "number", value: 3, image: "/images/apple.png", src: "/images/apple.png", alt: "사과", size: "medium", animation: "none", position: { x: 50, y: 100 } },
+      { id: "2", type: "number", value: 2, image: "/images/banana.png", src: "/images/banana.png", alt: "바나나", size: "medium", animation: "none", position: { x: 150, y: 100 } },
+      { id: "3", type: "number", value: 1, image: "/images/orange.png", src: "/images/orange.png", alt: "오렌지", size: "medium", animation: "none", position: { x: 250, y: 100 } }
     ],
+    images: [
+      { id: "1", type: "number", value: 3, image: "/images/apple.png", src: "/images/apple.png", alt: "사과", size: "medium", animation: "none", position: { x: 50, y: 100 } },
+      { id: "2", type: "number", value: 2, image: "/images/banana.png", src: "/images/banana.png", alt: "바나나", size: "medium", animation: "none", position: { x: 150, y: 100 } },
+      { id: "3", type: "number", value: 1, image: "/images/orange.png", src: "/images/orange.png", alt: "오렌지", size: "medium", animation: "none", position: { x: 250, y: 100 } }
+    ],
+    stem: "그림에서 보이는 숫자를 세어보세요.",
+    choices: ["4", "5", "6", "7"],
+    answer: "6",
+    solution: "사과 3개 + 바나나 2개 + 오렌지 1개 = 6개입니다.",
+    gameContext: "수학 게임",
+    grade: 1,
+    category: "기초 수학",
+    imageLayout: "horizontal",
+    gameTheme: "과일 세기",
     correctAnswer: "6",
     explanation: "사과 3개 + 바나나 2개 + 오렌지 1개 = 6개입니다.",
     difficulty: "easy"
   };
 }
 
-export function generateImageStageProblems(grade: number, stageId: number): ImageProblem[] {
+export function generateImageStageProblems(_grade: number, _stageId: number): ImageProblem[] {
   return [generateImageProblem()];
 }

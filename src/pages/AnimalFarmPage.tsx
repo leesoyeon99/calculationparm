@@ -455,7 +455,6 @@ export function AnimalFarmPage() {
                           onGift={() => handleGift(animal.id)}
                           onStudyTimer={() => handleRabbitClick(animal.id)}
                           isInTank={true}
-                          tankSize={{ width: window.innerWidth - 100, height: window.innerHeight * 0.7 }}
                         />
                       ))}
                     </div>

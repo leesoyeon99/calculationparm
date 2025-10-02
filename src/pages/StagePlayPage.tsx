@@ -13,6 +13,7 @@ export function StagePlayPage() {
   const [currentProblemIndex, setCurrentProblemIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -103,7 +104,11 @@ export function StagePlayPage() {
     
     setShowResult(true);
     
-    if (selectedAnswer === currentProblem.answer) {
+    // 정답 비교: 선택한 답안이 정답과 일치하는지 확인
+    const correct = selectedAnswer === currentProblem.answer;
+    setIsCorrect(correct);
+    
+    if (correct) {
       const newCombo = combo + 1;
       const newScore = score + 1;
       const newStreak = streak + 1;
@@ -143,6 +148,7 @@ export function StagePlayPage() {
   const handleNextProblem = () => {
     setSelectedAnswer(null);
     setShowResult(false);
+    setIsCorrect(false);
     setCropGrowthAnimation(false);
     setSpecialEffects([]);
 
@@ -380,7 +386,7 @@ export function StagePlayPage() {
             transition={{ delay: 0.2 }}
             className="mt-6 text-center"
           >
-            {selectedAnswer === currentProblem.answer ? (
+            {isCorrect ? (
               <motion.div
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}

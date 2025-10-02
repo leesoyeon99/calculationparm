@@ -122,6 +122,10 @@ export interface ImageItem {
   type: 'number' | 'shape' | 'object';
   value: string | number;
   image: string;
+  src: string;
+  alt: string;
+  size: string;
+  animation: string;
   position: { x: number; y: number };
 }
 
@@ -129,6 +133,16 @@ export interface ImageProblem {
   id: string;
   question: string;
   items: ImageItem[];
+  images: ImageItem[];
+  stem: string;
+  choices: string[];
+  answer: string;
+  solution: string;
+  gameContext: string;
+  grade: number;
+  category: string;
+  imageLayout: string;
+  gameTheme: string;
   correctAnswer: string;
   explanation: string;
   difficulty: 'easy' | 'medium' | 'hard';

@@ -18,7 +18,7 @@ export function RoadMapPreview() {
   const { stages } = useGameStore();
 
   const getStageIcon = (stage: typeof stages[0]) => {
-    if (stage.difficulty === 'boss') return Crown;
+    if (stage.difficulty >= 5) return Crown; // 5 이상이면 보스 스테이지
     if (stage.isCompleted) return CheckCircle;
     if (stage.isCurrent) return Zap;
     if (stage.isUnlocked) return Play;
@@ -33,7 +33,7 @@ export function RoadMapPreview() {
   };
 
   const getStageEmoji = (stage: typeof stages[0]) => {
-    if (stage.difficulty === 'boss') return '👑';
+    if (stage.difficulty >= 5) return '👑'; // 5 이상이면 보스 스테이지
     if (stage.isCompleted) return '✅';
     if (stage.isCurrent) return '🎯';
     if (stage.isUnlocked) return '🌱';
