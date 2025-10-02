@@ -146,8 +146,8 @@ export function StagePlayPage() {
   };
 
   const handleNextProblem = () => {
-    setSelectedAnswer(null);
-    setShowResult(false);
+        setSelectedAnswer(null);
+        setShowResult(false);
     setIsCorrect(false);
     setCropGrowthAnimation(false);
     setSpecialEffects([]);
@@ -155,9 +155,9 @@ export function StagePlayPage() {
     if (currentProblemIndex < Object.keys(problems).length - 1) {
       setCurrentProblemIndex(prev => prev + 1);
       setTimeLeft(30); // 다음 문제로 넘어가면 시간 초기화
-    } else {
+      } else {
       // 모든 문제 완료
-      setIsCompleted(true);
+    setIsCompleted(true);
       completeStage(stageId);
       addCoins(score * 10); // 점수당 코인 지급
       
@@ -184,23 +184,23 @@ export function StagePlayPage() {
         <XCircle size={64} className="mb-4" />
         <h1 className="text-3xl font-bold mb-2">문제를 불러올 수 없습니다</h1>
         <p className="text-lg mb-6 text-center">잠시 후 다시 시도해주세요. 또는 월드맵에서 다른 스테이지를 선택해주세요.</p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center"
           onClick={() => navigate('/world-map')}
-        >
+          >
           <ArrowLeft className="mr-2" /> 월드맵으로 돌아가기
-        </motion.button>
+          </motion.button>
       </div>
     );
   }
 
   if (isCompleted) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-100 to-teal-200 text-green-800 p-4"
       >
@@ -209,14 +209,14 @@ export function StagePlayPage() {
         <p className="text-xl mb-4">총 {Object.keys(problems).length} 문제 중 {score} 문제 정답!</p>
         <p className="text-lg mb-6">최대 콤보: {maxCombo} 🎉</p>
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
           className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center"
-          onClick={() => navigate('/world-map')}
+              onClick={() => navigate('/world-map')}
         >
           <ArrowLeft className="mr-2" /> 월드맵으로 돌아가기
-        </motion.button>
-      </motion.div>
+            </motion.button>
+        </motion.div>
     );
   }
 
@@ -225,14 +225,14 @@ export function StagePlayPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex flex-col items-center justify-center p-4 relative overflow-hidden">
       {/* 배경 효과 */}
-      <motion.div
+      <motion.div 
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
         className="absolute inset-0 bg-white bg-opacity-30 rounded-full blur-3xl opacity-50"
         style={{ width: '80vmin', height: '80vmin', top: '-40vmin', left: '-40vmin' }}
       ></motion.div>
-      <motion.div
+              <motion.div 
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.7, type: "spring", stiffness: 100, delay: 0.2 }}
@@ -328,10 +328,10 @@ export function StagePlayPage() {
               <Star className="mr-2" /> {score} / {Object.keys(problems).length}
             </motion.div>
           </div>
-        </div>
-
+            </div>
+            
         {/* 진행 바 */}
-        <motion.div
+            <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5 }}
@@ -339,21 +339,21 @@ export function StagePlayPage() {
         ></motion.div>
 
         {/* 문제 영역 */}
-        <motion.div
-          key={currentProblemIndex}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+      <motion.div
+        key={currentProblemIndex}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="bg-blue-50 p-6 rounded-2xl mb-8 shadow-inner"
-        >
+          >
           <div className="flex items-start mb-4">
             <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold mr-4 flex-shrink-0">
               {currentProblemIndex + 1}
             </div>
             <p className="text-2xl font-bold text-gray-900 leading-relaxed">
-              {currentProblem.question}
+            {currentProblem.question}
             </p>
-          </div>
+        </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {currentProblem.options?.map((option, index) => (
               <motion.button
@@ -375,7 +375,7 @@ export function StagePlayPage() {
                 <span className="text-left">{option}</span>
               </motion.button>
             ))}
-          </div>
+        </div>
         </motion.div>
 
         {/* 결과 및 다음 문제 버튼 */}
@@ -440,7 +440,7 @@ export function StagePlayPage() {
             className="absolute bottom-10 right-10 z-20"
           >
             <Target size={80} className="text-green-500" />
-          </motion.div>
+      </motion.div>
         )}
       </AnimatePresence>
     </div>
