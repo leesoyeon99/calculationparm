@@ -11,6 +11,6 @@ export default defineConfig({
     outDir: 'docs',
     sourcemap: true
   },
-  base: '/somariter-math-app/'
+  base: '/calculationparm/'
 })
 
