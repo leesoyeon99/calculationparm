@@ -11,6 +11,6 @@ export default defineConfig({
     outDir: 'docs',
     sourcemap: true
   },
-  base: process.env.NODE_ENV === 'production' ? '/calculationparm/' : '/'
+  base: process.env.NODE_ENV === 'production' ? './' : '/'
 })
 
