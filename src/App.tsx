@@ -35,8 +35,8 @@ function App() {
           {/* 모든 경로에 대한 fallback */}
           <Route path="*" element={<HomePage />} />
         </Routes>
-        <Navigation />
       </div>
+      <Navigation />
     </div>
   );
 }
