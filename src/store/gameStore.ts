@@ -386,21 +386,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
     
     // 동물 타입별 이름과 이미지 매핑
     const animalTypeInfo = {
-      rabbit: { name: '토끼', image: '/images/rabbit.png' },
-      rabbit1: { name: '토끼', image: '/images/r1.png' },
-      rabbit2: { name: '토끼', image: '/images/r2.png' },
-      rabbit3: { name: '토끼', image: '/images/r3.png' },
-      rabbit4: { name: '토끼', image: '/images/r4.png' },
-      rabbit5: { name: '토끼', image: '/images/r5.png' },
-      cat: { name: '고양이', image: '/images/c1.png' },
-      cat1: { name: '고양이', image: '/images/c1.png' },
-      cat2: { name: '고양이', image: '/images/c2.png' },
-      cat3: { name: '고양이', image: '/images/c3.png' },
-      fish: { name: '물고기', image: '/images/f1.png' },
-      fish1: { name: '물고기', image: '/images/f1.png' },
-      bird: { name: '새', image: '/images/rabbit.png' }, // 기본 이미지
-      hamster: { name: '햄스터', image: '/images/rabbit.png' }, // 기본 이미지
-      dog: { name: '강아지', image: '/images/rabbit.png' }, // 기본 이미지
+      rabbit: { name: '토끼', image: 'images/rabbit.png' },
+      rabbit1: { name: '토끼', image: 'images/r1.png' },
+      rabbit2: { name: '토끼', image: 'images/r2.png' },
+      rabbit3: { name: '토끼', image: 'images/r3.png' },
+      rabbit4: { name: '토끼', image: 'images/r4.png' },
+      rabbit5: { name: '토끼', image: 'images/r5.png' },
+      cat: { name: '고양이', image: 'images/c1.png' },
+      cat1: { name: '고양이', image: 'images/c1.png' },
+      cat2: { name: '고양이', image: 'images/c2.png' },
+      cat3: { name: '고양이', image: 'images/c3.png' },
+      fish: { name: '물고기', image: 'images/f1.png' },
+      fish1: { name: '물고기', image: 'images/f1.png' },
+      bird: { name: '새', image: 'images/rabbit.png' }, // 기본 이미지
+      hamster: { name: '햄스터', image: 'images/rabbit.png' }, // 기본 이미지
+      dog: { name: '강아지', image: 'images/rabbit.png' }, // 기본 이미지
     };
     
     const typeInfo = animalTypeInfo[animalType] || animalTypeInfo.rabbit;

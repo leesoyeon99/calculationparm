@@ -283,7 +283,7 @@ const StudyTimerPage: React.FC = () => {
             <div className="bg-white rounded-2xl shadow-xl p-6 text-center">
               <div className="relative">
                 <img 
-                  src="/images/rabbit.png" 
+                  src="images/rabbit.png" 
                   alt="Study Rabbit" 
                   className="w-32 h-32 mx-auto mb-4"
                 />
