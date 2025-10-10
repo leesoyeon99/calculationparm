@@ -16,7 +16,7 @@ import { Navigation } from './components/Navigation';
 
 function App() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{background: 'var(--gradient-secondary)'}}>
       <div className="w-full px-4 py-6">
         <Routes>
           <Route path="/" element={<HomePage />} />

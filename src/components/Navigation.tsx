@@ -24,9 +24,10 @@ export function Navigation() {
               to={path}
               className={`flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-all duration-200 ${
                 isActive 
-                  ? 'bg-farm-green text-white shadow-md' 
+                  ? 'text-white shadow-md' 
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
+              style={isActive ? {background: 'var(--gradient-primary)'} : {}}
             >
               <Icon className={`w-5 h-5 ${isActive ? 'text-white' : color}`} />
               <span className="text-xs font-medium">{label}</span>

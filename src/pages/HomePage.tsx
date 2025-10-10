@@ -15,7 +15,7 @@ export function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{background: 'var(--gradient-secondary)'}}>
       {/* 상단 네비게이션 */}
       <nav className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-lg w-full">
         <div className="w-full px-4 py-4">
