@@ -155,7 +155,7 @@ export function RabbitCharacter({
             }}
           >
             <img
-              src={animal.image || "images/rabbit.png"}
+              src={animal.image || "https://leesoyeon99.github.io/calculationparm/images/rabbit.png"}
               alt={animal.name}
               className="w-full h-full object-contain"
             />
@@ -208,7 +208,7 @@ export function RabbitCharacter({
               onClick={onStudyTimer}
             >
               <img
-                src={animal.image || "images/rabbit.png"}
+                src={animal.image || "https://leesoyeon99.github.io/calculationparm/images/rabbit.png"}
                 alt={animal.name}
                 className="w-full h-full object-contain"
               />
