@@ -39,3 +39,4 @@ export function StreakCounter({ streak, maxStreak = 0 }: StreakCounterProps) {
   );
 }
 
+
