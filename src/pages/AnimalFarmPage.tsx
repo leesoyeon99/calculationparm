@@ -47,16 +47,16 @@ export function AnimalFarmPage() {
   
   // 랜덤 동물 타입 정의 (이미지와 함께)
   const animalTypes = [
-    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '귀여운 토끼 친구', image: './images/rabbit.png' },
-    { type: 'cat1', name: '고양이', emoji: '🐱', description: '장난꾸러기 고양이', image: './images/c1.png' },
-    { type: 'cat2', name: '고양이', emoji: '🐱', description: '우아한 고양이', image: './images/c2.png' },
-    { type: 'cat3', name: '고양이', emoji: '🐱', description: '털복숭이 고양이', image: './images/c3.png' },
-    { type: 'fish1', name: '물고기', emoji: '🐠', description: '수영하는 물고기', image: './images/f1.png' },
-    { type: 'rabbit1', name: '토끼', emoji: '🐰', description: '활발한 토끼', image: './images/r1.png' },
-    { type: 'rabbit2', name: '토끼', emoji: '🐰', description: '귀여운 토끼', image: './images/r2.png' },
-    { type: 'rabbit3', name: '토끼', emoji: '🐰', description: '똑똑한 토끼', image: './images/r3.png' },
-    { type: 'rabbit4', name: '토끼', emoji: '🐰', description: '친근한 토끼', image: './images/r4.png' },
-    { type: 'rabbit5', name: '토끼', emoji: '🐰', description: '특별한 토끼', image: './images/r5.png' }
+    { type: 'rabbit', name: '토끼', emoji: '🐰', description: '귀여운 토끼 친구', image: '/images/rabbit.png' },
+    { type: 'cat1', name: '고양이', emoji: '🐱', description: '장난꾸러기 고양이', image: '/images/c1.png' },
+    { type: 'cat2', name: '고양이', emoji: '🐱', description: '우아한 고양이', image: '/images/c2.png' },
+    { type: 'cat3', name: '고양이', emoji: '🐱', description: '털복숭이 고양이', image: '/images/c3.png' },
+    { type: 'fish1', name: '물고기', emoji: '🐠', description: '수영하는 물고기', image: '/images/f1.png' },
+    { type: 'rabbit1', name: '토끼', emoji: '🐰', description: '활발한 토끼', image: '/images/r1.png' },
+    { type: 'rabbit2', name: '토끼', emoji: '🐰', description: '귀여운 토끼', image: '/images/r2.png' },
+    { type: 'rabbit3', name: '토끼', emoji: '🐰', description: '똑똑한 토끼', image: '/images/r3.png' },
+    { type: 'rabbit4', name: '토끼', emoji: '🐰', description: '친근한 토끼', image: '/images/r4.png' },
+    { type: 'rabbit5', name: '토끼', emoji: '🐰', description: '특별한 토끼', image: '/images/r5.png' }
   ];
   
   const [hatchedAnimal, setHatchedAnimal] = useState<any>(null);
@@ -395,7 +395,7 @@ export function AnimalFarmPage() {
                             whileHover={{ translateY: -5 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <img src={animal.image || "./images/rabbit.png"} alt={animal.name} className="w-20 h-20 object-contain mb-2" />
+                            <img src={animal.image || "/images/rabbit.png"} alt={animal.name} className="w-20 h-20 object-contain mb-2" />
                             <h4 className="font-bold text-lg text-gray-800">{animal.name}</h4>
                             <p className="text-sm text-gray-600">Lv.{animal.level} | {animal.personality}</p>
                             <div className="flex items-center space-x-2 mt-2">
@@ -470,7 +470,7 @@ export function AnimalFarmPage() {
                     const animal = farm.animals.find(a => a.id === selectedAnimalForStudy);
                     return animal ? (
                       <div className="flex items-center space-x-4">
-                        <img src={animal.image || "./images/rabbit.png"} alt={animal.name} className="w-16 h-16" />
+                        <img src={animal.image || "/images/rabbit.png"} alt={animal.name} className="w-16 h-16" />
                         <div>
                           <h3 className="text-xl font-bold text-gray-800">{animal.name}와 함께 공부해요!</h3>
                           <p className="text-gray-600">Lv.{animal.level} • 행복도: {animal.happiness}%</p>
