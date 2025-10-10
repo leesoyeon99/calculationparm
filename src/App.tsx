@@ -26,12 +26,14 @@ function App() {
           <Route path="/animal-farm" element={<AnimalFarmPage />} />
           <Route path="/stage/:id" element={<StagePlayPage />} />
           <Route path="/somariter" element={<SomaMasterHubPage />} />
-                  <Route path="/dungeon" element={<DungeonGame />} />
-                  <Route path="/platformer-cooking" element={<PlatformerCookingGame />} />
+          <Route path="/dungeon" element={<DungeonGame />} />
+          <Route path="/platformer-cooking" element={<PlatformerCookingGame />} />
           <Route path="/racing" element={<RacingGame />} />
           <Route path="/study-timer" element={<StudyTimerPage />} />
           <Route path="/ranking" element={<RankingPage />} />
           <Route path="/image-problems" element={<ImageProblemExample />} />
+          {/* 모든 경로에 대한 fallback */}
+          <Route path="*" element={<HomePage />} />
         </Routes>
         <Navigation />
       </div>
