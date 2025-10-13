@@ -11,6 +11,7 @@ import { RacingGame } from './pages/RacingGame';
 import { PlatformerCookingGame } from './pages/PlatformerCookingGame';
 import StudyTimerPage from './pages/StudyTimerPage';
 import { RankingPage } from './pages/RankingPage';
+import { GameHubPage } from './pages/GameHubPage';
 import ImageProblemExample from './examples/ImageProblemExample';
 import { Navigation } from './components/Navigation';
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/animal-farm" element={<AnimalFarmPage />} />
           <Route path="/stage/:id" element={<StagePlayPage />} />
           <Route path="/somariter" element={<SomaMasterHubPage />} />
+          <Route path="/game-hub" element={<GameHubPage />} />
           <Route path="/dungeon" element={<DungeonGame />} />
           <Route path="/platformer-cooking" element={<PlatformerCookingGame />} />
           <Route path="/racing" element={<RacingGame />} />

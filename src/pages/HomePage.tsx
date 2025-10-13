@@ -157,7 +157,7 @@ export function HomePage() {
               style={{background: 'var(--color-accent-light)', borderColor: 'var(--color-accent)'}}
               whileHover={{ scale: 1.05, rotate: -2 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/animal-farm')}
+              onClick={() => navigate('/game-hub')}
             >
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:animate-pulse mx-auto" style={{background: 'var(--color-accent)'}}>
                 <Gamepad2 className="w-8 h-8 text-white" />
@@ -208,7 +208,7 @@ export function HomePage() {
               style={{background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)', borderColor: '#ff5252'}}
               whileHover={{ scale: 1.05, y: -10 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/dungeon')}
+              onClick={() => navigate('/game-hub')}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -272,7 +272,7 @@ export function HomePage() {
               style={{background: 'linear-gradient(135deg, #ffa726 0%, #fb8c00 100%)', borderColor: '#ff9800'}}
               whileHover={{ scale: 1.05, y: -10 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/platformer-cooking')}
+              onClick={() => navigate('/game-hub')}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -336,7 +336,7 @@ export function HomePage() {
               style={{background: 'linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%)', borderColor: '#2196f3'}}
               whileHover={{ scale: 1.05, y: -10 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/racing')}
+              onClick={() => navigate('/game-hub')}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
