@@ -428,11 +428,20 @@ export const getRandomQuestion = (
   
   if (grade && difficulty) {
     questions = getQuestionsByGradeAndDifficulty(grade, difficulty);
+    // 해당 학년/난이도 문제가 없으면 학년만으로 필터링
+    if (questions.length === 0 && grade) {
+      questions = dungeonQuestionsByGrade[grade];
+    }
   } else if (grade) {
     questions = dungeonQuestionsByGrade[grade];
   } else if (difficulty) {
     questions = getQuestionsByDifficulty(difficulty);
   } else {
+    questions = allDungeonQuestions;
+  }
+  
+  // 문제가 없으면 전체 문제에서 랜덤 선택
+  if (questions.length === 0) {
     questions = allDungeonQuestions;
   }
   
@@ -450,11 +459,20 @@ export const getRandomQuestions = (
   
   if (grade && difficulty) {
     questions = getQuestionsByGradeAndDifficulty(grade, difficulty);
+    // 해당 학년/난이도 문제가 없으면 학년만으로 필터링
+    if (questions.length === 0 && grade) {
+      questions = dungeonQuestionsByGrade[grade];
+    }
   } else if (grade) {
     questions = dungeonQuestionsByGrade[grade];
   } else if (difficulty) {
     questions = getQuestionsByDifficulty(difficulty);
   } else {
+    questions = allDungeonQuestions;
+  }
+  
+  // 문제가 없으면 전체 문제에서 랜덤 선택
+  if (questions.length === 0) {
     questions = allDungeonQuestions;
   }
   
