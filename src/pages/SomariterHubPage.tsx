@@ -29,7 +29,7 @@ export function SomaMasterHubPage() {
       color: 'from-red-500 to-pink-500',
       bgColor: 'from-red-50 to-pink-50',
       borderColor: 'border-red-200',
-      path: '/dungeon-game'
+      path: '/dungeon'
     },
     {
       id: 'cooking',
@@ -39,7 +39,7 @@ export function SomaMasterHubPage() {
       color: 'from-orange-500 to-yellow-500',
       bgColor: 'from-orange-50 to-yellow-50',
       borderColor: 'border-orange-200',
-      path: '/platformer-cooking-game'
+      path: '/platformer-cooking'
     },
     {
       id: 'racing',
@@ -49,7 +49,7 @@ export function SomaMasterHubPage() {
       color: 'from-blue-500 to-cyan-500',
       bgColor: 'from-blue-50 to-cyan-50',
       borderColor: 'border-blue-200',
-      path: '/racing-game'
+      path: '/racing'
     }
   ];
 
