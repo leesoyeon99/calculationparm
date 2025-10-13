@@ -909,8 +909,8 @@ export const curriculum: { [key: number]: CurriculumUnit } = {
         problems: grade5Problems.slice(15, 20)
       }
     }
-    },
-    6: { 
+  },
+  6: { 
     id: 6,
     name: "6학년",
     description: "고급 수학 개념",
@@ -936,8 +936,8 @@ export const curriculum: { [key: number]: CurriculumUnit } = {
         problems: grade6Problems.slice(15, 20)
       }
     }
-    },
-    7: { 
+  },
+  7: { 
     id: 7,
     name: "중1",
     description: "중학교 1학년 수학",
