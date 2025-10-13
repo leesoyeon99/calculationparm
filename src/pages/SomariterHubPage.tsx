@@ -1,11 +1,12 @@
 import { ArrowLeft, Star, Trophy, Gift, MessageCircle, Sword, ChefHat, Car, Gamepad2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 export function SomaMasterHubPage() {
   const { user, somariter, achievements, farm } = useGameStore();
+  const navigate = useNavigate();
   
   const completedAchievements = achievements.filter(a => a.isCompleted);
   const totalAchievements = achievements.length;
@@ -327,7 +328,7 @@ export function SomaMasterHubPage() {
               } ${game.color}`}
               whileHover={hasTokens ? { scale: 1.1 } : {}}
               whileTap={hasTokens ? { scale: 0.95 } : {}}
-              onClick={() => hasTokens && (window.location.href = game.path)}
+              onClick={() => hasTokens && navigate(game.path)}
               title={`${game.name} (${tokenCount}개 체험권)`}
             >
               <IconComponent className="w-6 h-6 text-white" />

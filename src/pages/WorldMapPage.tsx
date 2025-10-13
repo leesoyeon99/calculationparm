@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Map, Target, Star, Award, Sword, ChefHat, Car, Gamepad2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { RoadMap } from '../components/RoadMap';
 import { useState } from 'react';
 
 export function WorldMapPage() {
+  const navigate = useNavigate();
+  
   // 게임 체험권 관련 상태
   const [gameTokens, setGameTokens] = useState({
     dungeon: 3,
@@ -132,7 +134,7 @@ export function WorldMapPage() {
                 } ${game.color}`}
                 whileHover={hasTokens ? { scale: 1.1 } : {}}
                 whileTap={hasTokens ? { scale: 0.95 } : {}}
-                onClick={() => hasTokens && (window.location.href = game.path)}
+                onClick={() => hasTokens && navigate(game.path)}
                 title={`${game.name} (${tokenCount}개 체험권)`}
               >
                 <IconComponent className="w-6 h-6 text-white" />

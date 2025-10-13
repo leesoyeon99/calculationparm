@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Star, 
   Lock, 
@@ -16,6 +16,7 @@ import { useGameStore } from '../store/gameStore';
 
 export function RoadMapPreview() {
   const { stages } = useGameStore();
+  const navigate = useNavigate();
 
   const getStageIcon = (stage: typeof stages[0]) => {
     if (stage.difficulty >= 5) return Crown; // 5 이상이면 보스 스테이지
@@ -185,7 +186,7 @@ export function RoadMapPreview() {
                   whileTap={isClickable ? { scale: 0.9 } : {}}
                   onClick={() => {
                     if (isClickable) {
-                      window.location.href = `/stage/${stage.id}`;
+                      navigate(`/stage/${stage.id}`);
                     }
                   }}
                   style={{ cursor: isClickable ? 'pointer' : 'not-allowed' }}
