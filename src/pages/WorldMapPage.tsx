@@ -117,28 +117,89 @@ export function WorldMapPage() {
           <RoadMap />
         </motion.div>
 
-        {/* 플로팅 게임 버튼들 */}
-        <div className="fixed top-4 right-4 z-50 flex flex-col space-y-2">
-          {games.map((game) => {
+        {/* 플로팅 게임 버튼들 - 눈에 띄게 개선 */}
+        <div className="fixed top-20 right-4 z-50 flex flex-col space-y-3">
+          {games.map((game, index) => {
             const IconComponent = game.icon;
             const tokenCount = gameTokens[game.id as keyof typeof gameTokens];
             const hasTokens = tokenCount > 0;
             
+            const gameColors = {
+              dungeon: { bg: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)', border: '#ff5252' },
+              cooking: { bg: 'linear-gradient(135deg, #ffa726 0%, #fb8c00 100%)', border: '#ff9800' },
+              racing: { bg: 'linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%)', border: '#2196f3' }
+            };
+            
+            const gameColor = gameColors[game.id as keyof typeof gameColors];
+            
             return (
-              <motion.button
+              <motion.div
                 key={game.id}
-                className={`w-14 h-14 rounded-full shadow-lg border-2 border-white flex items-center justify-center transition-all duration-300 ${
-                  hasTokens 
-                    ? 'cursor-pointer hover:scale-110 hover:shadow-xl' 
-                    : 'opacity-50 cursor-not-allowed'
-                } ${game.color}`}
-                whileHover={hasTokens ? { scale: 1.1 } : {}}
-                whileTap={hasTokens ? { scale: 0.95 } : {}}
-                onClick={() => hasTokens && navigate(game.path)}
-                title={`${game.name} (${tokenCount}개 체험권)`}
+                className="relative"
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
               >
-                <IconComponent className="w-6 h-6 text-white" />
-              </motion.button>
+                <motion.button
+                  className={`relative w-16 h-16 rounded-2xl shadow-2xl border-4 flex items-center justify-center transition-all duration-300 overflow-hidden ${
+                    hasTokens 
+                      ? 'cursor-pointer hover:shadow-3xl' 
+                      : 'opacity-50 cursor-not-allowed'
+                  }`}
+                  style={{
+                    background: gameColor.bg,
+                    borderColor: gameColor.border
+                  }}
+                  whileHover={hasTokens ? { scale: 1.15, rotate: 5 } : {}}
+                  whileTap={hasTokens ? { scale: 0.9 } : {}}
+                  onClick={() => hasTokens && navigate(game.path)}
+                  title={`${game.name} (${tokenCount}개 체험권)`}
+                >
+                  {/* 애니메이션 배경 */}
+                  {hasTokens && (
+                    <motion.div
+                      className="absolute inset-0 bg-white/20"
+                      animate={{
+                        scale: [1, 1.5, 1],
+                        opacity: [0.2, 0.5, 0.2],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  )}
+                  
+                  <IconComponent className="w-8 h-8 text-white relative z-10" strokeWidth={2.5} />
+                  
+                  {/* 체험권 개수 뱃지 */}
+                  <motion.div
+                    className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-bold text-gray-900 shadow-lg border-2 border-white"
+                    animate={hasTokens ? {
+                      scale: [1, 1.2, 1],
+                      rotate: [0, 10, -10, 0]
+                    } : {}}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    {tokenCount}
+                  </motion.div>
+                </motion.button>
+                
+                {/* 게임 이름 툴팁 */}
+                <motion.div
+                  className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900/90 text-white px-3 py-2 rounded-lg text-sm font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                >
+                  {game.name}
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full w-0 h-0 border-8 border-transparent border-l-gray-900/90" />
+                </motion.div>
+              </motion.div>
             );
           })}
         </div>

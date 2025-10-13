@@ -8,11 +8,24 @@ import {
   Gamepad2,
   CheckCircle,
   BookOpen,
-  Zap
+  Zap,
+  Sword,
+  ChefHat,
+  Car,
+  Trophy,
+  Coins
 } from 'lucide-react'
+import { useState } from 'react'
 
 export function HomePage() {
   const navigate = useNavigate();
+  
+  // 게임 체험권 (포인트)
+  const [gameTokens, setGameTokens] = useState({
+    dungeon: 3,
+    cooking: 2,
+    racing: 1
+  });
 
   return (
     <div className="min-h-screen" style={{background: 'var(--gradient-secondary)'}}>
@@ -161,6 +174,257 @@ export function HomePage() {
             </motion.div>
 
 
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 게임 체험 섹션 */}
+      <section className="py-16 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+        <div className="w-full max-w-6xl mx-auto">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold mb-4 shadow-lg" style={{background: 'var(--gradient-accent)', color: 'white'}}>
+              <Gamepad2 className="w-4 h-4 mr-2" />
+              🎮 게임 체험존
+              <Trophy className="w-4 h-4 ml-2" />
+            </div>
+            <h2 className="font-dnf-heading-1 mb-4" style={{color: 'var(--color-text-primary)'}}>
+              학습하고 포인트로 게임을 즐기세요!
+            </h2>
+            <p className="font-dnf-body-large" style={{color: 'var(--color-text-secondary)'}}>
+              수학 월드맵에서 스테이지를 완료하면 <span className="font-bold" style={{color: 'var(--color-accent)'}}>게임 체험권</span>을 획득할 수 있습니다
+            </p>
+          </motion.div>
+
+          {/* 게임 카드들 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* 던전 게임 */}
+            <motion.div
+              className="relative rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 cursor-pointer group border-4 overflow-hidden"
+              style={{background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)', borderColor: '#ff5252'}}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/dungeon')}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              {/* 배경 패턴 */}
+              <div className="absolute inset-0 opacity-10">
+                {[...Array(20)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-4 h-4 bg-white rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      y: [0, -20, 0],
+                      opacity: [0.3, 0.7, 0.3],
+                    }}
+                    transition={{
+                      duration: 2 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 2,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* 아이콘 */}
+              <div className="relative z-10 flex flex-col items-center">
+                <motion.div
+                  className="w-24 h-24 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 shadow-xl"
+                  animate={{
+                    rotate: [0, 5, -5, 0],
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <Sword className="w-12 h-12 text-white" strokeWidth={2.5} />
+                </motion.div>
+
+                <h3 className="font-dnf-heading-2 text-white mb-3">수학 던전</h3>
+                <p className="font-dnf-body text-white/90 mb-6 text-center">
+                  빠른 계산으로 몬스터를 물리치고<br/>던전을 정복하세요!
+                </p>
+
+                {/* 체험권 표시 */}
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+                  <Coins className="w-5 h-5 text-yellow-300" />
+                  <span className="font-bold text-white">체험권 {gameTokens.dungeon}개</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* 요리 게임 */}
+            <motion.div
+              className="relative rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 cursor-pointer group border-4 overflow-hidden"
+              style={{background: 'linear-gradient(135deg, #ffa726 0%, #fb8c00 100%)', borderColor: '#ff9800'}}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/platformer-cooking')}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {/* 배경 패턴 */}
+              <div className="absolute inset-0 opacity-10">
+                {[...Array(20)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-4 h-4 bg-white rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      y: [0, -20, 0],
+                      opacity: [0.3, 0.7, 0.3],
+                    }}
+                    transition={{
+                      duration: 2 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 2,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* 아이콘 */}
+              <div className="relative z-10 flex flex-col items-center">
+                <motion.div
+                  className="w-24 h-24 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 shadow-xl"
+                  animate={{
+                    rotate: [0, -5, 5, 0],
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <ChefHat className="w-12 h-12 text-white" strokeWidth={2.5} />
+                </motion.div>
+
+                <h3 className="font-dnf-heading-2 text-white mb-3">수학 레시피</h3>
+                <p className="font-dnf-body text-white/90 mb-6 text-center">
+                  실생활 문제를 풀고<br/>맛있는 요리를 완성하세요!
+                </p>
+
+                {/* 체험권 표시 */}
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+                  <Coins className="w-5 h-5 text-yellow-300" />
+                  <span className="font-bold text-white">체험권 {gameTokens.cooking}개</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* 레이싱 게임 */}
+            <motion.div
+              className="relative rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 cursor-pointer group border-4 overflow-hidden"
+              style={{background: 'linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%)', borderColor: '#2196f3'}}
+              whileHover={{ scale: 1.05, y: -10 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/racing')}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              {/* 배경 패턴 */}
+              <div className="absolute inset-0 opacity-10">
+                {[...Array(20)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-4 h-4 bg-white rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      y: [0, -20, 0],
+                      opacity: [0.3, 0.7, 0.3],
+                    }}
+                    transition={{
+                      duration: 2 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 2,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* 아이콘 */}
+              <div className="relative z-10 flex flex-col items-center">
+                <motion.div
+                  className="w-24 h-24 rounded-3xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 shadow-xl"
+                  animate={{
+                    x: [0, 5, -5, 0],
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <Car className="w-12 h-12 text-white" strokeWidth={2.5} />
+                </motion.div>
+
+                <h3 className="font-dnf-heading-2 text-white mb-3">수학 레이싱</h3>
+                <p className="font-dnf-body text-white/90 mb-6 text-center">
+                  속도와 거리 문제를 풀고<br/>레이싱 우승을 차지하세요!
+                </p>
+
+                {/* 체험권 표시 */}
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full">
+                  <Coins className="w-5 h-5 text-yellow-300" />
+                  <span className="font-bold text-white">체험권 {gameTokens.racing}개</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* 포인트 획득 방법 안내 */}
+          <motion.div
+            className="mt-12 bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-lg border-2"
+            style={{borderColor: 'var(--color-accent)'}}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <div className="flex items-center justify-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Map className="w-6 h-6" style={{color: 'var(--color-secondary)'}} />
+                <span className="font-dnf-body" style={{color: 'var(--color-text-primary)'}}>
+                  수학 월드맵에서 스테이지 완료
+                </span>
+              </div>
+              <ArrowRight className="w-6 h-6" style={{color: 'var(--color-text-secondary)'}} />
+              <div className="flex items-center space-x-2">
+                <Coins className="w-6 h-6 text-yellow-500" />
+                <span className="font-dnf-body font-bold" style={{color: 'var(--color-accent)'}}>
+                  게임 체험권 획득
+                </span>
+              </div>
+              <ArrowRight className="w-6 h-6" style={{color: 'var(--color-text-secondary)'}} />
+              <div className="flex items-center space-x-2">
+                <Gamepad2 className="w-6 h-6" style={{color: 'var(--color-accent)'}} />
+                <span className="font-dnf-body" style={{color: 'var(--color-text-primary)'}}>
+                  게임 체험!
+                </span>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
