@@ -1,25 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, ChefHat, Star, Clock, Target } from 'lucide-react'
-
-interface Ingredient {
-  id: string
-  name: string
-  amount: number
-  unit: string
-  collected: boolean
-  x: number
-  y: number
-}
-
-interface Recipe {
-  id: string
-  name: string
-  ingredients: Ingredient[]
-  mathProblem: string
-  answer: number
-}
+import { ArrowLeft, ChefHat, Star, Clock, Target, Trophy, Heart } from 'lucide-react'
+import { getRandomRecipe, CookingRecipe, CookingIngredient } from '../data/cookingRecipes'
 
 interface Player {
   x: number
@@ -28,76 +11,108 @@ interface Player {
   height: number
   velocityY: number
   onGround: boolean
+  facingRight: boolean
 }
+
+interface Platform {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+interface IngredientPosition extends CookingIngredient {
+  x: number
+  y: number
+  collected: boolean
+}
+
+type GamePhase = 'start' | 'collecting' | 'cooking' | 'completed' | 'failed'
 
 export function PlatformerCookingGame() {
   const navigate = useNavigate()
-  const [gameState, setGameState] = useState<'playing' | 'paused' | 'completed' | 'failed'>('playing')
+  const [difficulty, setDifficulty] = useState<1 | 2 | 3>(1)
+  const [gamePhase, setGamePhase] = useState<GamePhase>('start')
   const [score, setScore] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(60)
-  const [currentRecipe, setCurrentRecipe] = useState<Recipe | null>(null)
+  const [timeLeft, setTimeLeft] = useState(90)
+  const [currentRecipe, setCurrentRecipe] = useState<CookingRecipe | null>(null)
   const [player, setPlayer] = useState<Player>({
     x: 50,
-    y: 300,
+    y: 100,
     width: 40,
     height: 40,
     velocityY: 0,
-    onGround: false
+    onGround: false,
+    facingRight: true
   })
-  const [ingredients, setIngredients] = useState<Ingredient[]>([])
+  const [ingredients, setIngredients] = useState<IngredientPosition[]>([])
   const [showMathModal, setShowMathModal] = useState(false)
-  const [mathAnswer, setMathAnswer] = useState('')
-  const [mathResult, setMathResult] = useState<'correct' | 'incorrect' | null>(null)
+  const [mathAnswer, setMathAnswer] = useState<number | null>(null)
+  const [showResult, setShowResult] = useState(false)
+  const [isCorrect, setIsCorrect] = useState(false)
+  const [currentLevel, setCurrentLevel] = useState(1)
+  const [totalScore, setTotalScore] = useState(0)
 
-  // 레시피 데이터
-  const recipes: Recipe[] = [
-    {
-      id: '1',
-      name: '수학 쿠키',
-      ingredients: [
-        { id: '1', name: '밀가루', amount: 2, unit: '컵', collected: false, x: 200, y: 250 },
-        { id: '2', name: '설탕', amount: 1, unit: '컵', collected: false, x: 400, y: 200 },
-        { id: '3', name: '버터', amount: 3, unit: '큰술', collected: false, x: 600, y: 300 }
-      ],
-      mathProblem: '2 + 1 + 3 = ?',
-      answer: 6
-    },
-    {
-      id: '2',
-      name: '수학 파이',
-      ingredients: [
-        { id: '4', name: '사과', amount: 4, unit: '개', collected: false, x: 300, y: 180 },
-        { id: '5', name: '시나몬', amount: 2, unit: '작은술', collected: false, x: 500, y: 250 },
-        { id: '6', name: '반죽', amount: 1, unit: '장', collected: false, x: 700, y: 200 }
-      ],
-      mathProblem: '4 × 2 + 1 = ?',
-      answer: 9
-    }
+  // 플랫폼 설정 (난이도별로 다름)
+  const platforms: Platform[] = difficulty === 1 ? [
+    { x: 0, y: 500, width: 800, height: 20 }, // 바닥
+    { x: 150, y: 400, width: 150, height: 20 },
+    { x: 400, y: 300, width: 150, height: 20 },
+    { x: 650, y: 200, width: 150, height: 20 },
+  ] : difficulty === 2 ? [
+    { x: 0, y: 500, width: 800, height: 20 },
+    { x: 100, y: 420, width: 120, height: 20 },
+    { x: 300, y: 340, width: 120, height: 20 },
+    { x: 500, y: 260, width: 120, height: 20 },
+    { x: 700, y: 180, width: 100, height: 20 },
+  ] : [
+    { x: 0, y: 500, width: 800, height: 20 },
+    { x: 80, y: 430, width: 100, height: 20 },
+    { x: 220, y: 360, width: 100, height: 20 },
+    { x: 380, y: 290, width: 100, height: 20 },
+    { x: 540, y: 220, width: 100, height: 20 },
+    { x: 680, y: 150, width: 120, height: 20 },
   ]
 
-  // 게임 초기화
-  useEffect(() => {
-    const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)]
-    setCurrentRecipe(randomRecipe)
-    setIngredients([...randomRecipe.ingredients])
-  }, [])
+  // 게임 시작
+  const startGame = () => {
+    const recipe = getRandomRecipe(difficulty)
+    setCurrentRecipe(recipe)
+    setGamePhase('collecting')
+    setTimeLeft(recipe.timeLimit)
+    setScore(0)
+    setCurrentLevel(1)
+    
+    // 재료 배치 (플랫폼 위에)
+    const ingredientPositions: IngredientPosition[] = recipe.ingredients.map((ing, i) => {
+      const platform = platforms[i + 1] || platforms[0]
+      return {
+        ...ing,
+        x: platform.x + platform.width / 2 - 20,
+        y: platform.y - 50,
+        collected: false
+      }
+    })
+    
+    setIngredients(ingredientPositions)
+    setPlayer(prev => ({ ...prev, x: 50, y: 100 }))
+  }
 
   // 타이머
   useEffect(() => {
-    if (gameState === 'playing' && timeLeft > 0) {
+    if (gamePhase === 'collecting' && timeLeft > 0) {
       const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1)
+        setTimeLeft(prev => Math.max(0, prev - 1))
       }, 1000)
       return () => clearTimeout(timer)
-    } else if (timeLeft === 0) {
-      setGameState('failed')
+    } else if (timeLeft === 0 && gamePhase === 'collecting') {
+      setGamePhase('failed')
     }
-  }, [timeLeft, gameState])
+  }, [timeLeft, gamePhase])
 
-  // 키보드 입력 상태
+  // 키보드 입력
   const [keys, setKeys] = useState<{ [key: string]: boolean }>({})
 
-  // 키보드 이벤트 핸들러
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       setKeys(prev => ({ ...prev, [e.key]: true }))
@@ -116,39 +131,57 @@ export function PlatformerCookingGame() {
     }
   }, [])
 
-  // 플레이어 물리
+  // 플레이어 물리 & 이동
   useEffect(() => {
-    if (gameState !== 'playing') return
+    if (gamePhase !== 'collecting') return
 
     const gravity = 0.8
-    const jumpPower = -15
-    const moveSpeed = 5
+    const jumpPower = -18
+    const moveSpeed = 6
 
-    const gameLoop = () => {
+    const gameLoop = setInterval(() => {
       setPlayer(prev => {
         let newY = prev.y + prev.velocityY
         let newVelocityY = prev.velocityY + gravity
         let newOnGround = false
-
-        // 바닥 충돌
-        if (newY >= 300) {
-          newY = 300
-          newVelocityY = 0
-          newOnGround = true
-        }
-
-        // 점프
-        if (keys[' '] && prev.onGround) {
-          newVelocityY = jumpPower
-        }
+        let newX = prev.x
+        let newFacingRight = prev.facingRight
 
         // 좌우 이동
-        let newX = prev.x
         if (keys['ArrowLeft'] || keys['a']) {
           newX = Math.max(0, prev.x - moveSpeed)
+          newFacingRight = false
         }
         if (keys['ArrowRight'] || keys['d']) {
           newX = Math.min(760, prev.x + moveSpeed)
+          newFacingRight = true
+        }
+
+        // 플랫폼 충돌 체크
+        platforms.forEach(platform => {
+          if (
+            newX + prev.width > platform.x &&
+            newX < platform.x + platform.width &&
+            newY + prev.height >= platform.y &&
+            newY + prev.height <= platform.y + platform.height &&
+            prev.velocityY >= 0
+          ) {
+            newY = platform.y - prev.height
+            newVelocityY = 0
+            newOnGround = true
+          }
+        })
+
+        // 점프
+        if ((keys[' '] || keys['ArrowUp'] || keys['w']) && prev.onGround) {
+          newVelocityY = jumpPower
+        }
+
+        // 화면 밖으로 나가면 리셋
+        if (newY > 600) {
+          newY = 100
+          newX = 50
+          newVelocityY = 0
         }
 
         return {
@@ -156,305 +189,445 @@ export function PlatformerCookingGame() {
           x: newX,
           y: newY,
           velocityY: newVelocityY,
-          onGround: newOnGround
+          onGround: newOnGround,
+          facingRight: newFacingRight
         }
       })
-    }
+    }, 1000 / 60)
 
-    const interval = setInterval(gameLoop, 16)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [gameState, keys])
+    return () => clearInterval(gameLoop)
+  }, [gamePhase, keys])
 
   // 재료 수집 체크
   useEffect(() => {
-    const checkCollection = () => {
-      setIngredients(prev => {
-        return prev.map(ingredient => {
-          const distance = Math.sqrt(
-            Math.pow(player.x - ingredient.x, 2) + Math.pow(player.y - ingredient.y, 2)
-          )
+    if (gamePhase !== 'collecting') return
+
+    ingredients.forEach((ing, index) => {
+      if (!ing.collected) {
+        const distance = Math.sqrt(
+          Math.pow(player.x - ing.x, 2) + Math.pow(player.y - ing.y, 2)
+        )
+        
+        if (distance < 50) {
+          setIngredients(prev => prev.map((item, i) => 
+            i === index ? { ...item, collected: true } : item
+          ))
           
-          if (distance < 50 && !ingredient.collected) {
-            setScore(prev => prev + 10)
-            return { ...ingredient, collected: true }
+          // 모든 재료 수집 완료 시
+          if (ingredients.filter(i => !i.collected).length === 1) {
+            setTimeout(() => {
+              setGamePhase('cooking')
+              setShowMathModal(true)
+            }, 500)
           }
-          return ingredient
-        })
-      })
-    }
+        }
+      }
+    })
+  }, [player, ingredients, gamePhase])
 
-    if (gameState === 'playing') {
-      checkCollection()
-    }
-  }, [player.x, player.y, gameState])
+  // 답안 제출
+  const handleSubmitAnswer = () => {
+    if (!currentRecipe || mathAnswer === null) return
 
-  // 모든 재료 수집 완료 체크
-  useEffect(() => {
-    if (ingredients.length > 0 && ingredients.every(ing => ing.collected)) {
-      setShowMathModal(true)
-    }
-  }, [ingredients])
+    const correct = mathAnswer === currentRecipe.mathProblem.correct
+    setIsCorrect(correct)
+    setShowResult(true)
 
-  const handleMathSubmit = () => {
-    const userAnswer = parseInt(mathAnswer)
-    if (userAnswer === currentRecipe?.answer) {
-      setMathResult('correct')
-      setScore(prev => prev + 50)
-      setTimeout(() => {
-        setGameState('completed')
-      }, 1500)
-    } else {
-      setMathResult('incorrect')
-      setTimeout(() => {
-        setMathResult(null)
-        setMathAnswer('')
-      }, 1500)
-    }
+    setTimeout(() => {
+      if (correct) {
+        const earnedScore = currentRecipe.scoreReward + (timeLeft * 10)
+        setScore(earnedScore)
+        setTotalScore(prev => prev + earnedScore)
+        setGamePhase('completed')
+      } else {
+        setMathAnswer(null)
+        setShowResult(false)
+      }
+    }, 2000)
   }
 
-  const resetGame = () => {
-    const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)]
-    setCurrentRecipe(randomRecipe)
-    setIngredients([...randomRecipe.ingredients])
-    setPlayer({
-      x: 50,
-      y: 300,
-      width: 40,
-      height: 40,
-      velocityY: 0,
-      onGround: false
-    })
-    setScore(0)
-    setTimeLeft(60)
-    setGameState('playing')
-    setShowMathModal(false)
-    setMathAnswer('')
-    setMathResult(null)
+  // 다음 레벨
+  const nextLevel = () => {
+    const newLevel = currentLevel + 1
+    setCurrentLevel(newLevel)
+    
+    // 난이도 증가
+    if (newLevel % 3 === 0 && difficulty < 3) {
+      setDifficulty(prev => Math.min(3, prev + 1) as 1 | 2 | 3)
+    }
+    
+    startGame()
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 relative overflow-hidden">
-      {/* 상단 UI */}
-      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center">
-        <motion.button
-          onClick={() => navigate('/')}
-          className="bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg hover:shadow-xl transition-all"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ArrowLeft className="w-6 h-6 text-gray-700" />
-        </motion.button>
-
-        <div className="flex items-center space-x-6 bg-white/90 backdrop-blur-sm rounded-2xl px-6 py-3 shadow-lg">
-          <div className="flex items-center space-x-2">
-            <Star className="w-5 h-5 text-yellow-500" />
-            <span className="font-bold text-gray-700">{score}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Clock className="w-5 h-5 text-blue-500" />
-            <span className="font-bold text-gray-700">{timeLeft}s</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <ChefHat className="w-5 h-5 text-orange-500" />
-            <span className="font-bold text-gray-700">{currentRecipe?.name}</span>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-pink-100 relative overflow-hidden">
+      {/* 배경 요소 */}
+      <div className="absolute inset-0 opacity-20">
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-4xl"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -20, 0],
+              rotate: [0, 360],
+            }}
+            transition={{
+              duration: 5 + Math.random() * 5,
+              repeat: Infinity,
+              delay: Math.random() * 3,
+            }}
+          >
+            {['🍪', '🍰', '🍕', '🥧', '🧁'][Math.floor(Math.random() * 5)]}
+          </motion.div>
+        ))}
       </div>
 
-      {/* 게임 화면 */}
-      <div className="relative w-full h-screen">
-        {/* 배경 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-sky-200 to-green-200">
-          {/* 구름 */}
-          <div className="absolute top-20 left-20 w-16 h-8 bg-white rounded-full opacity-60"></div>
-          <div className="absolute top-32 right-32 w-20 h-10 bg-white rounded-full opacity-60"></div>
-          <div className="absolute top-16 right-64 w-12 h-6 bg-white rounded-full opacity-60"></div>
-        </div>
+      {gamePhase === 'start' ? (
+        // 시작 화면
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-6xl font-bold mb-8 bg-gradient-to-r from-orange-500 via-yellow-500 to-pink-500 bg-clip-text text-transparent">
+              👨‍🍳 수학 레시피 👨‍🍳
+            </h1>
+            <p className="text-2xl mb-12 text-gray-700">
+              재료를 모아서 맛있는 요리를 완성하세요!
+            </p>
 
-        {/* 바닥 */}
-        <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-green-600 to-green-400"></div>
+            {/* 난이도 선택 */}
+            <div className="mb-12">
+              <p className="text-lg mb-4 font-bold">난이도를 선택하세요:</p>
+              <div className="flex gap-4 justify-center">
+                {[
+                  { level: 1, name: '쉬움', color: 'from-green-500 to-emerald-500' },
+                  { level: 2, name: '보통', color: 'from-yellow-500 to-orange-500' },
+                  { level: 3, name: '어려움', color: 'from-red-500 to-pink-500' }
+                ].map(item => (
+                  <motion.button
+                    key={item.level}
+                    onClick={() => setDifficulty(item.level as 1 | 2 | 3)}
+                    className={`px-8 py-4 rounded-xl font-bold text-white transition-all ${
+                      difficulty === item.level
+                        ? `bg-gradient-to-r ${item.color} scale-110 ring-4 ring-white`
+                        : 'bg-gray-400'
+                    }`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.name}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
 
-        {/* 플랫폼들 */}
-        <div className="absolute bottom-32 left-0 w-full h-4 bg-yellow-600"></div>
-        <div className="absolute bottom-48 left-200 w-32 h-4 bg-yellow-600"></div>
-        <div className="absolute bottom-64 left-400 w-32 h-4 bg-yellow-600"></div>
-        <div className="absolute bottom-48 left-600 w-32 h-4 bg-yellow-600"></div>
-
-        {/* 플레이어 */}
-        <motion.div
-          className="absolute w-10 h-10 bg-blue-500 rounded-full shadow-lg"
-          style={{
-            left: player.x,
-            bottom: 400 - player.y,
-          }}
-          animate={{
-            scale: player.onGround ? 1 : 1.1,
-          }}
-          transition={{ duration: 0.1 }}
-        />
-
-        {/* 재료들 */}
-        <AnimatePresence>
-          {ingredients.map((ingredient) => (
-            !ingredient.collected && (
-              <motion.div
-                key={ingredient.id}
-                className="absolute w-8 h-8 bg-orange-400 rounded-full shadow-lg flex items-center justify-center"
-                style={{
-                  left: ingredient.x,
-                  bottom: 400 - ingredient.y,
-                }}
-                initial={{ scale: 0 }}
-                animate={{ 
-                  scale: 1,
-                  y: [0, -10, 0]
-                }}
-                exit={{ scale: 0 }}
-                transition={{ 
-                  duration: 0.3,
-                  y: { repeat: Infinity, duration: 2 }
-                }}
-              >
-                <span className="text-white text-xs font-bold">
-                  {ingredient.amount}
-                </span>
-              </motion.div>
-            )
-          ))}
-        </AnimatePresence>
-
-        {/* 수학 문제 모달 */}
-        <AnimatePresence>
-          {showMathModal && (
-            <motion.div
-              className="absolute inset-0 bg-black/50 flex items-center justify-center z-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+            <motion.button
+              onClick={startGame}
+              className="px-12 py-6 bg-gradient-to-r from-orange-600 to-yellow-600 text-white rounded-2xl text-2xl font-bold shadow-2xl"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <motion.div
-                className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl"
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.5, opacity: 0 }}
+              🎮 요리 시작!
+            </motion.button>
+
+            <div className="mt-12 text-gray-600">
+              <p>← → 또는 A D: 이동 | Space 또는 ↑ 또는 W: 점프</p>
+              <p>재료를 모두 모으고 문제를 풀어보세요!</p>
+            </div>
+          </motion.div>
+        </div>
+      ) : gamePhase === 'failed' ? (
+        // 실패 화면
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <div className="text-8xl mb-6">😢</div>
+            <h2 className="text-5xl font-bold mb-6 text-red-600">시간 초과!</h2>
+            <p className="text-2xl mb-4">레벨: {currentLevel}</p>
+            <p className="text-xl mb-8 text-gray-600">총 점수: {totalScore}</p>
+            <div className="flex gap-4 justify-center">
+              <motion.button
+                onClick={startGame}
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl text-xl font-bold"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <div className="text-center">
-                  <ChefHat className="w-16 h-16 text-orange-500 mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                    {currentRecipe?.name} 완성!
-                  </h2>
-                  <p className="text-lg text-gray-600 mb-6">
-                    {currentRecipe?.mathProblem}
-                  </p>
-                  
-                  <div className="mb-6">
-                    <input
-                      type="number"
-                      value={mathAnswer}
-                      onChange={(e) => setMathAnswer(e.target.value)}
-                      className="w-full p-4 text-center text-2xl font-bold border-2 border-gray-300 rounded-xl focus:border-orange-500 focus:outline-none"
-                      placeholder="답을 입력하세요"
-                      autoFocus
-                    />
+                다시 도전
+              </motion.button>
+              <motion.button
+                onClick={() => navigate('/game-hub')}
+                className="px-8 py-4 bg-gray-600 text-white rounded-xl text-xl font-bold"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                나가기
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      ) : gamePhase === 'completed' ? (
+        // 완료 화면
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen">
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <Trophy className="w-32 h-32 mx-auto mb-8 text-yellow-500" />
+            <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+              🎉 요리 완성! 🎉
+            </h2>
+            <div className="text-6xl mb-4">{currentRecipe?.emoji}</div>
+            <p className="text-3xl mb-4 font-bold">{currentRecipe?.name}</p>
+            <p className="text-2xl mb-2">획득 점수: {score}</p>
+            <p className="text-xl mb-8 text-gray-600">누적 점수: {totalScore + score}</p>
+            <div className="flex gap-4 justify-center">
+              <motion.button
+                onClick={nextLevel}
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl text-xl font-bold"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                다음 레벨 →
+              </motion.button>
+              <motion.button
+                onClick={() => navigate('/game-hub')}
+                className="px-8 py-4 bg-gray-600 text-white rounded-xl text-xl font-bold"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                나가기
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      ) : (
+        // 게임 플레이 화면
+        <div className="relative z-10 p-4">
+          {/* 상단 UI */}
+          <div className="flex justify-between items-start mb-4">
+            <div className="bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-xl min-w-[250px]">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <ChefHat className="w-5 h-5 text-orange-500" />
+                  <span className="font-bold">레벨 {currentLevel}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Star className="w-5 h-5 text-yellow-500" />
+                  <span className="font-bold">{totalScore}</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm">남은 시간</span>
+                </div>
+                <span className={`text-lg font-bold ${timeLeft < 20 ? 'text-red-500 animate-pulse' : ''}`}>
+                  {timeLeft}초
+                </span>
+              </div>
+
+              {/* 진행률 */}
+              <div className="mt-3">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm text-gray-600">재료 수집</span>
+                  <span className="text-sm font-bold">
+                    {ingredients.filter(i => i.collected).length}/{ingredients.length}
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <motion.div
+                    className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full"
+                    animate={{ width: `${(ingredients.filter(i => i.collected).length / ingredients.length) * 100}%` }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="bg-white/90 backdrop-blur-md rounded-2xl px-6 py-3 text-center shadow-xl">
+                <div className="text-4xl mb-1">{currentRecipe?.emoji}</div>
+                <p className="text-sm font-bold">{currentRecipe?.name}</p>
+              </div>
+              
+              <motion.button
+                onClick={() => navigate('/game-hub')}
+                className="w-full px-4 py-2 bg-gray-600 text-white rounded-xl flex items-center justify-center space-x-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>나가기</span>
+              </motion.button>
+            </div>
+          </div>
+
+          {/* 게임 필드 */}
+          <div className="relative h-[550px] bg-gradient-to-b from-sky-200 to-sky-100 rounded-3xl overflow-hidden border-4 border-white shadow-2xl">
+            {/* 플랫폼 */}
+            {platforms.map((platform, i) => (
+              <div
+                key={i}
+                className="absolute bg-gradient-to-b from-green-600 to-green-800 rounded-lg shadow-lg"
+                style={{
+                  left: platform.x,
+                  top: platform.y,
+                  width: platform.width,
+                  height: platform.height
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              </div>
+            ))}
+
+            {/* 플레이어 */}
+            <motion.div
+              className="absolute bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-2xl shadow-2xl"
+              style={{
+                left: player.x,
+                top: player.y,
+                width: player.width,
+                height: player.height,
+                transform: player.facingRight ? 'scaleX(1)' : 'scaleX(-1)'
+              }}
+              animate={{
+                boxShadow: ['0 0 20px rgba(59, 130, 246, 0.5)', '0 0 40px rgba(59, 130, 246, 0.8)', '0 0 20px rgba(59, 130, 246, 0.5)'],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              👨‍🍳
+            </motion.div>
+
+            {/* 재료 */}
+            <AnimatePresence>
+              {ingredients.map((ing, i) => !ing.collected && (
+                <motion.div
+                  key={i}
+                  className="absolute w-12 h-12 flex flex-col items-center"
+                  style={{ left: ing.x, top: ing.y }}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ 
+                    scale: 1, 
+                    opacity: 1,
+                    y: [0, -10, 0]
+                  }}
+                  exit={{ scale: 0, opacity: 0, rotate: 360 }}
+                  transition={{
+                    scale: { duration: 0.3 },
+                    y: { duration: 2, repeat: Infinity }
+                  }}
+                >
+                  <div className="text-4xl drop-shadow-lg">{ing.emoji}</div>
+                  <div className="text-xs font-bold text-white bg-black/50 px-2 py-1 rounded-full mt-1">
+                    {ing.name}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* 수학 문제 모달 */}
+          <AnimatePresence>
+            {showMathModal && currentRecipe && (
+              <motion.div
+                className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <motion.div
+                  className="bg-gradient-to-br from-orange-400 to-yellow-400 rounded-3xl p-8 max-w-2xl w-full mx-4 shadow-2xl"
+                  initial={{ scale: 0.5, y: 100 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.5, y: 100 }}
+                >
+                  <div className="text-center mb-6">
+                    <div className="text-8xl mb-4">{currentRecipe.emoji}</div>
+                    <h3 className="text-3xl font-bold text-white mb-2">{currentRecipe.name}</h3>
+                    <p className="text-white/80">{currentRecipe.description}</p>
                   </div>
 
-                  <motion.button
-                    onClick={handleMathSubmit}
-                    className="w-full bg-orange-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-colors"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    확인
-                  </motion.button>
+                  <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 mb-6">
+                    <p className="text-sm text-white/80 mb-2">
+                      난이도 {'⭐'.repeat(currentRecipe.mathProblem.difficulty)}
+                    </p>
+                    <h4 className="text-2xl font-bold mb-6 text-white text-center">
+                      {currentRecipe.mathProblem.question}
+                    </h4>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      {currentRecipe.mathProblem.options.map((option, index) => (
+                        <motion.button
+                          key={index}
+                          onClick={() => !showResult && setMathAnswer(index)}
+                          disabled={showResult}
+                          className={`px-6 py-4 rounded-xl text-lg font-bold transition-all ${
+                            showResult
+                              ? index === currentRecipe.mathProblem.correct
+                                ? 'bg-green-600 text-white ring-4 ring-green-400'
+                                : index === mathAnswer
+                                ? 'bg-red-600 text-white ring-4 ring-red-400'
+                                : 'bg-white/50 text-gray-600'
+                              : mathAnswer === index
+                              ? 'bg-white text-orange-600 ring-4 ring-white'
+                              : 'bg-white/80 text-gray-800 hover:bg-white'
+                          }`}
+                          whileHover={!showResult ? { scale: 1.05 } : {}}
+                          whileTap={!showResult ? { scale: 0.95 } : {}}
+                        >
+                          {option}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
 
-                  {mathResult && (
+                  {showResult && (
                     <motion.div
-                      className={`mt-4 p-4 rounded-xl font-bold ${
-                        mathResult === 'correct' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
+                      className={`p-4 rounded-xl mb-4 ${
+                        isCorrect ? 'bg-green-600/30' : 'bg-red-600/30'
                       }`}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
-                      {mathResult === 'correct' ? '정답입니다! 🎉' : '틀렸습니다. 다시 시도해보세요!'}
+                      <p className="text-white text-center font-bold">
+                        {currentRecipe.mathProblem.explanation}
+                      </p>
                     </motion.div>
                   )}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* 게임 완료/실패 모달 */}
-        <AnimatePresence>
-          {(gameState === 'completed' || gameState === 'failed') && (
-            <motion.div
-              className="absolute inset-0 bg-black/50 flex items-center justify-center z-20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div
-                className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl text-center"
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.5, opacity: 0 }}
-              >
-                {gameState === 'completed' ? (
-                  <>
-                    <Star className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-                    <h2 className="text-3xl font-bold text-gray-800 mb-4">레시피 완성! 🎉</h2>
-                    <p className="text-lg text-gray-600 mb-6">최종 점수: {score}점</p>
-                  </>
-                ) : (
-                  <>
-                    <Clock className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                    <h2 className="text-3xl font-bold text-gray-800 mb-4">시간 초과!</h2>
-                    <p className="text-lg text-gray-600 mb-6">최종 점수: {score}점</p>
-                  </>
-                )}
-                
-                <div className="flex space-x-4">
-                  <motion.button
-                    onClick={resetGame}
-                    className="flex-1 bg-orange-500 text-white py-3 rounded-xl font-bold hover:bg-orange-600 transition-colors"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    다시 플레이
-                  </motion.button>
-                  <motion.button
-                    onClick={() => navigate('/')}
-                    className="flex-1 bg-gray-500 text-white py-3 rounded-xl font-bold hover:bg-gray-600 transition-colors"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    홈으로
-                  </motion.button>
-                </div>
+                  {!showResult && (
+                    <motion.button
+                      onClick={handleSubmitAnswer}
+                      disabled={mathAnswer === null}
+                      className={`w-full px-8 py-4 rounded-xl text-xl font-bold ${
+                        mathAnswer === null
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-500 hover:to-emerald-500'
+                      }`}
+                      whileHover={mathAnswer !== null ? { scale: 1.05 } : {}}
+                      whileTap={mathAnswer !== null ? { scale: 0.95 } : {}}
+                    >
+                      답안 제출
+                    </motion.button>
+                  )}
+                </motion.div>
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* 조작법 안내 */}
-      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
-        <div className="text-sm text-gray-600">
-          <div className="flex items-center space-x-2 mb-1">
-            <span className="font-bold">스페이스바:</span>
-            <span>점프</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="font-bold">←→:</span>
-            <span>이동</span>
-          </div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -178,7 +178,196 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* 게임 체험 섹션 */}
+      {/* 1단계: 진단 테스트 상세 섹션 */}
+      <section className="py-16 px-4 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <div className="w-full max-w-6xl mx-auto">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold mb-4 shadow-lg" style={{background: 'var(--gradient-primary)', color: 'white'}}>
+              <Brain className="w-4 h-4 mr-2" />
+              📝 1단계: 진단 테스트
+              <CheckCircle className="w-4 h-4 ml-2" />
+            </div>
+            <h2 className="font-dnf-heading-1 mb-4" style={{color: 'var(--color-text-primary)'}}>
+              현재 실력을 정확하게 파악하세요
+            </h2>
+            <p className="font-dnf-body-large" style={{color: 'var(--color-text-secondary)'}}>
+              3가지 난이도의 진단 테스트로 <span className="font-bold" style={{color: 'var(--color-primary)'}}>개인별 맞춤 학습 경로</span>를 제공합니다
+            </p>
+          </motion.div>
+
+          {/* 진단 테스트 카드들 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                name: '기초 수학 진단',
+                emoji: '🌱',
+                level: '1-2학년 수준',
+                color: 'from-green-500 to-emerald-500',
+                items: ['한 자리 연산', '간단한 덧셈/뺄셈', '기초 개념']
+              },
+              {
+                name: '중급 수학 진단',
+                emoji: '🌿',
+                level: '3-4학년 수준',
+                color: 'from-blue-500 to-cyan-500',
+                items: ['두 자리 연산', '곱셈/나눗셈', '혼합 연산']
+              },
+              {
+                name: '고급 수학 진단',
+                emoji: '🌳',
+                level: '5-6학년 수준',
+                color: 'from-purple-500 to-pink-500',
+                items: ['분수/소수', '도형', '사고력 문제']
+              }
+            ].map((test, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all cursor-pointer border-2"
+                style={{borderColor: 'var(--color-primary)'}}
+                whileHover={{ scale: 1.05, y: -10 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/diagnostic')}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 * index }}
+              >
+                <div className="text-6xl mb-4 text-center">{test.emoji}</div>
+                <h3 className="font-bold text-xl mb-2 text-center" style={{color: 'var(--color-text-primary)'}}>{test.name}</h3>
+                <p className="text-sm text-center mb-4 text-gray-600">{test.level}</p>
+                <div className="space-y-2">
+                  {test.items.map((item, i) => (
+                    <div key={i} className="flex items-center space-x-2 text-sm">
+                      <CheckCircle className="w-4 h-4" style={{color: 'var(--color-primary)'}} />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            className="mt-8 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <motion.button
+              onClick={() => navigate('/diagnostic')}
+              className="px-8 py-4 rounded-2xl font-bold text-white shadow-xl"
+              style={{background: 'var(--gradient-primary)'}}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              지금 진단 시작하기 →
+            </motion.button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 2단계: 맞춤 학습 경로 상세 섹션 */}
+      <section className="py-16 px-4 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+        <div className="w-full max-w-6xl mx-auto">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold mb-4 shadow-lg" style={{background: 'var(--gradient-secondary)', color: 'white'}}>
+              <Map className="w-4 h-4 mr-2" />
+              🗺️ 2단계: 맞춤 학습 경로
+              <BookOpen className="w-4 h-4 ml-2" />
+            </div>
+            <h2 className="font-dnf-heading-1 mb-4" style={{color: 'var(--color-text-primary)'}}>
+              체계적인 학습으로 실력을 쌓으세요
+            </h2>
+            <p className="font-dnf-body-large" style={{color: 'var(--color-text-secondary)'}}>
+              진단 결과에 따라 <span className="font-bold" style={{color: 'var(--color-secondary)'}}>개인별 최적화된 스테이지</span>를 제공합니다
+            </p>
+          </motion.div>
+
+          {/* 학습 경로 카드들 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                name: '초등 수학',
+                emoji: '📚',
+                stages: '1-6학년 과정',
+                color: 'from-blue-500 to-indigo-500',
+                items: ['기초부터 차근차근', '학년별 커리큘럼', '단계별 진행']
+              },
+              {
+                name: '사고력 연산',
+                emoji: '🧠',
+                stages: '창의 사고 과정',
+                color: 'from-purple-500 to-pink-500',
+                items: ['논리적 사고력', '문제 해결 능력', '창의적 접근']
+              },
+              {
+                name: '중학 준비',
+                emoji: '🎓',
+                stages: '예습 과정',
+                color: 'from-green-500 to-teal-500',
+                items: ['중학 수학 대비', '심화 문제', '응용력 향상']
+              }
+            ].map((course, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-3xl p-6 shadow-xl hover:shadow-2xl transition-all cursor-pointer border-2"
+                style={{borderColor: 'var(--color-secondary)'}}
+                whileHover={{ scale: 1.05, y: -10 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/world-map')}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 * index }}
+              >
+                <div className="text-6xl mb-4 text-center">{course.emoji}</div>
+                <h3 className="font-bold text-xl mb-2 text-center" style={{color: 'var(--color-text-primary)'}}>{course.name}</h3>
+                <p className="text-sm text-center mb-4 text-gray-600">{course.stages}</p>
+                <div className="space-y-2">
+                  {course.items.map((item, i) => (
+                    <div key={i} className="flex items-center space-x-2 text-sm">
+                      <Star className="w-4 h-4" style={{color: 'var(--color-secondary)'}} />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 text-center">
+                  <span className="text-xs bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full font-bold">
+                    스테이지 완료 시 게임 체험권 획득!
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            className="mt-8 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <motion.button
+              onClick={() => navigate('/world-map')}
+              className="px-8 py-4 rounded-2xl font-bold text-white shadow-xl"
+              style={{background: 'var(--gradient-secondary)'}}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              학습 경로 탐색하기 →
+            </motion.button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 3단계: 게임 체험 섹션 */}
       <section className="py-16 px-4 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
         <div className="w-full max-w-6xl mx-auto">
           <motion.div
@@ -189,11 +378,11 @@ export function HomePage() {
           >
             <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold mb-4 shadow-lg" style={{background: 'var(--gradient-accent)', color: 'white'}}>
               <Gamepad2 className="w-4 h-4 mr-2" />
-              🎮 게임 체험존
-              <Trophy className="w-4 h-4 ml-2" />
+              🎮 3단계: 게임 체험
+              <Zap className="w-4 h-4 ml-2" />
             </div>
             <h2 className="font-dnf-heading-1 mb-4" style={{color: 'var(--color-text-primary)'}}>
-              학습하고 포인트로 게임을 즐기세요!
+              학습 보상으로 다양한 게임을 즐기세요!
             </h2>
             <p className="font-dnf-body-large" style={{color: 'var(--color-text-secondary)'}}>
               수학 월드맵에서 스테이지를 완료하면 <span className="font-bold" style={{color: 'var(--color-accent)'}}>게임 체험권</span>을 획득할 수 있습니다
