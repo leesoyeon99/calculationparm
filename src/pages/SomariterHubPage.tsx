@@ -151,9 +151,9 @@ export function SomaMasterHubPage() {
         </motion.div>
 
         {/* 메인 그리드 레이아웃 - PC: 2열, 모바일: 1열 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:items-start">
           {/* 왼쪽 열 */}
-          <div className="space-y-6">
+          <div className="space-y-6 flex flex-col h-full">
             {/* 레벨 및 경험치 */}
             <motion.div 
               className="farm-card p-6"
@@ -203,7 +203,7 @@ export function SomaMasterHubPage() {
 
             {/* 업적 시스템 */}
             <motion.div 
-              className="farm-card p-6"
+              className="farm-card p-6 flex-1 flex flex-col"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
@@ -218,7 +218,7 @@ export function SomaMasterHubPage() {
                 </div>
               </div>
               
-              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+              <div className="space-y-3 flex-1 overflow-y-auto pr-2">
                 {achievements.map((achievement, index) => (
                   <motion.div
                     key={achievement.id}
@@ -268,7 +268,7 @@ export function SomaMasterHubPage() {
           </div>
 
           {/* 오른쪽 열 */}
-          <div className="space-y-6">
+          <div className="space-y-6 flex flex-col h-full">
             {/* 농장 통계 */}
             <motion.div 
               className="farm-card p-6"
@@ -302,7 +302,7 @@ export function SomaMasterHubPage() {
 
             {/* 게임 체험권 */}
             <motion.div 
-              className="farm-card p-6"
+              className="farm-card p-6 flex-1 flex flex-col"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
@@ -312,46 +312,48 @@ export function SomaMasterHubPage() {
                 <h3 className="text-lg font-bold text-gray-800">게임 체험권</h3>
               </div>
               
-              <div className="space-y-3">
-                {games.map((game, index) => {
-                  const IconComponent = game.icon;
-                  const tokenCount = gameTokens[game.id as keyof typeof gameTokens];
-                  
-                  return (
-                    <motion.div
-                      key={game.id}
-                      className={`p-4 rounded-lg border-2 ${game.borderColor} bg-gradient-to-r ${game.bgColor} cursor-pointer hover:shadow-lg transition-all`}
-                      onClick={() => navigate(game.path)}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 + index * 0.1 }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${game.color} flex items-center justify-center`}>
-                            <IconComponent className="w-6 h-6 text-white" />
+              <div className="flex-1 flex flex-col">
+                <div className="space-y-3 mb-4">
+                  {games.map((game, index) => {
+                    const IconComponent = game.icon;
+                    const tokenCount = gameTokens[game.id as keyof typeof gameTokens];
+                    
+                    return (
+                      <motion.div
+                        key={game.id}
+                        className={`p-4 rounded-lg border-2 ${game.borderColor} bg-gradient-to-r ${game.bgColor} cursor-pointer hover:shadow-lg transition-all`}
+                        onClick={() => navigate(game.path)}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 + index * 0.1 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${game.color} flex items-center justify-center`}>
+                              <IconComponent className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-gray-800">{game.name}</h4>
+                              <p className="text-xs text-gray-600">{game.description}</p>
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="font-bold text-gray-800">{game.name}</h4>
-                            <p className="text-xs text-gray-600">{game.description}</p>
+                          <div className="flex items-center space-x-1 bg-white/80 px-3 py-1 rounded-full">
+                            <Trophy className="w-4 h-4 text-yellow-500" />
+                            <span className="font-bold text-gray-800">{tokenCount}</span>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-1 bg-white/80 px-3 py-1 rounded-full">
-                          <Trophy className="w-4 h-4 text-yellow-500" />
-                          <span className="font-bold text-gray-800">{tokenCount}</span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
 
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-sm text-gray-700 text-center">
-                  💡 수학 월드맵에서 스테이지를 완료하고 게임 체험권을 획득하세요!
-                </p>
+                <div className="mt-auto p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <p className="text-sm text-gray-700 text-center">
+                    💡 수학 월드맵에서 스테이지를 완료하고 게임 체험권을 획득하세요!
+                  </p>
+                </div>
               </div>
             </motion.div>
           </div>
