@@ -35,7 +35,7 @@
     
     /* 그라데이션 */
     --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-    --gradient-secondary: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-secondary-light) 100%);
+    --gradient-secondary: #FFFFFF;
     --gradient-neutral: linear-gradient(135deg, var(--color-neutral-100) 0%, var(--color-neutral-200) 100%);
     
     /* 그림자 */
@@ -77,7 +77,7 @@
   }
   
   body {
-    background: var(--gradient-secondary);
+    background: #FFFFFF;
     min-height: 100vh;
     font-family: 'Noto Sans KR', sans-serif;
     color: var(--color-text-primary);
