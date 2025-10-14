@@ -87,8 +87,8 @@ export function SomaMasterHubPage() {
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </Link>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">소마리터 허브</h1>
-              <p className="text-sm md:text-base text-gray-600">소마리터와 함께 성장해보세요!</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">내 프로필</h1>
+              <p className="text-sm md:text-base text-gray-600">나의 학습 현황을 확인하세요!</p>
             </div>
           </div>
         </div>
