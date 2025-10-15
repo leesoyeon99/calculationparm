@@ -357,7 +357,7 @@ export function HomePage() {
             <motion.button
               onClick={() => navigate('/world-map')}
               className="px-8 py-4 rounded-2xl font-bold text-white shadow-xl"
-              style={{background: 'var(--gradient-secondary)'}}
+              style={{background: 'var(--gradient-primary)'}}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
